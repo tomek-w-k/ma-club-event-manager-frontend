@@ -22,17 +22,10 @@ class AuthService
 
     logout()
     {
-        localStorage.removeItem("user");
-
-        const loggedOutUser = {
-            accessToken: undefined,
-            id: undefined,
-            email: undefined,
-            roles: [
-                "ROLE_UNDEFINED"
-            ],
-            type: "Bearer"
-        }
+        return new Promise( resolve => {
+            localStorage.removeItem("user");
+            resolve();
+        });
     }
 
     register(email, password)
