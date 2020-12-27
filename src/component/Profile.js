@@ -1,9 +1,11 @@
-import React, {Component} from "react";
+import React, {Component, Fragment} from "react";
 import Card from "react-bootstrap/Card";
+import {MDBIcon, MDBContainer, MDBBtn} from "mdbreact";
+
 import AuthService from "../service/auth-service";
 
 
-class ProfileComponent extends Component
+class Profile extends Component
 {
     constructor(props)
     {
@@ -13,17 +15,22 @@ class ProfileComponent extends Component
     render()
     {
         const currentUser = AuthService.getCurrentUser();
+        this.props.navbarControlsHandler();
 
         return(
             currentUser != null ?
             (
-                <div>
+                <div >                                            
                     <Card>
                         <Card.Body>
                             <Card.Title>User's Profile</Card.Title>
                             <Card.Subtitle className="mb-2 text-muted">{currentUser.email}</Card.Subtitle>
                             <br />
                             <Card.Text>
+                                <tr>
+                                    <td>Full name</td>
+                                    <td>{currentUser.fullName}</td>
+                                </tr>
                                 <tr>
                                     <td style={{paddingRight: "100px"}}>Token</td>
                                     <td>
@@ -41,8 +48,8 @@ class ProfileComponent extends Component
                                         {currentUser.roles &&
                                         currentUser.roles.map( role => <div>{role}</div> )}
                                     </td>
-                                </tr>
-                            </Card.Text>
+                                </tr>                                
+                            </Card.Text>                            
                         </Card.Body>
                     </Card>
                 </div>
@@ -52,4 +59,4 @@ class ProfileComponent extends Component
     }
 }
 
-export default ProfileComponent;
+export default Profile;
