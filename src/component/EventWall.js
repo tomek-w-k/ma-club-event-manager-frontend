@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import ExamEventTile from "./ExamEventTile";
 import CampEventTile from "./CampEventTile";
+import TournamentEventTile from "./TournamentEventTile";
 import AuthService from "../service/auth-service";
 
 
@@ -40,7 +41,7 @@ class EventWall extends Component
                     {this.state.events.map(event => {                        
                         if ( event.hasOwnProperty("examRegistrations") ) return <ExamEventTile event={event} />;
                         if ( event.hasOwnProperty("campRegistrations") ) return <CampEventTile event={event} />;
-                        if ( event.hasOwnProperty("tournamentRegistrations") ) console.log("torunam");
+                        if ( event.hasOwnProperty("tournamentRegistrations") ) return <TournamentEventTile event={event} />;
                     })}
                 </div>
             ) : ( <h2>You have no priviledges granted to view Profile component.</h2> )
