@@ -12,20 +12,27 @@ import {MDBIcon} from "mdbreact";
 
 import LoginComponent from "./component/security/LoginComponent";
 import SignUpComponent from "./component/security/SignUpComponent";
+
+import People from "./component/admin/People";
+
+import Exams from "./component/admin/exam_event/Exams";
+import Exam from "./component/admin/exam_event/Exam";
+import AddExam from "./component/admin/exam_event/AddExam";
+
+import Camps from "./component/admin/camp/Camps";
+import Camp from "./component/admin/camp/Camp";
+import AddCamp from "./component/admin/camp/AddCamp";
+
+import Tournaments from "./component/admin/tournament/Tournaments";
+
 import Profile from "./component/Profile";
 import EventWall from "./component/EventWall";
-import AddExam from "./component/admin/exam_event/AddExam";
-import Exams from "./component/admin/exam_event/Exams";
-import Camps from "./component/admin/camp/Camps";
-import People from "./component/admin/People";
-import Exam from "./component/admin/exam_event/Exam";
-import Camp from "./component/admin/camp/Camp";
 
 import AuthService from "./service/auth-service";
 
 import './App.css';
 import ichibanDojoLogo from "./resources/images/ichiban_logo.png";
-import AddCamp from "./component/admin/camp/AddCamp";
+
 
 
 const toggleLanguageRadios = [
@@ -52,6 +59,7 @@ class App extends Component
 		this.examRef = React.createRef();
 		this.campsRef = React.createRef();
 		this.campRef = React.createRef();
+		this.tournamentsRef = React.createRef();
 	}
 
 	componentDidMount()
@@ -91,6 +99,8 @@ class App extends Component
 			campComponentSelected: false,
 			addCampComponentSelected: false,
 
+			tournamentsComponentSelected: false,
+
 			profileComponentSelected: false,
 			eventWallComponentSelected: false,
 		})
@@ -109,8 +119,9 @@ class App extends Component
 							<div>
 								<div style={{fontSize: "small", paddingLeft:"10px", paddingTop:"20px"}}>ADMINISTRATIVE TOOLS</div>
 								<Link to="/people_component" className="nav-link sidenav-text" style={{color:"black"}} >People</Link>
-								<Link to="/exams_component" className="nav-link sidenav-text" style={{color:"black"}} >Exams</Link>								
-								<Link to="/camps_component" className="nav-link sidenav-text" style={{color:"black"}} >Camps</Link>								
+								<Link to="/exams_component" className="nav-link sidenav-text" style={{color:"black"}} >Exams</Link>
+								<Link to="/camps_component" className="nav-link sidenav-text" style={{color:"black"}} >Camps</Link>
+								<Link to="/tournaments_component" className="nav-link sidenav-text" style={{color:"black"}} >Tournaments</Link>
 								<div style={{fontSize: "small", paddingLeft:"10px", paddingTop:"20px"}}>USER'S TOOLS</div>
 							</div>							
 						)}	
@@ -135,6 +146,8 @@ class App extends Component
 							{this.state.campsComponentSelected && (<div>Camps</div>)}
 							{this.state.campComponentSelected && (<div>Camp</div>)}
 							{this.state.addCampComponentSelected && (<div>New Camp</div>)}
+
+							{this.state.tournamentsComponentSelected && (<div>Tournaments</div>)}
 
 							{this.state.profileComponentSelected && (<div>Profile</div>)}
 							{this.state.eventWallComponentSelected && (<div>Events</div>)}
@@ -215,6 +228,12 @@ class App extends Component
 							<div>
 								<Button href="/add_camp_component" variant="secondary">Clear form</Button>							
 							</div>	
+						)}
+						{this.state.tournamentsComponentSelected && (
+							<div>								
+								<Link to="/add_tournament_component" className="btn btn-info">New Tournament</Link>{' '}
+								<Button variant="danger" onClick={() => { this.tournamentsRef.current.handleDeleteTournament() }}>Remove</Button>
+							</div>							
 						)}
 						{this.state.profileComponentSelected && (
 							<div>
@@ -302,6 +321,13 @@ class App extends Component
 										{
 											this.deselectAllComponents();
 											this.setState({ addCampComponentSelected: true });
+										}
+									}} />)} />
+									<Route path="/tournaments_component" render={(props) => (<Tournaments {...props} ref={this.tournamentsRef} navbarControlsHandler={() => {
+										if ( !this.state.tournamentsComponentSelected )
+										{
+											this.deselectAllComponents();
+											this.setState({ tournamentsComponentSelected: true });
 										}
 									}} />)} />
 								</div>								
