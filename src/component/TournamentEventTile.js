@@ -3,7 +3,7 @@ import {
     Card,    
     Button,    
 } from "react-bootstrap";
-//import TournamentRegistrationOptionChooserModal from "./TournamentRegistrationOptionChooserModal";
+import TournamentRegistrationOptionChooserModal from "./TournamentRegistrationOptionChooserModal";
 
 import AuthService from "../service/auth-service";
 
@@ -20,11 +20,11 @@ class TournamentEventTile extends Component
         this.state = {            
             eventContainsCurrentUser: false,
             tournamentRegistrationId: undefined,
-            //showChooserModal: false,
+            showChooserModal: false,
         }
 
-        // this.handleSignUp = this.handleSignUp.bind(this);
-        // this.handleSignOut = this.handleSignOut.bind(this);
+        this.handleSignUp = this.handleSignUp.bind(this);
+        this.handleSignOut = this.handleSignOut.bind(this);
     }
 
     componentDidMount()
@@ -45,37 +45,37 @@ class TournamentEventTile extends Component
         });
     }
 
-    // handleSignUp(e)
-    // {
-    //     e.preventDefault();
-    //     this.setState({
-    //         showChooserModal: true
-    //     });
-    // }
+    handleSignUp(e)
+    {
+        e.preventDefault();
+        this.setState({
+            showChooserModal: true
+        });
+    }
 
-    // handleSignOut(e)
-    // {
-    //     e.preventDefault();
-    //     fetch(TOURNAMENT_REGISTRATION_API_URL + "/" + this.state.tournamentRegistrationId, {
-    //         method: "DELETE"
-    //     })
-    //     .then(response => {
-    //         if ( response.ok )
-    //         {
-    //             console.log("wypisano z obozu pomyślnie");
-    //             this.setState({
-    //                 eventContainsCurrentUser: false,
-    //                 tournamentRegistrationId: undefined
-    //             });
-    //             window.location.reload();
-    //             return response;
-    //         }
-    //         throw new Error(response.message);
-    //     })
-    //     .catch(error => {
-    //         console.log(error);
-    //     })
-    // }
+    handleSignOut(e)
+    {
+        e.preventDefault();
+        fetch(TOURNAMENT_REGISTRATION_API_URL + "/" + this.state.tournamentRegistrationId, {
+            method: "DELETE"
+        })
+        .then(response => {
+            if ( response.ok )
+            {
+                console.log("wypisano z obozu pomyślnie");
+                this.setState({
+                    eventContainsCurrentUser: false,
+                    tournamentRegistrationId: undefined
+                });
+                window.location.reload();
+                return response;
+            }
+            throw new Error(response.message);
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    }
 
     render()
     {   
@@ -88,15 +88,15 @@ class TournamentEventTile extends Component
             currentUser != null && currentUser.roles.includes("ROLE_USER") ? 
             (
                 <div>
-                    {/* <TournamentRegistrationOptionChooserModal   show={this.state.showChooserModal}
+                    <TournamentRegistrationOptionChooserModal   show={this.state.showChooserModal}
                                                                 onHide={() => {
                                                                     this.setState({ showChooserModal: false });
                                                                     window.location.reload();                                                                 
                                                                 }}                                                            
                                                                 eventId={event.id}
-                                                                sayonaraMeeting={this.props.event.sayonaraMeeting}
-                                                                accommodation={}
-                    /> */}
+                                                                sayonaraMeeting={event.sayonaraMeeting}
+                                                                accommodation={event.accommodation}
+                    />
                     <Card style={{marginBottom: "20px"}}>
                         <Card.Body>
                             <Card.Title>{event.eventName}</Card.Title>
@@ -115,7 +115,7 @@ class TournamentEventTile extends Component
                                 Registrations:
                                 { event.tournamentRegistrations.map(reg => <li>{reg.user.email}</li>) }
                             </Card.Text>                        
-                            {/* <div className="d-flex flex-row-reverse">                                                        
+                            <div className="d-flex flex-row-reverse">                                                        
                                 {!eventContainsCurrentUser && (
                                     <Button variant="info" onClick={this.handleSignUp} >Sign Up</Button>
                                 )}
@@ -125,13 +125,13 @@ class TournamentEventTile extends Component
                                         <Button variant="danger" onClick={this.handleSignOut}>Sign Out</Button> 
                                     </div>                                        
                                 )}
-                            </div> */}
+                            </div>
                         </Card.Body>
                     <Card.Footer>
                         Added: {event.dateCreated}
-                        {/* <div style={{float: "right"}}>
+                        <div style={{float: "right"}}>
                             {event.tournamentRegistrations.length} persons registered
-                        </div>                     */}
+                        </div>                    
                     </Card.Footer>
                     </Card>
                 </div>
