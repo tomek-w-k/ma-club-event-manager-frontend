@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import TournamentDetails from "./TournamentDetails";
-//import TournamentRegistrations from "./TournamentRegistrations";
+import TournamentRegistrations from "./TournamentRegistrations";
 
 import AuthService from "../../../service/auth-service";
 
@@ -44,7 +44,7 @@ class Tournament extends Component
                 <div>
                     <TournamentDetails id={this.props.match.params.id} onTournamentUpdate={this.goToEventWall} />
                     <br />
-                    {/* <TournamentRegistrations id={this.props.match.params.id} ref={this.tournamentRegistrationsRef} /> */}
+                    <TournamentRegistrations id={this.props.match.params.id} ref={this.tournamentRegistrationsRef} />
                 </div>
             ): (<h2>You do not have priviledges  granted to view this section.</h2 > )
         )
