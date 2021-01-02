@@ -7,7 +7,7 @@ import {
 } from "react-bootstrap";
 import { textFilter } from 'react-bootstrap-table2-filter';
 import {Check, SortUp, X} from "react-bootstrap-icons";
-//import EditTournamentRegistrationModal from "./EditTournamentRegistrationModal";
+import EditTournamentRegistrationModal from "./EditTournamentRegistrationModal";
 //import AddParticipantToTournamentModal from "./AddParticipantToTournamentModal";
 
 import AuthService from "../../../service/auth-service";
@@ -48,7 +48,7 @@ const columns = [
     { 
         dataField: "sayonaraMeetingParticipation", 
         text: "Sayonara",
-        hidden: true,
+        //hidden: true,
         sort: false,
         type: "bool",
         style:  { "text-align": "center" },
@@ -190,15 +190,16 @@ class TournamentRegistrations extends Component
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
             (
                 <div>
-                    {/* <EditTournamentRegistrationModal  show={this.state.editModalShow}
+                    <EditTournamentRegistrationModal  show={this.state.editModalShow}
                                                 onHide={() => {
                                                     this.setState({ editModalShow: false, selectedRowsIds: [] });
                                                     this.crudTableRef.current.unselectAllRows();
                                                     this.crudTableRef.current.fillTable();
+                                                    this.props.onRegistrationUpdate();
                                                 }}
                                                 itemId={this.state.selectedRowsIds[0]}
                                                 eventId={this.props.id}
-                    />               */}
+                    />              
                     {/* <AddParticipantToTournamentModal  show={this.state.addModalShow}
                                                 onHide={() => {
                                                     this.setState({ addModalShow: false, selectedRowsIds: [] });

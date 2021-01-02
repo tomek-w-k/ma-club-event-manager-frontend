@@ -48,7 +48,9 @@ class TournamentDetails extends Component
             registrationsCountsForWeightAgeCategories: [],
             disableAccommodation: false
         };
+        this.loadTournamentOptions = this.loadTournamentOptions.bind(this);
         this.handleEditEvent = this.handleEditEvent.bind(this);
+        this.refreshTournamentDetails = this.refreshTournamentDetails.bind(this);
         
         this.handleChangeRoomTypeFields = this.handleChangeRoomTypeFields.bind(this);
         this.handleAddRoomTypeField = this.handleAddRoomTypeField.bind(this);
@@ -66,9 +68,15 @@ class TournamentDetails extends Component
         this.hasWeightAgeCategoryRegistrations = this.hasWeightAgeCategoryRegistrations.bind(this);
     }
 
-    componentDidMount()
+    loadTournamentOptions()
     {
         let allCounts = [];
+
+        const CountsNames = Object.freeze ({
+            ROOM_TYPES: 0,
+            STAY_PERIODS: 1,
+            WEIGHT_AGE_CATEGORIES: 2
+        });
 
         fetch(TOURNAMENT_EVENTS_API_URL + "/" + this.props.id)
         .then(response => response.json())        
@@ -110,12 +118,17 @@ class TournamentDetails extends Component
             .then(allCounts => {                
                 this.setState({                
                     event: data,
-                    registrationsCountsForRoomTypes: allCounts[0],
-                    registrationsCountsForStayPeriods: allCounts[1],
-                    registrationsCountsForWeightAgeCategories: allCounts[2]
+                    registrationsCountsForRoomTypes: allCounts[CountsNames.ROOM_TYPES],
+                    registrationsCountsForStayPeriods: allCounts[CountsNames.STAY_PERIODS],
+                    registrationsCountsForWeightAgeCategories: allCounts[CountsNames.WEIGHT_AGE_CATEGORIES]
                 });
             });
         });        
+    }
+
+    componentDidMount()
+    {
+        this.loadTournamentOptions();
     }
 
     /*
@@ -168,6 +181,11 @@ class TournamentDetails extends Component
             formValidated: true,
             errorMessage: "Please fill all required fields."
         });
+    }
+
+    refreshTournamentDetails()
+    {
+        this.loadTournamentOptions();
     }
 
     handleChangeRoomTypeFields(index, event)
@@ -315,8 +333,7 @@ class TournamentDetails extends Component
     render()
     {
         const currentUser = AuthService.getCurrentUser();        
-        const roomTypes = [...this.state.event.roomTypes];
-        
+        const roomTypes = [...this.state.event.roomTypes];        
        
         return( 
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
