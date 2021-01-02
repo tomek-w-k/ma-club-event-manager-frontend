@@ -24,6 +24,7 @@ import Camp from "./component/admin/camp/Camp";
 import AddCamp from "./component/admin/camp/AddCamp";
 
 import Tournaments from "./component/admin/tournament/Tournaments";
+import Tournament from "./component/admin/tournament/Tournament";
 
 import Profile from "./component/Profile";
 import EventWall from "./component/EventWall";
@@ -60,6 +61,7 @@ class App extends Component
 		this.campsRef = React.createRef();
 		this.campRef = React.createRef();
 		this.tournamentsRef = React.createRef();
+		this.tournamentRef = React.createRef();
 	}
 
 	componentDidMount()
@@ -100,6 +102,7 @@ class App extends Component
 			addCampComponentSelected: false,
 
 			tournamentsComponentSelected: false,
+			tournamentComponentSelected: false,
 
 			profileComponentSelected: false,
 			eventWallComponentSelected: false,
@@ -148,6 +151,7 @@ class App extends Component
 							{this.state.addCampComponentSelected && (<div>New Camp</div>)}
 
 							{this.state.tournamentsComponentSelected && (<div>Tournaments</div>)}
+							{this.state.tournamentComponentSelected && (<div>Tournament</div>)}
 
 							{this.state.profileComponentSelected && (<div>Profile</div>)}
 							{this.state.eventWallComponentSelected && (<div>Events</div>)}
@@ -233,6 +237,12 @@ class App extends Component
 							<div>								
 								<Link to="/add_tournament_component" className="btn btn-info">New Tournament</Link>{' '}
 								<Button variant="danger" onClick={() => { this.tournamentsRef.current.handleDeleteTournament() }}>Remove</Button>
+							</div>							
+						)}
+						{this.state.tournamentComponentSelected && (
+							<div>								
+								<Button onClick={() => { this.tournamentRef.current.handleAddRegistration() }} variant="info">Add participnat...</Button>{' '}
+								<Button onClick={() => { this.tournamentRef.current.handleDeleteRegistration() }} variant="danger">Remove participant</Button>
 							</div>							
 						)}
 						{this.state.profileComponentSelected && (
@@ -328,6 +338,13 @@ class App extends Component
 										{
 											this.deselectAllComponents();
 											this.setState({ tournamentsComponentSelected: true });
+										}
+									}} />)} />
+									<Route path="/tournament_component/:id" render={(props) => (<Tournament {...props} ref={this.tournamentRef} navbarControlsHandler={() => {
+										if ( !this.state.tournamentComponentSelected )
+										{
+											this.deselectAllComponents();
+											this.setState({ tournamentComponentSelected: true });											
 										}
 									}} />)} />
 								</div>								
