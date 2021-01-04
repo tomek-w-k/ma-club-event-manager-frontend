@@ -248,58 +248,64 @@ class EditTournamentRegistrationModal extends Component
                                     }}
                                 />
                             </Form.Group>
-                            <Form.Group as={Row}>
-                                <Form.Label column sm="4">Sayonara participation</Form.Label>
-                                <Form.Check column sm="4"
-                                    type="checkbox"
-                                    name="sayonaraMeetingParticipation" 
-                                    style={{display: "flex", alignItems: "center"}}
-                                    checked={this.state.itemToUpdate.sayonaraMeetingParticipation}
-                                    onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, sayonaraMeetingParticipation: e.target.checked} }) }}
-                                />
-                            </Form.Group>
-                            <Form.Group as={Row}>
-                                <Form.Label column sm="4">Accommodation</Form.Label>
-                                <Form.Check column sm="4"
-                                    type="checkbox"
-                                    name="accommodation" 
-                                    style={{display: "flex", alignItems: "center"}}
-                                    checked={this.state.itemToUpdate.accommodation}
-                                    onChange={e => { 
-                                        this.setState({ 
-                                            itemToUpdate: {...this.state.itemToUpdate, 
-                                                accommodation: e.target.checked,
-                                                roomType: { value: null, label : "-" },
-                                                stayPeriod: { value: null, label : "-" }
-                                            } 
-                                        }) 
-                                    }}
-                                />
-                            </Form.Group>
-                            <Form.Group as={Row}>
-                                <Form.Label column sm="4">Room type</Form.Label>
-                                <Select
-                                    styles={selectStyles}
-                                    options={this.state.roomTypes}                                    
-                                    value={this.state.itemToUpdate.roomType}
-                                    onChange={roomType => {                                        
-                                        this.setState({ itemToUpdate: {...this.state.itemToUpdate, roomType: roomType} })                                        
-                                    }}
-                                    isDisabled={!this.state.itemToUpdate.accommodation}
-                                />
-                            </Form.Group> 
-                            <Form.Group as={Row}>
-                                <Form.Label column sm="4">Stay period</Form.Label>
-                                <Select
-                                    styles={selectStyles}
-                                    options={this.state.stayPeriods}                                    
-                                    value={this.state.itemToUpdate.stayPeriod}
-                                    onChange={stayPeriod => {                                        
-                                        this.setState({ itemToUpdate: {...this.state.itemToUpdate, stayPeriod: stayPeriod} })                                        
-                                    }}
-                                    isDisabled={!this.state.itemToUpdate.accommodation}
-                                />
-                            </Form.Group> 
+                            {this.props.sayonaraMeeting && (
+                                <Form.Group as={Row}>
+                                    <Form.Label column sm="4">Sayonara participation</Form.Label>
+                                    <Form.Check column sm="4"
+                                        type="checkbox"
+                                        name="sayonaraMeetingParticipation" 
+                                        style={{display: "flex", alignItems: "center"}}
+                                        checked={this.state.itemToUpdate.sayonaraMeetingParticipation}
+                                        onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, sayonaraMeetingParticipation: e.target.checked} }) }}
+                                    />
+                                </Form.Group>
+                            )}
+                            {this.props.accommodation && (
+                                <div>
+                                    <Form.Group as={Row}>
+                                        <Form.Label column sm="4">Accommodation</Form.Label>
+                                        <Form.Check column sm="4"
+                                            type="checkbox"
+                                            name="accommodation" 
+                                            style={{display: "flex", alignItems: "center"}}
+                                            checked={this.state.itemToUpdate.accommodation}
+                                            onChange={e => { 
+                                                this.setState({ 
+                                                    itemToUpdate: {...this.state.itemToUpdate, 
+                                                        accommodation: e.target.checked,
+                                                        roomType: { value: null, label : "-" },
+                                                        stayPeriod: { value: null, label : "-" }
+                                                    } 
+                                                }) 
+                                            }}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Row}>
+                                        <Form.Label column sm="4">Room type</Form.Label>
+                                        <Select
+                                            styles={selectStyles}
+                                            options={this.state.roomTypes}                                    
+                                            value={this.state.itemToUpdate.roomType}
+                                            onChange={roomType => {                                        
+                                                this.setState({ itemToUpdate: {...this.state.itemToUpdate, roomType: roomType} })                                        
+                                            }}
+                                            isDisabled={!this.state.itemToUpdate.accommodation}
+                                        />
+                                    </Form.Group> 
+                                    <Form.Group as={Row}>
+                                        <Form.Label column sm="4">Stay period</Form.Label>
+                                        <Select
+                                            styles={selectStyles}
+                                            options={this.state.stayPeriods}                                    
+                                            value={this.state.itemToUpdate.stayPeriod}
+                                            onChange={stayPeriod => {                                        
+                                                this.setState({ itemToUpdate: {...this.state.itemToUpdate, stayPeriod: stayPeriod} })                                        
+                                            }}
+                                            isDisabled={!this.state.itemToUpdate.accommodation}
+                                        />
+                                    </Form.Group> 
+                                </div>
+                            )}                            
                             <Form.Group as={Row}>
                                 <Form.Label column sm="4">Weight / age category</Form.Label>
                                 <Select

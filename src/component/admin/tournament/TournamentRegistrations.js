@@ -8,13 +8,25 @@ import {
 import { textFilter } from 'react-bootstrap-table2-filter';
 import {Check, SortUp, X} from "react-bootstrap-icons";
 import EditTournamentRegistrationModal from "./EditTournamentRegistrationModal";
-//import AddParticipantToTournamentModal from "./AddParticipantToTournamentModal";
+import AddParticipantToTournamentModal from "./AddParticipantToTournamentModal";
 
 import AuthService from "../../../service/auth-service";
 
 
 const TOURNAMENT_REGISTRATIONS = "http://localhost:8081/tournament_registrations";
 const TOURNAMENT_EVENTS = "http://localhost:8081/tournament_events";
+
+const ColumnNames = Object.freeze({
+    ID: 0,
+    FULL_NAME: 1,
+    CLUB_NAME: 2,
+    FEE_RECEIVED: 3,
+    SAYONARA_MEETING_PARTICIPATION: 4,
+    AS_JUDGE_PARTICIPATION: 5,
+    ROOM_TYPE_NAME: 6,
+    STAY_PERIOD_NAME: 7,
+    CATEGORY_NAME: 8
+});
 
 const columns = [
     {
@@ -48,7 +60,7 @@ const columns = [
     { 
         dataField: "sayonaraMeetingParticipation", 
         text: "Sayonara",
-        //hidden: true,
+        hidden: true,
         sort: false,
         type: "bool",
         style:  { "text-align": "center" },
@@ -71,6 +83,7 @@ const columns = [
     {
         dataField: "roomType.roomTypeName",
         text: "Room type",
+        hidden: true,
         sort: true, 
         filter: textFilter(),
         formatter: (cell, row) => {
@@ -82,6 +95,7 @@ const columns = [
     {
         dataField: "stayPeriod.stayPeriodName",
         text: "Stay period",
+        hidden: true,
         sort: true, 
         filter: textFilter(),
         formatter: (cell, row) => {
@@ -113,7 +127,8 @@ class TournamentRegistrations extends Component
             editModalShow: false,
             addModalShow: false,            
             selectedRowsIds: [],            
-            sayonaraMeeting: false
+            sayonaraMeeting: false,
+            accommodation: false
         };
                
         this.handleRowClick = this.handleRowClick.bind(this);
@@ -127,10 +142,15 @@ class TournamentRegistrations extends Component
     {
         fetch(TOURNAMENT_EVENTS + "/" + this.props.id)
         .then(response => response.json())        
-        .then(data => {
-            let sayonaraColumnDef = Object.assign(columns[5], { hidden: !data.sayonaraMeeting });            
-            columns[5] = sayonaraColumnDef;
-            this.setState({ sayonaraMeeting: data.sayonaraMeeting });
+        .then(data => {            
+            columns[ColumnNames.SAYONARA_MEETING_PARTICIPATION] = {...columns[ColumnNames.SAYONARA_MEETING_PARTICIPATION],  hidden: !data.sayonaraMeeting };
+            columns[ColumnNames.ROOM_TYPE_NAME] = {...columns[ColumnNames.ROOM_TYPE_NAME], hidden: !data.accommodation};
+            columns[ColumnNames.STAY_PERIOD_NAME] = {...columns[ColumnNames.STAY_PERIOD_NAME], hidden: !data.accommodation};
+            
+            this.setState({ 
+                sayonaraMeeting: data.sayonaraMeeting,
+                accommodation: data.accommodation
+            });
             this.forceUpdate();
         });
     }
@@ -139,7 +159,7 @@ class TournamentRegistrations extends Component
     {
         this.setState({ addModalShow: true });
     }
-
+   
     handleRowClick(selectedRowsIds)
     {
         this.setState({ 
@@ -190,26 +210,29 @@ class TournamentRegistrations extends Component
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
             (
                 <div>
-                    <EditTournamentRegistrationModal  show={this.state.editModalShow}
-                                                onHide={() => {
-                                                    this.setState({ editModalShow: false, selectedRowsIds: [] });
-                                                    this.crudTableRef.current.unselectAllRows();
-                                                    this.crudTableRef.current.fillTable();
-                                                    this.props.onRegistrationUpdate();
-                                                }}
-                                                itemId={this.state.selectedRowsIds[0]}
-                                                eventId={this.props.id}
+                    <EditTournamentRegistrationModal    show={this.state.editModalShow}
+                                                        onHide={() => {
+                                                            this.setState({ editModalShow: false, selectedRowsIds: [] });
+                                                            this.crudTableRef.current.unselectAllRows();
+                                                            this.crudTableRef.current.fillTable();
+                                                            this.props.onRegistrationUpdate();
+                                                        }}
+                                                        itemId={this.state.selectedRowsIds[0]}
+                                                        eventId={this.props.id}
+                                                        sayonaraMeeting={this.state.sayonaraMeeting}
+                                                        accommodation={this.state.accommodation}
                     />              
-                    {/* <AddParticipantToTournamentModal  show={this.state.addModalShow}
-                                                onHide={() => {
-                                                    this.setState({ addModalShow: false, selectedRowsIds: [] });
-                                                    this.crudTableRef.current.unselectAllRows();
-                                                    this.crudTableRef.current.fillTable();                                                    
-                                                }}
-                                                itemId={this.state.selectedRowsIds[0]}
-                                                eventId={this.props.id}
-                                                sayonaraMeeting={this.state.sayonaraMeeting}
-                    />  */}
+                    <AddParticipantToTournamentModal    show={this.state.addModalShow}
+                                                        onHide={() => {
+                                                            this.setState({ addModalShow: false, selectedRowsIds: [] });
+                                                            this.crudTableRef.current.unselectAllRows();
+                                                            this.crudTableRef.current.fillTable();                                                    
+                                                        }}
+                                                        itemId={this.state.selectedRowsIds[0]}
+                                                        eventId={this.props.id}
+                                                        sayonaraMeeting={this.state.sayonaraMeeting}
+                                                        accommodation={this.state.accommodation}
+                    /> 
                     <Accordion defaultActiveKey="0">
                     <Card>
                         {/* style={{backgroundColor: "#EAECEE"}} */}
