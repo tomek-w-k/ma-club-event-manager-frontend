@@ -25,6 +25,7 @@ import AddCamp from "./component/admin/camp/AddCamp";
 
 import Tournaments from "./component/admin/tournament/Tournaments";
 import Tournament from "./component/admin/tournament/Tournament";
+import AddTournament from "./component/admin/tournament/AddTournament";
 
 import Profile from "./component/Profile";
 import EventWall from "./component/EventWall";
@@ -103,6 +104,7 @@ class App extends Component
 
 			tournamentsComponentSelected: false,
 			tournamentComponentSelected: false,
+			addTournamentComponentSelected: false,
 
 			profileComponentSelected: false,
 			eventWallComponentSelected: false,
@@ -245,6 +247,11 @@ class App extends Component
 								<Button onClick={() => { this.tournamentRef.current.handleDeleteRegistration() }} variant="danger">Remove participant</Button>
 							</div>							
 						)}
+						{this.state.addTournamentComponentSelected && (
+							<div>
+								<Button href="/add_tournament_component" variant="secondary">Clear form</Button>							
+							</div>	
+						)}
 						{this.state.profileComponentSelected && (
 							<div>
 								<Button href="#" variant="danger">Remove my account</Button>
@@ -345,6 +352,13 @@ class App extends Component
 										{
 											this.deselectAllComponents();
 											this.setState({ tournamentComponentSelected: true });											
+										}
+									}} />)} />
+									<Route path="/add_tournament_component" render={(props) => (<AddTournament {...props} navbarControlsHandler={() => {
+										if ( !this.state.addTournamentComponentSelected )
+										{
+											this.deselectAllComponents();
+											this.setState({ addTournamentComponentSelected: true });
 										}
 									}} />)} />
 								</div>								
