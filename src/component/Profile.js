@@ -39,6 +39,12 @@ class Profile extends Component
                                     </td>
                                 </tr>
                                 <tr>
+                                    <td style={{paddingRight: "100px"}}>Session Id</td>
+                                    <td>
+                                        {currentUser.customSessionId}                                        
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td>Id</td>
                                     <td>{currentUser.id}</td>
                                 </tr>
