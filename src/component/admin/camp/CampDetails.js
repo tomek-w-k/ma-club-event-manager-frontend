@@ -42,6 +42,7 @@ class CampDetailsComponent extends Component
         };
         this.loadCampOptions = this.loadCampOptions.bind(this);
         this.handleEditEvent = this.handleEditEvent.bind(this);
+        this.refreshCampDetails = this.refreshCampDetails.bind(this);
         
         this.handleChangeFeeFields = this.handleChangeFeeFields.bind(this);        
         this.handleAddFeeField = this.handleAddFeeField.bind(this);
@@ -131,6 +132,11 @@ class CampDetailsComponent extends Component
             formValidated: true,
             errorMessage: "Please fill all required fields."
         });
+    }
+
+    refreshCampDetails()
+    {
+        this.loadCampOptions();
     }
 
     handleChangeFeeFields(index, event)

@@ -179,6 +179,7 @@ class CampRegistrations extends Component
                                                     this.setState({ editModalShow: false, selectedRowsIds: [] });
                                                     this.crudTableRef.current.unselectAllRows();
                                                     this.crudTableRef.current.fillTable();
+                                                    this.props.onRegistrationUpdate();
                                                 }}
                                                 itemId={this.state.selectedRowsIds[0]}
                                                 eventId={this.props.id}
