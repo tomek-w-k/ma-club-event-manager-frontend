@@ -14,6 +14,7 @@ import AuthService from "../../../service/auth-service";
 
 
 const CAMP_EVENTS_API_URL = "http://localhost:8081/camp_events";
+const CLOTHING_SIZES_API_URL = "http://localhost:8081/clothing_sizes";
 
 
 class CampDetailsComponent extends Component
@@ -36,8 +37,10 @@ class CampDetailsComponent extends Component
                 campRegistrations: []
             },
             errorMessage: null,
-            formValidated: false             
+            formValidated: false,
+            registrationsCountsForClothingTypes: []           
         };
+        this.loadCampOptions = this.loadCampOptions.bind(this);
         this.handleEditEvent = this.handleEditEvent.bind(this);
         
         this.handleChangeFeeFields = this.handleChangeFeeFields.bind(this);        
@@ -46,18 +49,36 @@ class CampDetailsComponent extends Component
 
         this.handleChangeClothingSizeFields = this.handleChangeClothingSizeFields.bind(this);
         this.handleAddClothingSizeField = this.handleAddClothingSizeField.bind(this);
-        this.handleRemoveClothingSizeField = this.handleRemoveClothingSizeField.bind(this);       
+        this.handleRemoveClothingSizeField = this.handleRemoveClothingSizeField.bind(this);
+        this.hasClothingSizeRegistrations = this.hasClothingSizeRegistrations.bind(this);
+    }
+
+    loadCampOptions()
+    {        
+        fetch(CAMP_EVENTS_API_URL + "/" + this.props.id)
+        .then(response => response.json())
+        .then(data => {
+            let clothingSizeUrls = data.clothingSizes.map(clothingSize => CLOTHING_SIZES_API_URL + "/" + clothingSize.id + "/camp_registrations");
+            let clothingSizeRequests = clothingSizeUrls.map(url => fetch(url));
+
+            Promise.all(clothingSizeRequests)
+            .then( responses => {                
+                let jsonResponses = responses.map(response => response.json());
+                return Promise.all(jsonResponses).then(data => data);
+            })
+            .then(counts => counts.map(count => count.clothingSizeCount))
+            .then(counts => {
+                this.setState({
+                    event: data,
+                    registrationsCountsForClothingTypes: counts
+                });                
+            });            
+        });        
     }
 
     componentDidMount()
     {
-        fetch(CAMP_EVENTS_API_URL + "/" + this.props.id)
-        .then(response => response.json())
-        .then(data => {
-            this.setState({
-                event: data,
-            });
-        });
+        this.loadCampOptions();
     }
 
     /*
@@ -158,6 +179,15 @@ class CampDetailsComponent extends Component
             clothingSizeFields.splice(index, 1);
             this.setState({ event: {...this.state.event, clothingSizes: clothingSizeFields} });            
         }
+    }
+
+    hasClothingSizeRegistrations(index)
+    {
+        let regCount = this.state.registrationsCountsForClothingTypes[index];
+        
+        if ( regCount !== null && regCount != 0 )
+            return true;
+        else return false;
     }
 
     render()
@@ -266,6 +296,7 @@ class CampDetailsComponent extends Component
                                                     <Col className="col-md-auto">
                                                         <Button variant="danger" 
                                                                 onClick={() => this.handleRemoveClothingSizeField(index)}
+                                                                disabled={this.hasClothingSizeRegistrations(index)}
                                                         >-</Button>
                                                     </Col>
                                                     <Col className="col-md-auto">
