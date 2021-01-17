@@ -45,8 +45,7 @@ class TournamentDetails extends Component
             formValidated: false,
             registrationsCountsForRoomTypes: [],
             registrationsCountsForStayPeriods: [],
-            registrationsCountsForWeightAgeCategories: [],
-            disableAccommodation: false
+            registrationsCountsForWeightAgeCategories: []            
         };
         this.loadTournamentOptions = this.loadTournamentOptions.bind(this);
         this.handleEditEvent = this.handleEditEvent.bind(this);
@@ -66,6 +65,8 @@ class TournamentDetails extends Component
         this.handleAddWeightAgeCategoryField = this.handleAddWeightAgeCategoryField.bind(this);
         this.handleRemoveWeightAgeCategoryField = this.handleRemoveWeightAgeCategoryField.bind(this);
         this.hasWeightAgeCategoryRegistrations = this.hasWeightAgeCategoryRegistrations.bind(this);
+
+        this.disableAccommodationCheckbox = this.disableAccommodationCheckbox.bind(this);
     }
 
     loadTournamentOptions()
@@ -230,13 +231,9 @@ class TournamentDetails extends Component
     { 
         let regCount = this.state.registrationsCountsForRoomTypes[index];
         
-        if ( regCount !== null && regCount != 0 )
-        {
-            if ( this.state.disableAccommodation == false )            
-                this.setState({ disableAccommodation: true });
+        if ( regCount !== null && regCount != 0 && regCount !== undefined )
             return true;
-        }
-        else return false;            
+        else return false;
     }
 
     handleChangeStayPeriodFields(index, event)
@@ -281,13 +278,9 @@ class TournamentDetails extends Component
     {
         let regCount = this.state.registrationsCountsForStayPeriods[index];
         
-        if ( regCount !== null && regCount != 0 )
-        {
-            if ( this.state.disableAccommodation == false )            
-                this.setState({ disableAccommodation: true });
-            return true;
-        }
-        else return false;
+        if ( regCount !== null && regCount != 0 && regCount !== undefined )
+            return true;        
+        else return false;           
     }
 
     handleChangeWeightAgeCategoryFields(index, event)
@@ -335,6 +328,23 @@ class TournamentDetails extends Component
         if ( regCount !== null && regCount != 0 )
             return true;
         else return false;
+    }
+
+    disableAccommodationCheckbox()
+    {        
+        let disableAccommodationCheckbox = false;
+        
+        this.state.registrationsCountsForRoomTypes.forEach((regCount) => {            
+            if ( regCount !== null && regCount != 0 ) 
+                disableAccommodationCheckbox = true;
+        });
+        
+        this.state.registrationsCountsForStayPeriods.forEach((regCount) => {            
+            if ( regCount !== null && regCount != 0 )
+                disableAccommodationCheckbox = true;
+        });
+
+        return disableAccommodationCheckbox;
     }
 
     render()
@@ -424,14 +434,14 @@ class TournamentDetails extends Component
                                                 name="accommodation"
                                                 style={{display: "flex", alignItems: "center"}}
                                                 checked={this.state.event.accommodation}
-                                                disabled={this.state.disableAccommodation}
+                                                disabled={this.disableAccommodationCheckbox()}
                                                 onChange={(e) => { 
                                                     if ( e.target.checked )
                                                         this.setState({ 
                                                             event: {...this.state.event, 
                                                                 accommodation: e.target.checked,
                                                                 roomTypes: [{ roomTypeName: "" }],
-                                                                stayPeriods: [{ stayPeriodName: "" }]
+                                                                stayPeriods: [{ stayPeriodName: "" }]                                                               
                                                             } 
                                                         });     
                                                     else 
@@ -439,7 +449,7 @@ class TournamentDetails extends Component
                                                             event: {...this.state.event, 
                                                                 accommodation: e.target.checked,
                                                                 roomTypes: [],
-                                                                stayPeriods: []
+                                                                stayPeriods: []                                                              
                                                             } 
                                                         });                                                    
                                                 }}
