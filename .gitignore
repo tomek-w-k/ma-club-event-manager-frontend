@@ -11,6 +11,9 @@
 # production
 /build
 
+# images
+/public/images
+
 # misc
 .DS_Store
 .env.local
@@ -23,3 +26,4 @@ yarn-debug.log*
 yarn-error.log*
 
 .eslintcache
+
