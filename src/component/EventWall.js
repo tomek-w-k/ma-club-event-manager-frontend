@@ -3,9 +3,10 @@ import ExamEventTile from "./ExamEventTile";
 import CampEventTile from "./CampEventTile";
 import TournamentEventTile from "./TournamentEventTile";
 import AuthService from "../service/auth-service";
+import * as Urls from "../servers-urls";
 
 
-const EVENTS_API_URL = "http://localhost:8081/events";
+const EVENTS_API_URL = Urls.WEBSERVICE_URL + "/events";
 
 
 class EventWall extends Component

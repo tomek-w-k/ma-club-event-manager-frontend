@@ -4,12 +4,12 @@ import {
     Button,    
 } from "react-bootstrap";
 import CampRegistrationOptionChooserModal from "./CampRegistrationOptionChooserModal";
-
 import AuthService from "../service/auth-service";
+import * as Urls from "../servers-urls";
 
 
 const currentUser = AuthService.getCurrentUser();
-const CAMP_REGISTRATION_API_URL = "http://localhost:8081/camp_registrations";
+const CAMP_REGISTRATION_API_URL = Urls.WEBSERVICE_URL + "/camp_registrations";
 
 
 class CampEventTile extends Component

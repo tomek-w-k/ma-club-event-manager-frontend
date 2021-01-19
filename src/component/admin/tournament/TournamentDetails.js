@@ -11,14 +11,15 @@ import {
 import Datetime from "react-datetime";
 import Dropzone from "../Dropzone";
 import AuthService from "../../../service/auth-service";
+import * as Urls from "../../../servers-urls";
 
 
 const currentUser = AuthService.getCurrentUser();
 
-const TOURNAMENT_EVENTS_API_URL = "http://localhost:8081/tournament_events";
-const ROOM_TYPES_API_URL = "http://localhost:8081/room_types";
-const STAY_PERIODS_API_URL = "http://localhost:8081/stay_periods";
-const WEIGHT_AGE_CATEGORIES_API_URL = "http://localhost:8081/weight_age_categories";
+const TOURNAMENT_EVENTS_API_URL = Urls.WEBSERVICE_URL + "/tournament_events";
+const ROOM_TYPES_API_URL = Urls.WEBSERVICE_URL + "/room_types";
+const STAY_PERIODS_API_URL = Urls.WEBSERVICE_URL + "/stay_periods";
+const WEIGHT_AGE_CATEGORIES_API_URL = Urls.WEBSERVICE_URL + "/weight_age_categories";
 
 
 class TournamentDetails extends Component
@@ -137,7 +138,7 @@ class TournamentDetails extends Component
         let formData = new FormData();
         formData.append("userTempDir", "/images/temp/" + currentUser.customSessionId);
 
-        fetch("http://localhost:4000/clear_temp_dir", {
+        fetch(Urls.EXPRESS_JS_URL + "/clear_temp_dir", {
             method: "DELETE",
             body: formData
         })
@@ -193,7 +194,7 @@ class TournamentDetails extends Component
                 formData.append("imageTempDir", imageTempDir);
                 formData.append("imageTargetDir", imageTargetDir);
 
-                fetch("http://localhost:4000/save_picture", {
+                fetch(Urls.EXPRESS_JS_URL + "/save_picture", {
                     method: "POST",
                     body: formData
                 })
@@ -417,7 +418,7 @@ class TournamentDetails extends Component
         formData.append("picture" , acceptedFiles[0]);
         formData.append("imageDir", imageDir);
 
-        fetch("http://localhost:4000/save_temp_picture", {
+        fetch(Urls.EXPRESS_JS_URL + "/save_temp_picture", {
             method: "POST",
             body: formData
         })

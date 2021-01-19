@@ -1,7 +1,6 @@
 import React, {Component, Fragment} from "react";
 import Card from "react-bootstrap/Card";
 import {MDBIcon, MDBContainer, MDBBtn} from "mdbreact";
-
 import AuthService from "../service/auth-service";
 
 

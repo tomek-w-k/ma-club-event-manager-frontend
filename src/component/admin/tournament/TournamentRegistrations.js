@@ -9,12 +9,12 @@ import { textFilter } from 'react-bootstrap-table2-filter';
 import {Check, SortUp, X} from "react-bootstrap-icons";
 import EditTournamentRegistrationModal from "./EditTournamentRegistrationModal";
 import AddParticipantToTournamentModal from "./AddParticipantToTournamentModal";
-
 import AuthService from "../../../service/auth-service";
+import * as Urls from "../../../servers-urls";
 
 
-const TOURNAMENT_REGISTRATIONS = "http://localhost:8081/tournament_registrations";
-const TOURNAMENT_EVENTS = "http://localhost:8081/tournament_events";
+const TOURNAMENT_REGISTRATIONS = Urls.WEBSERVICE_URL + "/tournament_registrations";
+const TOURNAMENT_EVENTS = Urls.WEBSERVICE_URL + "/tournament_events";
 
 const ColumnNames = Object.freeze({
     ID: 0,
@@ -204,7 +204,7 @@ class TournamentRegistrations extends Component
     render()
     {
         const currentUser = AuthService.getCurrentUser();
-        const TOURNAMENT_REGISTRATIONS_FOR_TOURNAMENT = "http://localhost:8081/tournament_events/" + this.props.id +"/tournament_registrations";
+        const TOURNAMENT_REGISTRATIONS_FOR_TOURNAMENT = Urls.WEBSERVICE_URL + "/tournament_events/" + this.props.id + "/tournament_registrations";
         
         return(            
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?

@@ -7,13 +7,13 @@ import {
     Container
     } from "react-bootstrap";
 import Select from "react-select";
-
 import AuthService from "../../../service/auth-service";
+import * as Urls from "../../../servers-urls";
 
 
 const currentUser = AuthService.getCurrentUser();
-const TOURNAMENT_REGISTRATIONS = "http://localhost:8081/tournament_registrations"; 
-const TOURNAMENT_EVENTS = "http://localhost:8081/tournament_events"; 
+const TOURNAMENT_REGISTRATIONS = Urls.WEBSERVICE_URL + "/tournament_registrations"; 
+const TOURNAMENT_EVENTS = Urls.WEBSERVICE_URL + "/tournament_events"; 
 
 
 class EditTournamentRegistrationModal extends Component

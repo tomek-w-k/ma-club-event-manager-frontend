@@ -9,11 +9,11 @@ import {
 } from "react-bootstrap";
 import "react-datetime/css/react-datetime.css";
 import Datetime from "react-datetime";
-
 import AuthService from "../../../service/auth-service";
+import * as Urls from "../../../servers-urls";
 
 
-const TOURNAMENT_EVENTS_API_URL = "http://localhost:8081/tournament_events";
+const TOURNAMENT_EVENTS_API_URL = Urls.WEBSERVICE_URL + "/tournament_events";
 
 
 class AddTournament extends Component

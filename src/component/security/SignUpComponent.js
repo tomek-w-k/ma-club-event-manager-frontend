@@ -4,11 +4,11 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import {isEmail} from "validator";
 import Card from "react-bootstrap/Card";
-
 import AuthService from "../../service/auth-service";
+import * as Urls from "../../servers-urls";
 
 
-const API_URL = "http://localhost:8081/auth/";
+const API_URL = Urls.WEBSERVICE_URL + "/auth/";
 
 const required = value => {
     if ( !value )

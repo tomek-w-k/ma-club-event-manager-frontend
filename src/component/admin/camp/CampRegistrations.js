@@ -9,12 +9,12 @@ import { textFilter } from 'react-bootstrap-table2-filter';
 import {Check, SortUp, X} from "react-bootstrap-icons";
 import EditCampRegistrationModal from "./EditCampRegistrationModal";
 import AddParticipantToCampModal from "./AddParticipantToCampModal";
-
 import AuthService from "../../../service/auth-service";
+import * as Urls from "../../../servers-urls";
 
 
-const CAMP_REGISTRATIONS = "http://localhost:8081/camp_registrations";
-const CAMP_EVENTS = "http://localhost:8081/camp_events";
+const CAMP_REGISTRATIONS = Urls.WEBSERVICE_URL + "/camp_registrations";
+const CAMP_EVENTS = Urls.WEBSERVICE_URL + "/camp_events";
 
 const columns = [
     {
@@ -168,7 +168,7 @@ class CampRegistrations extends Component
     render()
     {
         const currentUser = AuthService.getCurrentUser();
-        const CAMP_REGISTRATIONS_FOR_CAMP = "http://localhost:8081/camp_events/" + this.props.id +"/camp_registrations";
+        const CAMP_REGISTRATIONS_FOR_CAMP = Urls.WEBSERVICE_URL + "/camp_events/" + this.props.id + "/camp_registrations";
         
         return(            
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?

@@ -5,12 +5,12 @@ import {
     Col,
     Row
 } from "react-bootstrap";
-
 import AuthService from "../service/auth-service";
+import * as Urls from "../servers-urls";
 
 
 const currentUser = AuthService.getCurrentUser();
-const EXAM_REGISTRATION_API_URL = "http://localhost:8081/exam_registrations";
+const EXAM_REGISTRATION_API_URL = Urls.WEBSERVICE_URL + "/exam_registrations";
 
 
 class ExamEventTile extends Component

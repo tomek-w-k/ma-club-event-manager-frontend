@@ -8,12 +8,11 @@ import {
     Alert
 } from "react-bootstrap";
 import Datetime from "react-datetime";
-
-
 import AuthService from "../../../service/auth-service";
+import * as Urls from "../../../servers-urls";
 
 
-const EXAM_EVENTS_API_URL = "http://localhost:8081/exam_events";
+const EXAM_EVENTS_API_URL = Urls.WEBSERVICE_URL + "/exam_events";
 
 
 class ExamDetails extends Component

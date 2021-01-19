@@ -5,9 +5,10 @@ import {
     Button,
     Row
 } from "react-bootstrap";
+import * as Urls from "../../../servers-urls";
 
 
-const EXAM_REGISTRATIONS = "http://localhost:8081/exam_registrations"; 
+const EXAM_REGISTRATIONS = Urls.WEBSERVICE_URL + "/exam_registrations"; 
 
 
 class EditExamRegistrationModal extends Component

@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import TournamentDetails from "./TournamentDetails";
 import TournamentRegistrations from "./TournamentRegistrations";
-
 import AuthService from "../../../service/auth-service";
 
 

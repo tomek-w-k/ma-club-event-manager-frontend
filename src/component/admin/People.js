@@ -7,11 +7,11 @@ import {
     Button
 } from "react-bootstrap";
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
-
 import AuthService from "../../service/auth-service";
+import * as Urls from "../../servers-urls";
 
 
-const USERS_URL = "http://localhost:8081/users";
+const USERS_URL = Urls.WEBSERVICE_URL + "/users";
 
 const columns = [
     {

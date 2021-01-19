@@ -9,12 +9,12 @@ import {
     Alert
 } from "react-bootstrap";
 import Datetime from "react-datetime";
-
 import AuthService from "../../../service/auth-service";
+import * as Urls from "../../../servers-urls";
 
 
-const CAMP_EVENTS_API_URL = "http://localhost:8081/camp_events";
-const CLOTHING_SIZES_API_URL = "http://localhost:8081/clothing_sizes";
+const CAMP_EVENTS_API_URL = Urls.WEBSERVICE_URL + "/camp_events";
+const CLOTHING_SIZES_API_URL = Urls.WEBSERVICE_URL + "/clothing_sizes";
 
 
 class CampDetailsComponent extends Component

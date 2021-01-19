@@ -9,11 +9,11 @@ import {
 } from "react-bootstrap";
 import "react-datetime/css/react-datetime.css";
 import Datetime from "react-datetime";
-
 import AuthService from "../../../service/auth-service";
+import * as Urls from "../../../servers-urls";
 
 
-const CAMP_EVENTS_API_URL = "http://localhost:8081/camp_events";
+const CAMP_EVENTS_API_URL = Urls.WEBSERVICE_URL + "/camp_events";
 
 
 class AddCamp extends Component

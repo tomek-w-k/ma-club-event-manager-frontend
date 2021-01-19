@@ -1,7 +1,8 @@
 import axios from "axios";
+import * as Urls from "../servers-urls";
 
 
-const API_URL = "http://localhost:8081/auth/";
+const API_URL = Urls.WEBSERVICE_URL + "/auth/";
 
 
 class AuthService

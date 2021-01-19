@@ -3,7 +3,6 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import Card from "react-bootstrap/Card";
-
 import AuthService from "../../service/auth-service";
 
 

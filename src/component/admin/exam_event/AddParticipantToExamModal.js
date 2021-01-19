@@ -9,15 +9,15 @@ import {
 import Select from "react-select";
 import CrudTableComponent from "../../CrudTableComponent";
 import { textFilter } from 'react-bootstrap-table2-filter';
-
 import AuthService from "../../../service/auth-service";
+import * as Urls from "../../../servers-urls";
 
 
 const currentUser = AuthService.getCurrentUser();
-const EXAM_REGISTRATION_API_URL = "http://localhost:8081/exam_registrations";
-const USERS_API_URL = "http://localhost:8081/users";
-const EXAM_EVENTS = "http://localhost:8081/exam_events"; 
-const EXAM_REGISTRATIONS = "http://localhost:8081/exam_registrations"; 
+const EXAM_REGISTRATION_API_URL = Urls.WEBSERVICE_URL + "/exam_registrations";
+const USERS_API_URL = Urls.WEBSERVICE_URL + "/users";
+const EXAM_EVENTS = Urls.WEBSERVICE_URL + "/exam_events"; 
+const EXAM_REGISTRATIONS = Urls.WEBSERVICE_URL + "/exam_registrations"; 
 
 const columns = [
     {

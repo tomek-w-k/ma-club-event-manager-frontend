@@ -2,12 +2,12 @@ import React, {Component} from "react";
 import CrudTableComponent from "../../CrudTableComponent";
 import {Card} from "react-bootstrap";
 import {textFilter} from 'react-bootstrap-table2-filter';
-
 import AuthService from "../../../service/auth-service";
+import * as Urls from "../../../servers-urls";
 
 
-const CAMP_EVENTS_URL = "http://localhost:8081/camp_events";
-const EVENTS_API_URL = "http://localhost:8081/events";
+const CAMP_EVENTS_URL = Urls.WEBSERVICE_URL + "/camp_events";
+const EVENTS_API_URL = Urls.WEBSERVICE_URL + "/events";
 
 
 const columns = [

@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import ExamDetails from "./ExamDetails";
 import ExamRegistrations from "./ExamRegistrations";
 import ExamHelp from "./ExamHelp";
-
 import AuthService from "../../../service/auth-service";
 
 

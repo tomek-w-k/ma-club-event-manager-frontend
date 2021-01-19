@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import CampDetails from "./CampDetails";
 import CampRegistrations from "./CampRegistrations";
-
 import AuthService from "../../../service/auth-service";
 
 

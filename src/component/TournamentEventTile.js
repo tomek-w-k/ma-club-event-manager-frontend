@@ -4,12 +4,12 @@ import {
     Button,    
 } from "react-bootstrap";
 import TournamentRegistrationOptionChooserModal from "./TournamentRegistrationOptionChooserModal";
-
 import AuthService from "../service/auth-service";
+import * as Urls from "../servers-urls";
 
 
 const currentUser = AuthService.getCurrentUser();
-const TOURNAMENT_REGISTRATION_API_URL = "http://localhost:8081/tournament_registrations";
+const TOURNAMENT_REGISTRATION_API_URL = Urls.WEBSERVICE_URL + "/tournament_registrations";
 
 
 class TournamentEventTile extends Component

@@ -9,12 +9,12 @@ import { textFilter } from 'react-bootstrap-table2-filter';
 import {Check, X} from "react-bootstrap-icons";
 import EditExamRegistrationModal from "./EditExamRegistrationModal";
 import AddParticipantToExamModal from "./AddParticipantToExamModal";
-
 import AuthService from "../../../service/auth-service";
+import * as Urls from "../../../servers-urls";
 
 
-const EXAM_REGISTRATIONS = "http://localhost:8081/exam_registrations";
-const EXAM_EVENTS = "http://localhost:8081/exam_events";
+const EXAM_REGISTRATIONS = Urls.WEBSERVICE_URL + "/exam_registrations";
+const EXAM_EVENTS = Urls.WEBSERVICE_URL + "/exam_events";
 
 const columns = [
     {
@@ -133,7 +133,7 @@ class ExamRegistrations extends Component
     render()
     {
         const currentUser = AuthService.getCurrentUser();
-        const EXAM_REGISTRATIONS_FOR_EXAM = "http://localhost:8081/exam_events/" + this.props.id +"/exam_registrations";
+        const EXAM_REGISTRATIONS_FOR_EXAM = Urls.WEBSERVICE_URL + "/exam_events/" + this.props.id + "/exam_registrations";
 
         return(            
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
