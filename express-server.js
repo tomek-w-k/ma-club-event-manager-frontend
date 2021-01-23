@@ -56,10 +56,7 @@ app.post("/save_temp_picture", (req, res) => {
             });           
         }
     }
-    catch(e) 
-    {
-        res.status(500).send(e);
-    }
+    catch(e) { res.status(500).send(e) }
 });
 
 app.post("/save_picture", (req, res) => {
@@ -78,8 +75,7 @@ app.post("/save_picture", (req, res) => {
             const targetPath = path.join(process.cwd(), publicDir, imageTargetDir);
             
             if ( imageTempDir != "" )
-            {
-                console.log("temp dir :: ", imageTempDir);
+            {                
                 removeDir(targetPath);            
                 fs.mkdirSync(path.join(process.cwd(), publicDir, imageTargetDir), {recursive: true});
                 fs.copyFileSync(path.join(process.cwd(), publicDir, imageTempDir, imageName),
@@ -92,13 +88,44 @@ app.post("/save_picture", (req, res) => {
             });
         }
     }
-    catch(e)
-    {
-        res.status(500).send(e);
-    }
+    catch(e) { res.status(500).send(e) }
 });
 
-app.delete("/clear_temp_dir", (req, res) => {
+app.post("/save_rt_picture", (req, res) => {
+    try
+    {
+        if(!req.body || !req.files)
+            res.send({
+                status: false,
+                message: "No request content"
+            });
+        else
+        {
+            const {picture} = req.files;            
+            const {imageTargetDir} = req.body;
+            const targetPath = path.join(process.cwd(), publicDir, imageTargetDir);
+            
+            picture.mv(path.join(targetPath + picture.name));
+        
+            res.send({
+                status: true,                
+                imageUrl: imageTargetDir + picture.name
+            });    
+        }
+    }
+    catch(e) { res.status(500).send(e) }
+});
+
+app.get("/get_rt_picture/:tournamentId/:imageName", (req, res) => {       
+    try
+    {        
+        const targetPath = path.join(process.cwd(), publicDir, "images/tournaments", req.params.tournamentId, "room_types_pictures", req.params.imageName  );                
+        res.sendFile(targetPath);
+    }
+    catch(e) { res.status(500).send(e) }
+});
+
+app.delete("/clear_rt_dir", (req, res) => {
     try
     {
         if(!req.body)
@@ -108,19 +135,40 @@ app.delete("/clear_temp_dir", (req, res) => {
         });
         else
         {
-            const {userTempDir} = req.body;
-            if(fs.existsSync(path.join(process.cwd(), publicDir, userTempDir)))
+            const {imageTargetDir} = req.body;
+            const targetPath = path.join(process.cwd(), publicDir, imageTargetDir);
+
+            if(fs.existsSync(targetPath))
             {
-                removeDir(path.join(process.cwd(), publicDir, userTempDir));
+                removeDir(targetPath);
                 res.status(200).send("Directory removed successfully.");
             }
             else res.status(200).send("Directory not exist.");                
-        }
+        } 
     }
-    catch(e)
+    catch(e) { res.status(500).send(e) }    
+});
+
+app.delete("/clear_dir", (req, res) => {
+    try
     {
-        res.status(500).send(e);
-    }    
+        if(!req.body)
+        res.send({
+            status: false,
+            message: "No request body"
+        });
+        else
+        {
+            const {dir} = req.body;
+            if(fs.existsSync(path.join(process.cwd(), publicDir, dir)))
+            {
+                removeDir(path.join(process.cwd(), publicDir, dir));
+                res.status(200).send("Directory removed successfully.");
+            }
+            else res.status(200).send("Directory not exist.");                
+        } 
+    }
+    catch(e) { res.status(500).send(e) }    
 });
 
 const port = 4000;

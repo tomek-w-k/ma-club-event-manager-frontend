@@ -84,6 +84,15 @@ class Tournaments extends Component
                 }
             })
             .then(result => {
+                let formData = new FormData();
+                formData.append("dir", "/images/tournaments/" + this.state.selectedRowsIds[0]);
+
+                fetch(Urls.EXPRESS_JS_URL + "/clear_dir", {
+                    method: "DELETE",
+                    body: formData
+                })
+                .then(() => { console.log("Image directory removed.") });
+
                 this.setState({ selectedRowsIds: [] });
                 this.crudTableRef.current.unselectAllRows();
                 this.crudTableRef.current.fillTable();

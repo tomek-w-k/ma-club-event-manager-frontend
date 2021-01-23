@@ -12,6 +12,7 @@ import Datetime from "react-datetime";
 import Dropzone from "../Dropzone";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
+import { createWriteStream } from "fs";
 
 
 const currentUser = AuthService.getCurrentUser();
@@ -48,7 +49,8 @@ class TournamentDetails extends Component
             registrationsCountsForRoomTypes: [],
             registrationsCountsForStayPeriods: [],
             registrationsCountsForWeightAgeCategories: [],
-            eventTempPicturePath: ""          
+            eventTempPicturePath: "",
+            rtTempPictures: []         
         };
         this.loadTournamentOptions = this.loadTournamentOptions.bind(this);
         this.clearTempImageDirectory = this.clearTempImageDirectory.bind(this);
@@ -73,6 +75,8 @@ class TournamentDetails extends Component
         this.disableAccommodationCheckbox = this.disableAccommodationCheckbox.bind(this);
 
         this.onDrop = this.onDrop.bind(this);
+        this.handleRemoveRoomTypePicture = this.handleRemoveRoomTypePicture.bind(this);
+
     }
 
     loadTournamentOptions()
@@ -120,6 +124,31 @@ class TournamentDetails extends Component
             .then(counts => counts.map(count => count.weightAgeCategoryCount));            
             allCounts.push(wacCount);
             
+            let rtTempPicturesRequests = data.roomTypes.map(rt => {                
+                let imageName = rt.roomTypePicturePath ? rt.roomTypePicturePath.split('\\').pop().split('/').pop() : "";                 
+                let url = Urls.EXPRESS_JS_URL + "/get_rt_picture/" + data.id + "/" + imageName;                
+                return fetch(url);
+            });
+
+            Promise.all(rtTempPicturesRequests)
+            .then(responses => responses.map(response => response.blob()))
+            .then(blobPromises => {
+                Promise.all(blobPromises)
+                .then(blobs => {
+                    return blobs.map((blob, index) => {
+                        let fileName = data.roomTypes[index].roomTypePicturePath ? data.roomTypes[index].roomTypePicturePath.split('\\').pop().split('/').pop() : "";
+                        let file = new File([blob], fileName, {type:"image/jpeg", lastModified:new Date()});                        
+                        return {
+                            file: file,
+                            name: fileName
+                        };
+                    });                    
+                })
+                .then(fileWithNameObjects => {                    
+                    this.setState({ rtTempPictures: fileWithNameObjects });
+                });
+            });
+                        
             Promise.all(allCounts)
             .then(allCounts => { return Object.assign({}, allCounts) })
             .then(allCounts => {                
@@ -136,15 +165,18 @@ class TournamentDetails extends Component
     clearTempImageDirectory()
     {
         let formData = new FormData();
-        formData.append("userTempDir", "/images/temp/" + currentUser.customSessionId);
+        formData.append("dir", "/images/temp/" + currentUser.customSessionId);
 
-        fetch(Urls.EXPRESS_JS_URL + "/clear_temp_dir", {
+        fetch(Urls.EXPRESS_JS_URL + "/clear_dir", {
             method: "DELETE",
             body: formData
         })
         .then(result => {
             if(result.ok)
-                this.setState({ eventTempPicturePath: "" });
+                this.setState({ 
+                    eventTempPicturePath: "",
+                    rtTempPictures: []
+                });
         });
     }
 
@@ -173,72 +205,93 @@ class TournamentDetails extends Component
         if ( e.currentTarget.checkValidity() )
         {
             this.setState({ formValidated: true });
+            let tournamentEvent = {...this.state.event};
 
             fetch(TOURNAMENT_EVENTS_API_URL + "/" + this.props.id + "/tournament_registrations")
             .then(response => response.json())
-            .then(data => {                            
-                let imageName = "";
-                if(this.state.eventTempPicturePath != "")
-                    imageName = this.state.eventTempPicturePath.split('\\').pop().split('/').pop();
-                else
-                    imageName = this.state.event.eventPicturePath.split('\\').pop().split('/').pop();
+            .then(data => {
+                tournamentEvent = {...tournamentEvent, tournamentRegistrations: data};
 
-                let imageTempDir = "";
-                if(this.state.eventTempPicturePath != "")
-                    imageTempDir = this.state.eventTempPicturePath.replace(imageName, "");
-                
-                let imageTargetDir = "/images/tournaments/" + this.state.event.id + "/event_picture/";
+                // - - - save pictures of room types - - - 
+                let rtImagesDir = "/images/tournaments/" + tournamentEvent.id + "/room_types_pictures/"; 
 
                 let formData = new FormData();
-                formData.append("imageName", imageName);
-                formData.append("imageTempDir", imageTempDir);
-                formData.append("imageTargetDir", imageTargetDir);
-
-                fetch(Urls.EXPRESS_JS_URL + "/save_picture", {
-                    method: "POST",
+                formData.append("imageTargetDir", rtImagesDir);
+                fetch(Urls.EXPRESS_JS_URL + "/clear_rt_dir", {
+                    method: "DELETE",
                     body: formData
                 })
-                .then(response => response.json())
-                .then(response => {                    
-                    this.setState(state => (
-                        { event: {...state.event, eventPicturePath: response.imageUrl, tournamentRegistrations: data} }
-                    ),
-                    () => {
-                        fetch(TOURNAMENT_EVENTS_API_URL, {
-                            method: "PUT",
-                            headers: {
-                                "Accept": "application/json",
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify( {...this.state.event, startDate: e.target.startDate.value, endDate: e.target.endDate.value} )            
-                        })                                      
-                        .then(result => {
-                            return new Promise((resolve, reject) => {
-                                if(result.ok)
-                                    resolve();                            
-                                else reject(result);
-                            })
-                        },
-                        error => { this.setState({ errorMessage: "Error: Event not updated." }) })
-                        .then( msg => {
-                            this.props.onTournamentUpdate();
-                        },
-                        error => {
-                            error.json()
-                            .then(text => {                            
-                                this.setState({ errorMessage: text.message })
-                            })
-                        }); 
+                .then(() => {
+                    let rtPicturesRequests = tournamentEvent.roomTypes.map((roomType, index) => {
+                        let formData = new FormData();
+                        formData.append("picture", this.state.rtTempPictures[index].file);                    
+                        formData.append("imageTargetDir", rtImagesDir);
+                        
+                        return fetch(Urls.EXPRESS_JS_URL + "/save_rt_picture", {
+                            method: "POST",
+                            body: formData
+                        });
                     });
-                    return response;
-                })
-                .then(response => {
-                    this.clearTempImageDirectory();
-                    return response;
-                })
-                .catch(error => {
-                    console.log("er :: ", error);
-                });
+
+                    Promise.all(rtPicturesRequests)
+                    .then(() => {                                                                        
+                        return tournamentEvent.roomTypes.map((roomType, index) => {
+                            return {...roomType, roomTypePicturePath: this.state.rtTempPictures[index].name ? rtImagesDir + this.state.rtTempPictures[index].name : ""}
+                        });  
+                    })
+                    .then(roomTypes => {
+                        tournamentEvent = {...tournamentEvent, roomTypes: roomTypes};
+
+                        // - - - save main event picture - - - 
+                        let imageName = "";
+                        if(this.state.eventTempPicturePath != "")
+                            imageName = this.state.eventTempPicturePath.split('\\').pop().split('/').pop();
+                        else
+                            imageName = tournamentEvent.eventPicturePath.split('\\').pop().split('/').pop();
+
+                        let imageTempDir = "";
+                        if(this.state.eventTempPicturePath != "")
+                            imageTempDir = this.state.eventTempPicturePath.replace(imageName, "");
+                        
+                        let imageTargetDir = "/images/tournaments/" + tournamentEvent.id + "/event_picture/";
+
+                        formData = new FormData();
+                        formData.append("imageName", imageName);
+                        formData.append("imageTempDir", imageTempDir);
+                        formData.append("imageTargetDir", imageTargetDir);
+
+                        fetch(Urls.EXPRESS_JS_URL + "/save_picture", {
+                            method: "POST",
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(response => {
+                            tournamentEvent = {...tournamentEvent, eventPicturePath: response.imageUrl};                  
+                            
+                            // - - - save tournament - - -                             
+                            fetch(TOURNAMENT_EVENTS_API_URL, {
+                                method: "PUT",
+                                headers: {
+                                    "Accept": "application/json",
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify( {...tournamentEvent, startDate: e.target.startDate.value, endDate: e.target.endDate.value} )            
+                            })                                      
+                            .then(result => {
+                                return new Promise((resolve, reject) => {
+                                    if(result.ok)
+                                        resolve();                            
+                                    else reject(result);
+                                })
+                            },
+                            error => { this.setState({ errorMessage: "Error: Event not updated." }) })
+                            .then( msg => { this.props.onTournamentUpdate() },
+                            error => { error.json().then(text => { this.setState({ errorMessage: text.message }) }) });                    
+                            return response;
+                        })
+                        .then(() => this.clearTempImageDirectory() )
+                    });                  
+                });             
             });
         }
         else this.setState({ 
@@ -267,9 +320,13 @@ class TournamentDetails extends Component
         const rtRegCounts = [...this.state.registrationsCountsForRoomTypes];
         rtRegCounts.splice(index+1, 0, null);
 
+        const rtTempPictures = [...this.state.rtTempPictures];
+        rtTempPictures.splice(index+1, 0, "");
+
         this.setState({ 
             event: {...this.state.event, roomTypes: roomTypeFields},
-            registrationsCountsForRoomTypes: rtRegCounts
+            registrationsCountsForRoomTypes: rtRegCounts,
+            rtTempPictures: rtTempPictures
         });        
     }
 
@@ -283,9 +340,13 @@ class TournamentDetails extends Component
             const rtRegCounts = [...this.state.registrationsCountsForRoomTypes];
             rtRegCounts.splice(index, 1);
 
+            const rtTempPictures = [...this.state.rtTempPictures];
+            rtTempPictures.splice(index, 1);
+
             this.setState({ 
                 event: {...this.state.event, roomTypes: roomTypeFields},
-                registrationsCountsForRoomTypes: rtRegCounts
+                registrationsCountsForRoomTypes: rtRegCounts,
+                rtTempPictures: rtTempPictures
             });            
         }
     }
@@ -431,9 +492,35 @@ class TournamentDetails extends Component
         });
     }
 
+    onDropRoomTypePicture(index, acceptedFiles)
+    {   
+        let rtTempPictures = [...this.state.rtTempPictures];             
+        rtTempPictures[index] = {
+            file: acceptedFiles[0],
+            name: acceptedFiles[0].name
+        };
+
+        this.setState({ rtTempPictures: rtTempPictures });
+    }
+
+    handleRemoveRoomTypePicture(index)
+    {
+        let rtTempPictures = [...this.state.rtTempPictures];
+        let roomTypes = [...this.state.event.roomTypes];
+        
+        rtTempPictures[index] = "";
+        roomTypes[index].roomTypePicturePath = "";
+
+        this.setState(state => ({ 
+            event: {...state.event, roomTypes: roomTypes},
+            rtTempPictures: rtTempPictures
+        }));
+    }
+
     render()
     {                
         const roomTypes = [...this.state.event.roomTypes];
+        const rtImageSize = "300px";      
 
         return( 
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
@@ -497,17 +584,16 @@ class TournamentDetails extends Component
                                             onChange={(e) => { this.setState({ event: {...this.state.event, eventDescription: e.target.value} }) }}
                                         />
                                     </Form.Group>
-
-
-
                                     <Form.Group>
                                         <Card>
-                                            <Dropzone onDrop={this.onDrop} accept={"image/*"} imagePath={this.state.event.eventPicturePath}  />                                            
+                                            <Dropzone   onDrop={this.onDrop} 
+                                                        accept={"image/*"} 
+                                                        imagePath={this.state.event.eventPicturePath}
+                                                        mw="640px"
+                                                        mh="480px"
+                                            />                                            
                                         </Card>
                                     </Form.Group>
-
-
-
                                     <Form.Group>
                                         <Form.Control                                             
                                             type="text"
@@ -516,8 +602,6 @@ class TournamentDetails extends Component
                                             onChange={(e) => { this.setState({ event: {...this.state.event, eventPicturePath: e.target.value} }) }}
                                         />
                                     </Form.Group>
-
-
                                     <Form.Group >
                                         <Row>
                                             <Form.Label column sm="2">Sayonara meeting</Form.Label>
@@ -544,8 +628,8 @@ class TournamentDetails extends Component
                                                         this.setState({ 
                                                             event: {...this.state.event, 
                                                                 accommodation: e.target.checked,
-                                                                roomTypes: [{ roomTypeName: "" }],
-                                                                stayPeriods: [{ stayPeriodName: "" }]                                                               
+                                                                roomTypes: [{ roomTypeName: "", roomTypePicturePath: "" }],
+                                                                stayPeriods: [{ stayPeriodName: "" }]
                                                             } 
                                                         });     
                                                     else 
@@ -553,8 +637,9 @@ class TournamentDetails extends Component
                                                             event: {...this.state.event, 
                                                                 accommodation: e.target.checked,
                                                                 roomTypes: [],
-                                                                stayPeriods: []                                                              
-                                                            } 
+                                                                stayPeriods: []
+                                                            },
+                                                            rtTempPictures: [] 
                                                         });                                                    
                                                 }}
                                             />
@@ -565,18 +650,43 @@ class TournamentDetails extends Component
                                             <Form.Row>
                                                 <Col><Form.Label>Room types</Form.Label></Col>
                                             </Form.Row>
-                                            {   
+                                            {
                                                 roomTypes.map( (roomTypeInputField, index) => (
                                                     <div key={index}>
                                                         <Form.Row>
+                                                            <Col className="col-md-auto col">
+                                                                <Form.Group >
+                                                                    <Card >
+                                                                        <Dropzone   onDrop={this.onDropRoomTypePicture.bind(this, index)} 
+                                                                                    accept={"image/*"} 
+                                                                                    imagePath={
+                                                                                        this.state.rtTempPictures[index] ? 
+                                                                                        URL.createObjectURL(this.state.rtTempPictures[index].file) : ""
+                                                                                    }
+                                                                                    mw={rtImageSize}
+                                                                                    mh={rtImageSize}
+                                                                        />
+                                                                    </Card>
+                                                                </Form.Group>
+                                                            </Col>
                                                             <Col>
                                                                 <Form.Control required
-                                                                    type="text" 
+                                                                    //type="text" 
+                                                                    as="textarea"
                                                                     name="roomTypeName" 
                                                                     value={roomTypeInputField.roomTypeName} 
                                                                     onChange={event => this.handleChangeRoomTypeFields(index, event)}
                                                                     style={{marginBottom: "10px"}}
                                                                 />
+                                                                <Form.Control                                             
+                                                                    type="text"
+                                                                    name="roomTypePicturePath"
+                                                                    value={roomTypeInputField.roomTypePicturePath}
+                                                                    onChange={event => this.handleChangeRoomTypeFields(index, event)}
+                                                                />
+                                                                <Button variant="danger" 
+                                                                        onClick={() => this.handleRemoveRoomTypePicture(index)}                                                                        
+                                                                >Remove image</Button>
                                                             </Col>                                                                                                           
                                                             <Col className="col-md-auto">
                                                                 <Button variant="danger" 
