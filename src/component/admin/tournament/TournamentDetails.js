@@ -48,12 +48,11 @@ class TournamentDetails extends Component
             formValidated: false,
             registrationsCountsForRoomTypes: [],
             registrationsCountsForStayPeriods: [],
-            registrationsCountsForWeightAgeCategories: [],
-            eventTempPicturePath: "",
+            registrationsCountsForWeightAgeCategories: [],            
+            eventTempPicture: "",
             rtTempPictures: []         
         };
-        this.loadTournamentOptions = this.loadTournamentOptions.bind(this);
-        this.clearTempImageDirectory = this.clearTempImageDirectory.bind(this);
+        this.loadTournamentOptions = this.loadTournamentOptions.bind(this);        
         this.handleEditEvent = this.handleEditEvent.bind(this);
         this.refreshTournamentDetails = this.refreshTournamentDetails.bind(this);
         
@@ -74,7 +73,7 @@ class TournamentDetails extends Component
 
         this.disableAccommodationCheckbox = this.disableAccommodationCheckbox.bind(this);
 
-        this.onDrop = this.onDrop.bind(this);
+        this.onDropEventPicture = this.onDropEventPicture.bind(this);
         this.handleRemoveRoomTypePicture = this.handleRemoveRoomTypePicture.bind(this);
 
     }
@@ -124,6 +123,7 @@ class TournamentDetails extends Component
             .then(counts => counts.map(count => count.weightAgeCategoryCount));            
             allCounts.push(wacCount);
             
+            // - - - Get pictures for Room Types - - - 
             let rtTempPicturesRequests = data.roomTypes.map(rt => {                
                 let imageName = rt.roomTypePicturePath ? rt.roomTypePicturePath.split('\\').pop().split('/').pop() : "";                 
                 let url = Urls.EXPRESS_JS_URL + "/get_rt_picture/" + data.id + "/" + imageName;                
@@ -148,7 +148,26 @@ class TournamentDetails extends Component
                     this.setState({ rtTempPictures: fileWithNameObjects });
                 });
             });
-                        
+
+            // - - - Get event picture - - - 
+            let eventPictureName = data.eventPicturePath ? data.eventPicturePath.split('\\').pop().split('/').pop() : "";
+            let getTournamentPictureUrl = Urls.EXPRESS_JS_URL + "/get_tournament_picture/" + data.id + "/" + eventPictureName;
+
+            fetch(getTournamentPictureUrl)
+            .then(response => response.blob())
+            .then(blob => {
+                let fileName = data.eventPicturePath ? data.eventPicturePath.split('\\').pop().split('/').pop() : "";
+                let file = new File([blob], fileName, {type:"image/jpeg", lastModified:new Date()});
+                return {
+                    file: file,
+                    name: fileName
+                };
+            })
+            .then(fileWithNameObject => {
+                this.setState({ eventTempPicture: fileWithNameObject });
+            });
+            
+            // - - - Set loaded tournament in state - - -
             Promise.all(allCounts)
             .then(allCounts => { return Object.assign({}, allCounts) })
             .then(allCounts => {                
@@ -162,37 +181,14 @@ class TournamentDetails extends Component
         });        
     }
 
-    clearTempImageDirectory()
-    {
-        let formData = new FormData();
-        formData.append("dir", "/images/temp/" + currentUser.customSessionId);
-
-        fetch(Urls.EXPRESS_JS_URL + "/clear_dir", {
-            method: "DELETE",
-            body: formData
-        })
-        .then(result => {
-            if(result.ok)
-                this.setState({ 
-                    eventTempPicturePath: "",
-                    rtTempPictures: []
-                });
-        });
-    }
-
     componentDidMount()
     {
         this.loadTournamentOptions();
 
-        window.addEventListener("beforeunload", event => {
-            //event.preventDefault();            
-            this.clearTempImageDirectory();            
-        });
-    }
-
-    componentWillUnmount()
-    {
-        this.clearTempImageDirectory();
+        // window.addEventListener("beforeunload", event => {
+        //     //event.preventDefault();            
+        //     this.clearTempImageDirectory();            
+        // });
     }
 
     /*
@@ -243,31 +239,19 @@ class TournamentDetails extends Component
                         tournamentEvent = {...tournamentEvent, roomTypes: roomTypes};
 
                         // - - - save main event picture - - - 
-                        let imageName = "";
-                        if(this.state.eventTempPicturePath != "")
-                            imageName = this.state.eventTempPicturePath.split('\\').pop().split('/').pop();
-                        else
-                            imageName = tournamentEvent.eventPicturePath.split('\\').pop().split('/').pop();
-
-                        let imageTempDir = "";
-                        if(this.state.eventTempPicturePath != "")
-                            imageTempDir = this.state.eventTempPicturePath.replace(imageName, "");
-                        
                         let imageTargetDir = "/images/tournaments/" + tournamentEvent.id + "/event_picture/";
-
-                        formData = new FormData();
-                        formData.append("imageName", imageName);
-                        formData.append("imageTempDir", imageTempDir);
+                        let formData = new FormData();
+                        formData.append("picture", this.state.eventTempPicture.file);
                         formData.append("imageTargetDir", imageTargetDir);
 
-                        fetch(Urls.EXPRESS_JS_URL + "/save_picture", {
+                        fetch(Urls.EXPRESS_JS_URL + "/save_event_picture", {
                             method: "POST",
                             body: formData
                         })
                         .then(response => response.json())
-                        .then(response => {
-                            tournamentEvent = {...tournamentEvent, eventPicturePath: response.imageUrl};                  
-                            
+                        .then(response => {                                           
+                            tournamentEvent = {...tournamentEvent, eventPicturePath: this.state.eventTempPicture.name ? imageTargetDir + this.state.eventTempPicture.name : "" }
+
                             // - - - save tournament - - -                             
                             fetch(TOURNAMENT_EVENTS_API_URL, {
                                 method: "PUT",
@@ -288,8 +272,7 @@ class TournamentDetails extends Component
                             .then( msg => { this.props.onTournamentUpdate() },
                             error => { error.json().then(text => { this.setState({ errorMessage: text.message }) }) });                    
                             return response;
-                        })
-                        .then(() => this.clearTempImageDirectory() )
+                        });                        
                     });                  
                 });             
             });
@@ -471,24 +454,13 @@ class TournamentDetails extends Component
         return disableAccommodationCheckbox;
     }
 
-    onDrop(acceptedFiles)
+    onDropEventPicture(acceptedFiles)
     {
-        let imageDir = "/images/temp/" + currentUser.customSessionId + "/tournament_details/";
-
-        let formData = new FormData();
-        formData.append("picture" , acceptedFiles[0]);
-        formData.append("imageDir", imageDir);
-
-        fetch(Urls.EXPRESS_JS_URL + "/save_temp_picture", {
-            method: "POST",
-            body: formData
-        })
-        .then(response => response.json())
-        .then(response => {
-            this.setState(state => ({ 
-                event: {...state.event, eventPicturePath: response.imageUrl},
-                eventTempPicturePath: response.imageUrl
-            }));            
+        this.setState({
+            eventTempPicture: {
+                file: acceptedFiles[0],
+                name: acceptedFiles[0].name
+            }
         });
     }
 
@@ -586,9 +558,12 @@ class TournamentDetails extends Component
                                     </Form.Group>
                                     <Form.Group>
                                         <Card>
-                                            <Dropzone   onDrop={this.onDrop} 
+                                            <Dropzone   onDrop={this.onDropEventPicture} 
                                                         accept={"image/*"} 
-                                                        imagePath={this.state.event.eventPicturePath}
+                                                        imagePath={
+                                                            this.state.eventTempPicture ? 
+                                                            URL.createObjectURL(this.state.eventTempPicture.file) : ""
+                                                        }
                                                         mw="640px"
                                                         mh="480px"
                                             />                                            

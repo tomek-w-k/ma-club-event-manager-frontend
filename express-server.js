@@ -36,61 +36,6 @@ const removeDir = path => {
     else console.log("Directory path not exist.");
 }
 
-app.post("/save_temp_picture", (req, res) => {
-    try 
-    {
-        if(!req.files)
-            res.send({
-                status: false,
-                message: "No files"
-            })        
-        else 
-        {            
-            const {picture} = req.files;
-            const {imageDir} = req.body;            
-            picture.mv(process.cwd() + publicDir + imageDir + picture.name);
-        
-            res.send({
-                status: true,                
-                imageUrl: imageDir + picture.name
-            });           
-        }
-    }
-    catch(e) { res.status(500).send(e) }
-});
-
-app.post("/save_picture", (req, res) => {
-    try
-    {
-        if(!req.body)
-            res.send({
-                status: false,
-                message: "No request body"
-            });
-        else
-        {
-            const {imageName} = req.body;
-            const {imageTempDir} = req.body;
-            const {imageTargetDir} = req.body;            
-            const targetPath = path.join(process.cwd(), publicDir, imageTargetDir);
-            
-            if ( imageTempDir != "" )
-            {                
-                removeDir(targetPath);            
-                fs.mkdirSync(path.join(process.cwd(), publicDir, imageTargetDir), {recursive: true});
-                fs.copyFileSync(path.join(process.cwd(), publicDir, imageTempDir, imageName),
-                                path.join(process.cwd(), publicDir, imageTargetDir, imageName));            
-            }            
-            
-            res.send({
-                status: true,
-                imageUrl: imageTargetDir + imageName
-            });
-        }
-    }
-    catch(e) { res.status(500).send(e) }
-});
-
 app.post("/save_rt_picture", (req, res) => {
     try
     {
@@ -116,10 +61,48 @@ app.post("/save_rt_picture", (req, res) => {
     catch(e) { res.status(500).send(e) }
 });
 
+app.post("/save_event_picture", (req, res) => {
+    try
+    {
+        if(!req.body || !req.files)
+            res.send({
+                status: false,
+                message: "No request content"
+            });
+        else
+        {
+            const {picture} = req.files;            
+            const {imageTargetDir} = req.body;
+            const targetPath = path.join(process.cwd(), publicDir, imageTargetDir);
+            
+            if(fs.existsSync(targetPath))            
+                removeDir(targetPath);
+
+            picture.mv(path.join(targetPath + picture.name));
+        
+            res.send({
+                status: true,                
+                imageUrl: imageTargetDir + picture.name
+            });    
+        }
+    }
+    catch(e) { res.status(500).send(e) }
+});
+
+
 app.get("/get_rt_picture/:tournamentId/:imageName", (req, res) => {       
     try
     {        
         const targetPath = path.join(process.cwd(), publicDir, "images/tournaments", req.params.tournamentId, "room_types_pictures", req.params.imageName  );                
+        res.sendFile(targetPath);
+    }
+    catch(e) { res.status(500).send(e) }
+});
+
+app.get("/get_tournament_picture/:tournamentId/:imageName", (req, res) => {       
+    try
+    {        
+        const targetPath = path.join(process.cwd(), publicDir, "images/tournaments", req.params.tournamentId, "event_picture", req.params.imageName  );                
         res.sendFile(targetPath);
     }
     catch(e) { res.status(500).send(e) }
