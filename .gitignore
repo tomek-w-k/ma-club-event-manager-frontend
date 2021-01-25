@@ -14,6 +14,9 @@
 # images
 /public/images
 
+# club documents
+/public/club_documents
+
 # misc
 .DS_Store
 .env.local

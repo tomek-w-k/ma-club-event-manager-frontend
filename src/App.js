@@ -27,8 +27,13 @@ import Tournaments from "./component/admin/tournament/Tournaments";
 import Tournament from "./component/admin/tournament/Tournament";
 import AddTournament from "./component/admin/tournament/AddTournament";
 
+import ClubDocuments from "./component/admin/club_document/ClubDocuments";
+import ClubDocument from "./component/admin/club_document/ClubDocument";
+import AddClubDocument from "./component/admin/club_document/AddClubDocument";
+
 import Profile from "./component/Profile";
 import EventWall from "./component/EventWall";
+import Downloads from "./component/Downloads";
 
 import AuthService from "./service/auth-service";
 
@@ -63,6 +68,8 @@ class App extends Component
 		this.campRef = React.createRef();
 		this.tournamentsRef = React.createRef();
 		this.tournamentRef = React.createRef();
+		this.clubDocumentsRef = React.createRef();
+		this.clubDocumentRef = React.createRef();
 	}
 
 	componentDidMount()
@@ -106,8 +113,13 @@ class App extends Component
 			tournamentComponentSelected: false,
 			addTournamentComponentSelected: false,
 
+			clubDocumentsComponentSelected: false,
+			clubDocumentComponentSelected: false,
+			addClubDocumentComponentSelected: false,
+
 			profileComponentSelected: false,
 			eventWallComponentSelected: false,
+			downloadsComponentSelected: false,
 		})
 	}
 
@@ -127,6 +139,7 @@ class App extends Component
 								<Link to="/exams_component" className="nav-link sidenav-text" style={{color:"black"}} >Exams</Link>
 								<Link to="/camps_component" className="nav-link sidenav-text" style={{color:"black"}} >Camps</Link>
 								<Link to="/tournaments_component" className="nav-link sidenav-text" style={{color:"black"}} >Tournaments</Link>
+								<Link to="/club_documents_component" className="nav-link sidenav-text" style={{color:"black"}} >Documents</Link>
 								<div style={{fontSize: "small", paddingLeft:"10px", paddingTop:"20px"}}>USER'S TOOLS</div>
 							</div>							
 						)}	
@@ -134,6 +147,7 @@ class App extends Component
 							<div>
 								<Link to="/profile_component" className=" nav-link sidenav-text" style={{color:"black"}} >Profile</Link>
 								<Link to="/event_wall_component" className="nav-link sidenav-text" style={{color:"black"}} >Events</Link>
+								<Link to="/downloads_component" className="nav-link sidenav-text" style={{color:"black"}} >Downloads</Link>
 							</div>
 						)}
 					</Nav>
@@ -154,9 +168,15 @@ class App extends Component
 
 							{this.state.tournamentsComponentSelected && (<div>Tournaments</div>)}
 							{this.state.tournamentComponentSelected && (<div>Tournament</div>)}
+							{this.state.addTournamentComponentSelected && (<div>New Tournament</div>)}
+
+							{this.state.clubDocumentsComponentSelected && (<div>Documents</div>)}
+							{this.state.clubDocumentComponentSelected && (<div>Document</div>)}
+							{this.state.addClubDocumentComponentSelected && (<div>Add Document</div>)}
 
 							{this.state.profileComponentSelected && (<div>Profile</div>)}
 							{this.state.eventWallComponentSelected && (<div>Events</div>)}
+							{this.state.downloadsComponentSelected && (<div>Downloads</div>)}
 						</Navbar.Brand>
 						<Nav className="mr-auto" ></Nav>
 						<Nav>
@@ -252,6 +272,21 @@ class App extends Component
 								<Button href="/add_tournament_component" variant="secondary">Clear form</Button>							
 							</div>	
 						)}
+						{this.state.clubDocumentsComponentSelected && (
+							<div>								
+								<Link to="/add_club_document_component" className="btn btn-info">New Document</Link>{' '}
+								<Button variant="danger" onClick={() => { this.clubDocumentsRef.current.handleDeleteClubDocument() }}>Remove</Button>
+							</div>							
+						)}
+						{this.state.clubDocumentComponentSelected && (
+							<div>	
+							</div>							
+						)}
+						{this.state.addClubDocumentComponentSelected && (
+							<div>
+								<Button href="/add_club_document_component" variant="secondary">Clear form</Button>							
+							</div>	
+						)}
 						{this.state.profileComponentSelected && (
 							<div>
 								<Button href="#" variant="danger">Remove my account</Button>
@@ -264,6 +299,10 @@ class App extends Component
 									<Col><Button type="submit" variant="info">Search</Button></Col>									
 								</Form.Row>								
 							</Form>							
+						)}
+						{this.state.downloadsComponentSelected && (
+							<div>								
+							</div>
 						)}
 						</Nav>
 						<Nav className="ml-auto">
@@ -288,6 +327,12 @@ class App extends Component
 								if ( !this.state.eventWallComponentSelected ) {
 									this.deselectAllComponents();
 									this.setState({ eventWallComponentSelected: true });
+								}
+							}} />)} />
+							<Route path="/downloads_component" render={(props) => (<Downloads {...props} navbarControlsHandler={() =>{
+								if ( !this.state.downloadsComponentSelected ) {
+									this.deselectAllComponents();
+									this.setState({ downloadsComponentSelected: true });
 								}
 							}} />)} />
 							{this.state.showAdministrativeTools && (
@@ -359,6 +404,28 @@ class App extends Component
 										{
 											this.deselectAllComponents();
 											this.setState({ addTournamentComponentSelected: true });
+										}
+									}} />)} />
+
+									<Route path="/club_documents_component" render={(props) => (<ClubDocuments {...props} ref={this.clubDocumentsRef} navbarControlsHandler={() => {
+										if ( !this.state.clubDocumentsComponentSelected )
+										{
+											this.deselectAllComponents();
+											this.setState({ clubDocumentsComponentSelected: true });
+										}
+									}} />)} />
+									<Route path="/club_document_component/:id" render={(props) => (<ClubDocument {...props} ref={this.clubDocumentRef} navbarControlsHandler={() => {
+										if ( !this.state.clubDocumentComponentSelected )
+										{
+											this.deselectAllComponents();
+											this.setState({ clubDocumentComponentSelected: true });											
+										}
+									}} />)} />
+									<Route path="/add_club_document_component" render={(props) => (<AddClubDocument {...props} navbarControlsHandler={() => {
+										if ( !this.state.addClubDocumentComponentSelected )
+										{
+											this.deselectAllComponents();
+											this.setState({ addClubDocumentComponentSelected: true });
 										}
 									}} />)} />
 								</div>								

@@ -154,5 +154,42 @@ app.delete("/clear_dir", (req, res) => {
     catch(e) { res.status(500).send(e) }    
 });
 
+app.post("/save_club_document", (req, res) => {
+    try
+    {
+        if(!req.body || !req.files)
+            res.send({
+                status: false,
+                message: "No request content"
+            });
+        else
+        {
+            const {clubDocument} = req.files;            
+            const {clubDocumentTargetDir} = req.body;
+            const targetPath = path.join(process.cwd(), publicDir, clubDocumentTargetDir);            
+    
+            if(fs.existsSync(targetPath))            
+                removeDir(targetPath);
+
+            clubDocument.mv(path.join(targetPath + "/" + clubDocument.name));
+            console.log(path.join(targetPath + "/" + clubDocument.name))   
+            res.send({
+                status: true,                
+                clubDocumentName: clubDocument.name
+            });    
+        }
+    }
+    catch(e) { res.status(500).send(e) }
+});
+
+app.get("/get_club_document/:documentId/:clubDocumentName", (req, res) => {       
+    try
+    {        
+        const targetPath = path.join(process.cwd(), publicDir, "club_documents", req.params.documentId, req.params.clubDocumentName );                
+        res.download(targetPath);
+    }
+    catch(e) { res.status(500).send(e) }
+});
+
 const port = 4000;
 app.listen(port, () => console.log(`Server is running on port ${port}`));
