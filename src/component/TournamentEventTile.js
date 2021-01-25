@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import {
     Card,    
-    Button,    
+    Button,
+    Image    
 } from "react-bootstrap";
 import TournamentRegistrationOptionChooserModal from "./TournamentRegistrationOptionChooserModal";
 import AuthService from "../service/auth-service";
@@ -21,6 +22,7 @@ class TournamentEventTile extends Component
             eventContainsCurrentUser: false,
             tournamentRegistrationId: undefined,
             showChooserModal: false,
+            eventPicture: ""
         }
 
         this.handleSignUp = this.handleSignUp.bind(this);
@@ -29,6 +31,24 @@ class TournamentEventTile extends Component
 
     componentDidMount()
     {
+        // - - - Get event picture - - - 
+        let eventPictureName = this.props.event.eventPicturePath ? this.props.event.eventPicturePath.split('\\').pop().split('/').pop() : "";
+        let getTournamentPictureUrl = Urls.EXPRESS_JS_URL + "/get_tournament_picture/" + this.props.event.id + "/" + eventPictureName;
+
+        fetch(getTournamentPictureUrl)
+        .then(response => response.blob())
+        .then(blob => {
+            let fileName = this.props.event.eventPicturePath ? this.props.event.eventPicturePath.split('\\').pop().split('/').pop() : "";
+            let file = new File([blob], fileName, {type:"image/jpeg", lastModified:new Date()});
+            return {
+                file: file,
+                name: fileName
+            };
+        })
+        .then(fileWithNameObject => {
+            this.setState({ eventPicture: fileWithNameObject });
+        });
+        
         this.props.event.tournamentRegistrations.some(tournamentRegistration => {            
             if ( tournamentRegistration.user.id == currentUser.id ) 
             {                                    
@@ -84,6 +104,17 @@ class TournamentEventTile extends Component
             eventContainsCurrentUser
         } = this.state;
         
+        const imageContainerStyle = {
+            textAlign: "center", 
+            backgroundColor: "gainsboro"		
+        };
+        
+        const imageStyle = {
+            color: "black",
+            maxWidth: "640px",
+            maxHeight: "480px"
+        };
+
         return(
             currentUser != null && currentUser.roles.includes("ROLE_USER") ? 
             (
@@ -105,6 +136,9 @@ class TournamentEventTile extends Component
                             <Card.Text>                            
                                 { event.eventDescription }                                                        
                             </Card.Text>
+                            <div style={imageContainerStyle}>
+                                <Image style={imageStyle} src={this.state.eventPicture ? URL.createObjectURL(this.state.eventPicture.file) : ""} />
+                            </div>                            
                             <Card.Text>                                                                
                                 Room types:
                                 { event.roomTypes.map(rt => <li>{rt.roomTypeName}</li> ) }
