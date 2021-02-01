@@ -42,6 +42,9 @@ class EditTournamentRegistrationModal extends Component
                 stayPeriod: null,
                 asJudgeParticipation: false,
                 weightAgeCategory: null,
+                tournamentEvent: {
+                    id: null
+                }
             },
             roomTypes: [],
             stayPeriods: [],
@@ -176,7 +179,10 @@ class EditTournamentRegistrationModal extends Component
                 roomTypeName: this.state.itemToUpdate.weightAgeCategory.label
             };
         
-        let itemToUpdate = {...this.state.itemToUpdate, roomType: rt, stayPeriod: sp, weightAgeCategory: wac };
+        let tournamentEvent = {
+            id : this.props.eventId
+        };
+        let itemToUpdate = {...this.state.itemToUpdate, roomType: rt, stayPeriod: sp, weightAgeCategory: wac, tournamentEvent: tournamentEvent };
         
         fetch(TOURNAMENT_REGISTRATIONS, {
             method: "PUT",
@@ -200,12 +206,12 @@ class EditTournamentRegistrationModal extends Component
         const selectStyles = {
             container: base => ({
                 ...base,
-                flex: 1,                
+                flex : 1,                
             })
         };
 
         return (
-            currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
+            currentUser != null && ( currentUser.roles.includes("ROLE_TRAINER")) ?
             (
             <Modal 
                 show={this.props.show}                

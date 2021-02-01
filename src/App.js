@@ -27,6 +27,9 @@ import Tournaments from "./component/admin/tournament/Tournaments";
 import Tournament from "./component/admin/tournament/Tournament";
 import AddTournament from "./component/admin/tournament/AddTournament";
 
+import Teams from "./component/trainer/Teams";
+import Team from "./component/trainer/Team";
+
 import ClubDocuments from "./component/admin/club_document/ClubDocuments";
 import ClubDocument from "./component/admin/club_document/ClubDocument";
 import AddClubDocument from "./component/admin/club_document/AddClubDocument";
@@ -41,6 +44,7 @@ import './App.css';
 import ichibanDojoLogo from "./resources/images/ichiban_logo.png";
 
 
+const user = AuthService.getCurrentUser();
 
 const toggleLanguageRadios = [
 	{ name: 'PL', value: '1' },
@@ -57,6 +61,7 @@ class App extends Component
 			currentUser: undefined,
 			showAdministrativeTools: false,
 			showUsersTools: false,
+			showTrainersTools: false,
 			toggleLanguageRadioValue: '2',
 		};
 		this.logout = this.logout.bind(this);
@@ -68,23 +73,24 @@ class App extends Component
 		this.campRef = React.createRef();
 		this.tournamentsRef = React.createRef();
 		this.tournamentRef = React.createRef();
+		this.teamsRef = React.createRef();
+		this.teamRef = React.createRef();
 		this.clubDocumentsRef = React.createRef();
 		this.clubDocumentRef = React.createRef();
 	}
 
 	componentDidMount()
 	{
-		const user = AuthService.getCurrentUser();
-
 		if ( user )
 		{
 			this.setState({
 				currentUser: user,	
 				showAdministrativeTools: user.roles.includes("ROLE_ADMIN"),
 				showUsersTools: user.roles.includes("ROLE_USER"),
+				showTrainersTools: user.roles.includes("ROLE_TRAINER"),
 				toggleLanguageRadioValue: '2',
 			});
-
+			
 			this.deselectAllComponents();
 		}
 	}
@@ -113,6 +119,9 @@ class App extends Component
 			tournamentComponentSelected: false,
 			addTournamentComponentSelected: false,
 
+			teamsComponentSelected: false,
+			teamComponentSelected: false,			
+
 			clubDocumentsComponentSelected: false,
 			clubDocumentComponentSelected: false,
 			addClubDocumentComponentSelected: false,
@@ -125,6 +134,8 @@ class App extends Component
 
 	render()
 	{
+		let USER_TEAMS_ROUTE = user ? "/user/" + user.id + "/teams_component" : "";
+
 		return(			
 			<div>
 				<div className="sidenav">
@@ -139,9 +150,15 @@ class App extends Component
 								<Link to="/exams_component" className="nav-link sidenav-text" style={{color:"black"}} >Exams</Link>
 								<Link to="/camps_component" className="nav-link sidenav-text" style={{color:"black"}} >Camps</Link>
 								<Link to="/tournaments_component" className="nav-link sidenav-text" style={{color:"black"}} >Tournaments</Link>
-								<Link to="/club_documents_component" className="nav-link sidenav-text" style={{color:"black"}} >Documents</Link>
-								<div style={{fontSize: "small", paddingLeft:"10px", paddingTop:"20px"}}>USER'S TOOLS</div>
+								<Link to="/club_documents_component" className="nav-link sidenav-text" style={{color:"black"}} >Documents</Link>								
 							</div>							
+						)}
+						{this.state.showTrainersTools && (
+							<div>
+								<div style={{fontSize: "small", paddingLeft:"10px", paddingTop:"20px"}}>TRAINER'S TOOLS</div>
+								<Link to={USER_TEAMS_ROUTE} className="nav-link sidenav-text" style={{color:"black"}} >Teams</Link>
+								<div style={{fontSize: "small", paddingLeft:"10px", paddingTop:"20px"}}>USER'S TOOLS</div>
+							</div>
 						)}	
 						{this.state.showUsersTools && (
 							<div>
@@ -149,7 +166,7 @@ class App extends Component
 								<Link to="/event_wall_component" className="nav-link sidenav-text" style={{color:"black"}} >Events</Link>
 								<Link to="/downloads_component" className="nav-link sidenav-text" style={{color:"black"}} >Downloads</Link>
 							</div>
-						)}
+						)}						
 					</Nav>
 				</div>
 				<div className="main">
@@ -169,6 +186,9 @@ class App extends Component
 							{this.state.tournamentsComponentSelected && (<div>Tournaments</div>)}
 							{this.state.tournamentComponentSelected && (<div>Tournament</div>)}
 							{this.state.addTournamentComponentSelected && (<div>New Tournament</div>)}
+
+							{this.state.teamsComponentSelected && (<div>Teams</div>)}
+							{this.state.teamComponentSelected && (<div>Team</div>)}
 
 							{this.state.clubDocumentsComponentSelected && (<div>Documents</div>)}
 							{this.state.clubDocumentComponentSelected && (<div>Document</div>)}
@@ -272,6 +292,18 @@ class App extends Component
 								<Button href="/add_tournament_component" variant="secondary">Clear form</Button>							
 							</div>	
 						)}
+						{this.state.teamsComponentSelected && (
+							<div>
+								<Button onClick={() => { this.teamsRef.current.handleDeleteTeam() }} variant="danger">Remove team</Button>
+							</div>
+						)}
+						{this.state.teamComponentSelected && (
+							<div>
+								<Button onClick={() => { this.teamRef.current.handleShowAddParticipantToTeamModal(false) }} variant="info">Sign up participant...</Button>{' '}
+								<Button onClick={() => { this.teamRef.current.handleShowAddParticipantToTeamModal(true) }} variant="info">Sign up me...</Button>{' '}
+								<Button onClick={() => { this.teamRef.current.handleDeleteRegistration() }} variant="danger">Remove participant</Button>
+							</div>
+						)}
 						{this.state.clubDocumentsComponentSelected && (
 							<div>								
 								<Link to="/add_club_document_component" className="btn btn-info">New Document</Link>{' '}
@@ -317,119 +349,148 @@ class App extends Component
 							<Route path="/login" component={LoginComponent} />
 							<Route path="/signup" component={SignUpComponent} />
 
-							<Route path="/profile_component" render={(props) => (<Profile {...props} navbarControlsHandler={() => {
-								if ( !this.state.profileComponentSelected ) {
-									this.deselectAllComponents();
-									this.setState({ profileComponentSelected: true });
-								}									
-							}} />)} />
-							<Route path="/event_wall_component" render={(props) => (<EventWall {...props} navbarControlsHandler={() =>{
-								if ( !this.state.eventWallComponentSelected ) {
-									this.deselectAllComponents();
-									this.setState({ eventWallComponentSelected: true });
-								}
-							}} />)} />
-							<Route path="/downloads_component" render={(props) => (<Downloads {...props} navbarControlsHandler={() =>{
-								if ( !this.state.downloadsComponentSelected ) {
-									this.deselectAllComponents();
-									this.setState({ downloadsComponentSelected: true });
-								}
-							}} />)} />
-							{this.state.showAdministrativeTools && (
-								<div>
-									<Route path="/people_component" render={(props) => (<People {...props} navbarControlsHandler={() => {
-										if ( !this.state.peopleComponentSelected )
-										{
-											this.deselectAllComponents();
-											this.setState({ peopleComponentSelected: true });
-										}
-									}} />)} />
-									<Route path="/exams_component" render={(props) => (<Exams {...props} ref={this.examsRef} navbarControlsHandler={() => {
-										if ( !this.state.examsComponentSelected )
-										{
-											this.deselectAllComponents();
-											this.setState({ examsComponentSelected: true });
-										}
-									}} />)} />
-									<Route path="/exam_component/:id" render={(props) => (<Exam {...props} ref={this.examRef} navbarControlsHandler={() => {
-										if ( !this.state.examComponentSelected ) {
-											this.deselectAllComponents();
-											this.setState({ examComponentSelected:  true });
-										}
-									}} /> )} />
-									<Route path="/add_exam_component" render={(props) => (<AddExam {...props} navbarControlsHandler={() => {
-										if ( !this.state.addExamComponentSelected )
-										{
-											this.deselectAllComponents();
-											this.setState({ addExamComponentSelected: true });
-										}
-									}} />)} />
-									<Route path="/camps_component" render={(props) => (<Camps {...props} ref={this.campsRef} navbarControlsHandler={() => {
-										if ( !this.state.campsComponentSelected )
-										{
-											this.deselectAllComponents();
-											this.setState({ campsComponentSelected: true });
-										}
-									}} />)} />
-									<Route path="/camp_component/:id" render={(props) => (<Camp {...props} ref={this.campRef} navbarControlsHandler={() => {
-										if ( !this.state.campComponentSelected )
-										{
-											this.deselectAllComponents();
-											this.setState({ campComponentSelected: true });											
-										}
-									}} />)} />
-									<Route path="/add_camp_component" render={(props) => (<AddCamp {...props} navbarControlsHandler={() => {
-										if ( !this.state.addCampComponentSelected )
-										{
-											this.deselectAllComponents();
-											this.setState({ addCampComponentSelected: true });
-										}
-									}} />)} />
-									<Route path="/tournaments_component" render={(props) => (<Tournaments {...props} ref={this.tournamentsRef} navbarControlsHandler={() => {
-										if ( !this.state.tournamentsComponentSelected )
-										{
-											this.deselectAllComponents();
-											this.setState({ tournamentsComponentSelected: true });
-										}
-									}} />)} />
-									<Route path="/tournament_component/:id" render={(props) => (<Tournament {...props} ref={this.tournamentRef} navbarControlsHandler={() => {
-										if ( !this.state.tournamentComponentSelected )
-										{
-											this.deselectAllComponents();
-											this.setState({ tournamentComponentSelected: true });											
-										}
-									}} />)} />
-									<Route path="/add_tournament_component" render={(props) => (<AddTournament {...props} navbarControlsHandler={() => {
-										if ( !this.state.addTournamentComponentSelected )
-										{
-											this.deselectAllComponents();
-											this.setState({ addTournamentComponentSelected: true });
-										}
-									}} />)} />
+							{/* It was necessary to make conditions below nested. Place them on the same level doesn't work - when all three state variables 
+							(showUsersTools, showTrainersTools and showAdministrativeTools) were set to "true", then it's expected that all routes below will be
+							rendered, but only first group of routes was rendered, regardless of that which group was placed as first. Always only the first group 
+							was rendered. */}
 
-									<Route path="/club_documents_component" render={(props) => (<ClubDocuments {...props} ref={this.clubDocumentsRef} navbarControlsHandler={() => {
-										if ( !this.state.clubDocumentsComponentSelected )
-										{
+							{this.state.showUsersTools && (
+								<div>
+									<Route path="/profile_component" render={(props) => (<Profile {...props} navbarControlsHandler={() => {
+										if ( !this.state.profileComponentSelected ) {
 											this.deselectAllComponents();
-											this.setState({ clubDocumentsComponentSelected: true });
+											this.setState({ profileComponentSelected: true });
+										}									
+									}} />)} />
+									<Route path="/event_wall_component" render={(props) => (<EventWall {...props} navbarControlsHandler={() =>{
+										if ( !this.state.eventWallComponentSelected ) {
+											this.deselectAllComponents();
+											this.setState({ eventWallComponentSelected: true });
 										}
 									}} />)} />
-									<Route path="/club_document_component/:id" render={(props) => (<ClubDocument {...props} ref={this.clubDocumentRef} navbarControlsHandler={() => {
-										if ( !this.state.clubDocumentComponentSelected )
-										{
+									<Route path="/downloads_component" render={(props) => (<Downloads {...props} navbarControlsHandler={() =>{
+										if ( !this.state.downloadsComponentSelected ) {
 											this.deselectAllComponents();
-											this.setState({ clubDocumentComponentSelected: true });											
+											this.setState({ downloadsComponentSelected: true });
 										}
 									}} />)} />
-									<Route path="/add_club_document_component" render={(props) => (<AddClubDocument {...props} navbarControlsHandler={() => {
-										if ( !this.state.addClubDocumentComponentSelected )
-										{
-											this.deselectAllComponents();
-											this.setState({ addClubDocumentComponentSelected: true });
-										}
-									}} />)} />
-								</div>								
-							)}														
+									{this.state.showTrainersTools && (
+										<div>
+											<Route path="/user/:userId/teams_component" 
+											render={(props) => (<Teams {...props} ref={this.teamsRef} navbarControlsHandler={() => {
+												if ( !this.state.teamsComponentSelected )
+												{
+													this.deselectAllComponents();
+													this.setState({ teamsComponentSelected: true });
+												}
+											}} />)} />
+											<Route path="/user/:userId/team_component/:teamId" 
+											render={(props) => (<Team {...props} ref={this.teamRef} navbarControlsHandler={() => {
+												if ( !this.state.teamComponentSelected )
+												{
+													this.deselectAllComponents();
+													this.setState({ teamComponentSelected: true });
+												}
+											}} />)} />
+											{this.state.showAdministrativeTools && (
+												<div>
+													<Route path="/people_component" render={(props) => (<People {...props} navbarControlsHandler={() => {
+														if ( !this.state.peopleComponentSelected )
+														{
+															this.deselectAllComponents();
+															this.setState({ peopleComponentSelected: true });
+														}
+													}} />)} />
+													<Route path="/exams_component" render={(props) => (<Exams {...props} ref={this.examsRef} navbarControlsHandler={() => {
+														if ( !this.state.examsComponentSelected )
+														{
+															this.deselectAllComponents();
+															this.setState({ examsComponentSelected: true });
+														}
+													}} />)} />
+													<Route path="/exam_component/:id" render={(props) => (<Exam {...props} ref={this.examRef} navbarControlsHandler={() => {
+														if ( !this.state.examComponentSelected ) {
+															this.deselectAllComponents();
+															this.setState({ examComponentSelected:  true });
+														}
+													}} /> )} />
+													<Route path="/add_exam_component" render={(props) => (<AddExam {...props} navbarControlsHandler={() => {
+														if ( !this.state.addExamComponentSelected )
+														{
+															this.deselectAllComponents();
+															this.setState({ addExamComponentSelected: true });
+														}
+													}} />)} />
+													<Route path="/camps_component" render={(props) => (<Camps {...props} ref={this.campsRef} navbarControlsHandler={() => {
+														if ( !this.state.campsComponentSelected )
+														{
+															this.deselectAllComponents();
+															this.setState({ campsComponentSelected: true });
+														}
+													}} />)} />
+													<Route path="/camp_component/:id" render={(props) => (<Camp {...props} ref={this.campRef} navbarControlsHandler={() => {
+														if ( !this.state.campComponentSelected )
+														{
+															this.deselectAllComponents();
+															this.setState({ campComponentSelected: true });											
+														}
+													}} />)} />
+													<Route path="/add_camp_component" render={(props) => (<AddCamp {...props} navbarControlsHandler={() => {
+														if ( !this.state.addCampComponentSelected )
+														{
+															this.deselectAllComponents();
+															this.setState({ addCampComponentSelected: true });
+														}
+													}} />)} />
+													<Route path="/tournaments_component" render={(props) => (<Tournaments {...props} ref={this.tournamentsRef} navbarControlsHandler={() => {
+														if ( !this.state.tournamentsComponentSelected )
+														{
+															this.deselectAllComponents();
+															this.setState({ tournamentsComponentSelected: true });
+														}
+													}} />)} />
+													<Route path="/tournament_component/:id" render={(props) => (<Tournament {...props} ref={this.tournamentRef} navbarControlsHandler={() => {
+														if ( !this.state.tournamentComponentSelected )
+														{
+															this.deselectAllComponents();
+															this.setState({ tournamentComponentSelected: true });											
+														}
+													}} />)} />
+													<Route path="/add_tournament_component" render={(props) => (<AddTournament {...props} navbarControlsHandler={() => {
+														if ( !this.state.addTournamentComponentSelected )
+														{
+															this.deselectAllComponents();
+															this.setState({ addTournamentComponentSelected: true });
+														}
+													}} />)} />
+
+													<Route path="/club_documents_component" render={(props) => (<ClubDocuments {...props} ref={this.clubDocumentsRef} navbarControlsHandler={() => {
+														if ( !this.state.clubDocumentsComponentSelected )
+														{
+															this.deselectAllComponents();
+															this.setState({ clubDocumentsComponentSelected: true });
+														}
+													}} />)} />
+													<Route path="/club_document_component/:id" render={(props) => (<ClubDocument {...props} ref={this.clubDocumentRef} navbarControlsHandler={() => {
+														if ( !this.state.clubDocumentComponentSelected )
+														{
+															this.deselectAllComponents();
+															this.setState({ clubDocumentComponentSelected: true });											
+														}
+													}} />)} />
+													<Route path="/add_club_document_component" render={(props) => (<AddClubDocument {...props} navbarControlsHandler={() => {
+														if ( !this.state.addClubDocumentComponentSelected )
+														{
+															this.deselectAllComponents();
+															this.setState({ addClubDocumentComponentSelected: true });
+														}
+													}} />)} />
+												</div>
+											)}									
+										</div>									
+									)}	
+								</div>
+							)}																		
 						</Switch>
 					</div>
 				</div>

@@ -95,3 +95,12 @@
   padding-right: 20px;
   background-color: whitesmoke;
 }
+
+.tooltip { 
+  z-index: 1151 !important; 
+}
+
+.popover { 
+  z-index: 1151 !important;
+  max-width: 800px;  
+}

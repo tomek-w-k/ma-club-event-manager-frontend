@@ -186,6 +186,15 @@ class CrudTable extends Component
         sizePerPageRenderer
     }, )
 
+    const emptyTableMessage = () => {
+        return (
+            <div style={{ textAlign: "center", marginTop: "50px", marginBottom: "50px" }}>                
+                { this.props.emptyTableMessage && {}.toString.call( this.props.emptyTableMessage) === '[object Function]' ? 
+                    this.props.emptyTableMessage() : "No data to display"}                
+            </div>
+        );
+    }
+
     return (
     <div>
         {/* <div className="content"> */}
@@ -211,7 +220,8 @@ class CrudTable extends Component
                                     rowEvents = { tableRowEvents }
                                     selectRow = { selectRow }
                                     filter = { filterFactory() }
-                                    pagination = { pagination }                                                                     
+                                    pagination = { pagination }  
+                                    noDataIndication={emptyTableMessage}                                                                   
                 >                    
                 </BootstrapTable>
 			{/* </Col> */}
