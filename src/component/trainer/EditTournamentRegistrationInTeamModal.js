@@ -259,10 +259,32 @@ class EditTournamentRegistrationInTeamModal extends Component
                             </Card.Body>
                         </Card>
                         <div style={{height: "16px"}}></div>
+                        {currentUser.roles.includes("ROLE_ADMIN") && (
+                            <div>                        
+                                <Card>
+                                    <Card.Header>ADMINISTRATIVE OPTIONS</Card.Header>
+                                    <Card.Body>
+                                        <Form.Group as={Row}>
+                                            <Form.Label column sm="4">Fee received</Form.Label>
+                                            <Col sm="8" style={{display: "flex", alignItems: "center"}}>
+                                                <Form.Check 
+                                                    type="checkbox"
+                                                    name="feeReceived" 
+                                                    style={{display: "flex", alignItems: "center"}}
+                                                    checked={this.state.itemToUpdate.feeReceived}
+                                                    onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, feeReceived: e.target.checked} }) }}
+                                                /> 
+                                            </Col>                           
+                                        </Form.Group>
+                                    </Card.Body>
+                                </Card>
+                                <div style={{height: "16px"}}></div>
+                            </div>
+                        )}
                         <Card >
-                            <Card.Header>OPTIONS</Card.Header>
+                            <Card.Header>REGISTRATION OPTIONS</Card.Header>
                             <Card.Body>
-                                {this.state.itemToUpdate.feeReceived && (
+                                {this.state.itemToUpdate.feeReceived && !currentUser.roles.includes("ROLE_ADMIN") && (
                                     <Alert variant="danger">
                                         Changing registration options is not allowed since the fee for this participant has been accepted by administrator.
                                     </Alert>
@@ -271,7 +293,7 @@ class EditTournamentRegistrationInTeamModal extends Component
                                     <Form.Label column sm="4">As a judge participation</Form.Label>
                                     <Col sm="8" style={{display: "flex", alignItems: "center"}}>
                                         <Form.Check
-                                            disabled={this.state.itemToUpdate.feeReceived} 
+                                            disabled={!currentUser.roles.includes("ROLE_ADMIN") ? this.state.itemToUpdate.feeReceived : false}  
                                             type="checkbox"
                                             name="asJudgeParticipation"                                    
                                             checked={this.state.itemToUpdate.asJudgeParticipation}
@@ -291,7 +313,7 @@ class EditTournamentRegistrationInTeamModal extends Component
                                         <Form.Label column sm="4">Sayonara participation</Form.Label>
                                         <Col sm="8" style={{display: "flex", alignItems: "center"}}>
                                             <Form.Check 
-                                                disabled={this.state.itemToUpdate.feeReceived} 
+                                                disabled={!currentUser.roles.includes("ROLE_ADMIN") ? this.state.itemToUpdate.feeReceived : false} 
                                                 type="checkbox"
                                                 name="sayonaraMeetingParticipation" 
                                                 style={{display: "flex", alignItems: "center"}}
@@ -311,7 +333,7 @@ class EditTournamentRegistrationInTeamModal extends Component
                                             <Form.Label column sm="4">Accommodation</Form.Label>
                                             <Col sm="8" style={{display: "flex", alignItems: "center"}}>
                                                 <Form.Check 
-                                                    disabled={this.state.itemToUpdate.feeReceived} 
+                                                    disabled={!currentUser.roles.includes("ROLE_ADMIN") ? this.state.itemToUpdate.feeReceived : false} 
                                                     type="checkbox"
                                                     name="accommodation" 
                                                     style={{display: "flex", alignItems: "center"}}
@@ -338,7 +360,7 @@ class EditTournamentRegistrationInTeamModal extends Component
                                                     onChange={roomType => {                                        
                                                         this.setState({ itemToUpdate: {...this.state.itemToUpdate, roomType: roomType} })                                        
                                                     }}
-                                                    isDisabled={!this.state.itemToUpdate.accommodation || this.state.itemToUpdate.feeReceived}
+                                                    isDisabled={!this.state.itemToUpdate.accommodation || (!currentUser.roles.includes("ROLE_ADMIN") ? this.state.itemToUpdate.feeReceived : false)}
                                                 />
                                             </Col>
                                         </Form.Group>
@@ -352,7 +374,7 @@ class EditTournamentRegistrationInTeamModal extends Component
                                                     onChange={stayPeriod => {                                        
                                                         this.setState({ itemToUpdate: {...this.state.itemToUpdate, stayPeriod: stayPeriod} })                                        
                                                     }}
-                                                    isDisabled={!this.state.itemToUpdate.accommodation || this.state.itemToUpdate.feeReceived}
+                                                    isDisabled={!this.state.itemToUpdate.accommodation || (!currentUser.roles.includes("ROLE_ADMIN") ? this.state.itemToUpdate.feeReceived : false)}
                                                 />
                                             </Col>
                                         </Form.Group>
@@ -368,7 +390,7 @@ class EditTournamentRegistrationInTeamModal extends Component
                                             onChange={weightAgeCategory => {                                        
                                                 this.setState({ itemToUpdate: {...this.state.itemToUpdate, weightAgeCategory: weightAgeCategory} })                                        
                                             }}
-                                            isDisabled={this.state.itemToUpdate.asJudgeParticipation || this.state.itemToUpdate.feeReceived}
+                                            isDisabled={this.state.itemToUpdate.asJudgeParticipation || (!currentUser.roles.includes("ROLE_ADMIN") ? this.state.itemToUpdate.feeReceived : false)}
                                         />
                                     </Col>
                                 </Form.Group>
@@ -377,7 +399,7 @@ class EditTournamentRegistrationInTeamModal extends Component
                     </Modal.Body>
                     <Modal.Footer>
                         <div>
-                            <Button variant="info" onClick={this.props.onHide} disabled={this.state.itemToUpdate.feeReceived} type="submit">Save</Button>{' '}                            
+                            <Button variant="info" onClick={this.props.onHide} disabled={!currentUser.roles.includes("ROLE_ADMIN") ? this.state.itemToUpdate.feeReceived : false} type="submit">Save</Button>{' '}                            
                             <Button variant="secondary" onClick={this.props.onHide}>Cancel</Button>
                         </div>
                     </Modal.Footer>

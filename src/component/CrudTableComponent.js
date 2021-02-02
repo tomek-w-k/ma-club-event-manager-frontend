@@ -8,6 +8,11 @@ import {
 import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
+import AuthService from "../service/auth-service";
+
+
+const currentUser = AuthService.getCurrentUser();
+
 
 //import "./../App.css";
 //import AddItemModal from "./AddItemModal";
@@ -39,7 +44,12 @@ class CrudTable extends Component
     
     fillTable()
     {        
-        fetch(this.props.itemsUrl)
+        fetch(this.props.itemsUrl, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken                
+            },
+        })
         .then(response => response.json())
         .then(data => {
             this.setState({                
@@ -167,24 +177,28 @@ class CrudTable extends Component
 
         </>
       );
+    
+    const sizePerPageList = this.props.sizePerPageList ? 
+        {...this.props.sizePerPageList, sizePerPageRenderer} :
+        {
+            sizePerPageList: [ 
+                {
+                    text: '10th', value: 10
+                },
+                {
+                    text: '15th', value: 15
+                },
+                {
+                    text: '20th', value: 20
+                },
+                {
+                    text: 'All', value: this.state.items.length
+                }
+            ],
+            sizePerPageRenderer
+        }
       
-    const pagination = paginationFactory({
-        sizePerPageList: [ 
-            {
-                text: '10th', value: 10
-            },
-            {
-                text: '15th', value: 15
-            },
-            {
-                text: '20th', value: 20
-            },
-            {
-                text: 'All', value: this.state.items.length
-            }
-        ],
-        sizePerPageRenderer
-    }, )
+    const pagination = paginationFactory(sizePerPageList, )
 
     const emptyTableMessage = () => {
         return (

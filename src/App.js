@@ -282,9 +282,10 @@ class App extends Component
 							</div>							
 						)}
 						{this.state.tournamentComponentSelected && (
-							<div>								
-								<Button onClick={() => { this.tournamentRef.current.handleAddRegistration() }} variant="info">Add participnat...</Button>{' '}
-								<Button onClick={() => { this.tournamentRef.current.handleDeleteRegistration() }} variant="danger">Remove participant</Button>
+							<div>
+								<Button onClick={() => { this.tournamentRef.current.handleAddTeam() }} variant="info">Add team...</Button>{' '}
+								<Button onClick={() => { this.tournamentRef.current.handleDeleteRegistration() }} variant="danger">Remove participant</Button>{' '}
+								<Button onClick={() => { this.tournamentRef.current.handleDeleteTeam() }} variant="danger">Remove team</Button>
 							</div>							
 						)}
 						{this.state.addTournamentComponentSelected && (

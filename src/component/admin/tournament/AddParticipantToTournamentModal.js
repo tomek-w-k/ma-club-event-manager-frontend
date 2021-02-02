@@ -51,6 +51,20 @@ const columns = [
     }
 ];
 
+const sizePerPageList = {
+    sizePerPageList: [ 
+        {
+            text: '3rd', value: 3
+        },
+        {
+            text: '6th', value: 6
+        },
+        {
+            text: '12th', value: 12
+        }
+    ]
+};
+
 
 class AddParticipantToTournamentModal extends Component
 {
@@ -381,7 +395,8 @@ class AddParticipantToTournamentModal extends Component
                             <CrudTableComponent itemsUrl={USERS_API_URL} 
                                                 tableColumns={columns} 
                                                 selectedItemId={this.handleRowClick}
-                                                selectedIds={this.handleRowSelection}                                                
+                                                selectedIds={this.handleRowSelection}  
+                                                sizePerPageList={sizePerPageList}                                              
                             />                         
                         </Container>                        
                     </Modal.Body>

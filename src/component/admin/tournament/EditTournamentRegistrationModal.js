@@ -4,7 +4,8 @@ import {
     Form,
     Button,
     Row,
-    Container
+    Col,    
+    Card
     } from "react-bootstrap";
 import Select from "react-select";
 import AuthService from "../../../service/auth-service";
@@ -42,7 +43,7 @@ class EditTournamentRegistrationModal extends Component
                 stayPeriod: null,
                 asJudgeParticipation: false,
                 weightAgeCategory: null,
-                tournamentEvent: {
+                team: {
                     id: null
                 }
             },
@@ -107,7 +108,7 @@ class EditTournamentRegistrationModal extends Component
     {        
         fetch(TOURNAMENT_REGISTRATIONS + "/" + this.props.itemId)
         .then(response => response.json())
-        .then(data => {
+        .then(data => { 
             let rt;
             if ( data.roomType == null )
                 rt = {
@@ -178,13 +179,10 @@ class EditTournamentRegistrationModal extends Component
                 id: this.state.itemToUpdate.weightAgeCategory.value,
                 roomTypeName: this.state.itemToUpdate.weightAgeCategory.label
             };
+                
+        let itemToUpdate = {...this.state.itemToUpdate, roomType: rt, stayPeriod: sp, weightAgeCategory: wac };
         
-        let tournamentEvent = {
-            id : this.props.eventId
-        };
-        let itemToUpdate = {...this.state.itemToUpdate, roomType: rt, stayPeriod: sp, weightAgeCategory: wac, tournamentEvent: tournamentEvent };
-        
-        fetch(TOURNAMENT_REGISTRATIONS, {
+        fetch(Urls.WEBSERVICE_URL + "/teams/" + itemToUpdate.team.id  + "/tournament_registrations", {
             method: "PUT",
             headers: {
                 "Accept": "application/json",
@@ -223,109 +221,131 @@ class EditTournamentRegistrationModal extends Component
             >
                 <Form onSubmit={this.handleUpdateRegistration}>
                     <Modal.Header>
-                        {this.state.itemToUpdate.user.fullName}
+                        EDIT REGISTRATION - {this.state.itemToUpdate.user.fullName}
                     </Modal.Header>
                     <Modal.Body>
-                        <Container>
-                            <Form.Group as={Row}>
-                                <Form.Label column sm="4">Fee received</Form.Label>
-                                <Form.Check column sm="4"
-                                    type="checkbox"
-                                    name="feeReceived" 
-                                    style={{display: "flex", alignItems: "center"}}
-                                    checked={this.state.itemToUpdate.feeReceived}
-                                    onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, feeReceived: e.target.checked} }) }}
-                                />                            
-                            </Form.Group>
-                            <Form.Group as={Row}>
-                                <Form.Label column sm="4">As a judge participation</Form.Label>
-                                <Form.Check column sm="4"
-                                    type="checkbox"
-                                    name="asJudgeParticipation" 
-                                    style={{display: "flex", alignItems: "center"}}
-                                    checked={this.state.itemToUpdate.asJudgeParticipation}
-                                    onChange={e => { 
-                                        this.setState({ 
-                                            itemToUpdate: {...this.state.itemToUpdate, 
-                                                asJudgeParticipation: e.target.checked,
-                                                weightAgeCategory: { value: null, label : "-" }
-                                            } 
-                                        }) 
-                                    }}
-                                />
-                            </Form.Group>
-                            {this.props.sayonaraMeeting && (
+                        <Card>
+                            <Card.Header>ADMINISTRATIVE OPTIONS</Card.Header>
+                            <Card.Body>
                                 <Form.Group as={Row}>
-                                    <Form.Label column sm="4">Sayonara participation</Form.Label>
-                                    <Form.Check column sm="4"
-                                        type="checkbox"
-                                        name="sayonaraMeetingParticipation" 
-                                        style={{display: "flex", alignItems: "center"}}
-                                        checked={this.state.itemToUpdate.sayonaraMeetingParticipation}
-                                        onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, sayonaraMeetingParticipation: e.target.checked} }) }}
-                                    />
-                                </Form.Group>
-                            )}
-                            {this.props.accommodation && (
-                                <div>
-                                    <Form.Group as={Row}>
-                                        <Form.Label column sm="4">Accommodation</Form.Label>
-                                        <Form.Check column sm="4"
+                                    <Form.Label column sm="4">Fee received</Form.Label>
+                                    <Col sm="8" style={{display: "flex", alignItems: "center"}}>
+                                        <Form.Check 
                                             type="checkbox"
-                                            name="accommodation" 
+                                            name="feeReceived" 
                                             style={{display: "flex", alignItems: "center"}}
-                                            checked={this.state.itemToUpdate.accommodation}
+                                            checked={this.state.itemToUpdate.feeReceived}
+                                            onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, feeReceived: e.target.checked} }) }}
+                                        /> 
+                                    </Col>                           
+                                </Form.Group>
+                            </Card.Body>
+                        </Card>
+                        <div style={{height: "16px"}}></div>
+                        <Card>
+                            <Card.Header>REGISTRATION OPTIONS</Card.Header>
+                            <Card.Body>                            
+                                <Form.Group as={Row}>
+                                    <Form.Label column sm="4">As a judge participation</Form.Label>
+                                    <Col sm="8" style={{display: "flex", alignItems: "center"}}>
+                                        <Form.Check 
+                                            type="checkbox"
+                                            name="asJudgeParticipation" 
+                                            style={{display: "flex", alignItems: "center"}}
+                                            checked={this.state.itemToUpdate.asJudgeParticipation}
                                             onChange={e => { 
                                                 this.setState({ 
                                                     itemToUpdate: {...this.state.itemToUpdate, 
-                                                        accommodation: e.target.checked,
-                                                        roomType: { value: null, label : "-" },
-                                                        stayPeriod: { value: null, label : "-" }
+                                                        asJudgeParticipation: e.target.checked,
+                                                        weightAgeCategory: { value: null, label : "-" }
                                                     } 
                                                 }) 
                                             }}
                                         />
+                                    </Col>
+                                </Form.Group>
+                                {this.props.sayonaraMeeting && (
+                                    <Form.Group as={Row}>
+                                        <Form.Label column sm="4">Sayonara participation</Form.Label>
+                                        <Col sm="8" style={{display: "flex", alignItems: "center"}}>
+                                            <Form.Check 
+                                                type="checkbox"
+                                                name="sayonaraMeetingParticipation" 
+                                                style={{display: "flex", alignItems: "center"}}
+                                                checked={this.state.itemToUpdate.sayonaraMeetingParticipation}
+                                                onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, sayonaraMeetingParticipation: e.target.checked} }) }}
+                                            />
+                                        </Col>
                                     </Form.Group>
-                                    <Form.Group as={Row}>
-                                        <Form.Label column sm="4">Room type</Form.Label>
+                                )}
+                                {this.props.accommodation && (
+                                    <div>
+                                        <Form.Group as={Row}>
+                                            <Form.Label column sm="4">Accommodation</Form.Label>
+                                            <Col sm="8" style={{display: "flex", alignItems: "center"}}>
+                                                <Form.Check 
+                                                    type="checkbox"
+                                                    name="accommodation" 
+                                                    style={{display: "flex", alignItems: "center"}}
+                                                    checked={this.state.itemToUpdate.accommodation}
+                                                    onChange={e => { 
+                                                        this.setState({ 
+                                                            itemToUpdate: {...this.state.itemToUpdate, 
+                                                                accommodation: e.target.checked,
+                                                                roomType: { value: null, label : "-" },
+                                                                stayPeriod: { value: null, label : "-" }
+                                                            } 
+                                                        }) 
+                                                    }}
+                                                />
+                                            </Col>
+                                        </Form.Group>
+                                        <Form.Group as={Row}>
+                                            <Form.Label column sm="4">Room type</Form.Label>
+                                            <Col sm="8" style={{display: "flex", alignItems: "center"}}>
+                                                <Select
+                                                    styles={selectStyles}
+                                                    options={this.state.roomTypes}                                    
+                                                    value={this.state.itemToUpdate.roomType}
+                                                    onChange={roomType => {                                        
+                                                        this.setState({ itemToUpdate: {...this.state.itemToUpdate, roomType: roomType} })                                        
+                                                    }}
+                                                    isDisabled={!this.state.itemToUpdate.accommodation}
+                                                />
+                                            </Col>
+                                        </Form.Group> 
+                                        <Form.Group as={Row}>
+                                            <Form.Label column sm="4">Stay period</Form.Label>
+                                            <Col sm="8" style={{display: "flex", alignItems: "center"}}>
+                                                <Select
+                                                    styles={selectStyles}
+                                                    options={this.state.stayPeriods}                                    
+                                                    value={this.state.itemToUpdate.stayPeriod}
+                                                    onChange={stayPeriod => {                                        
+                                                        this.setState({ itemToUpdate: {...this.state.itemToUpdate, stayPeriod: stayPeriod} })                                        
+                                                    }}
+                                                    isDisabled={!this.state.itemToUpdate.accommodation}
+                                                />
+                                            </Col>
+                                        </Form.Group> 
+                                    </div>
+                                )}                            
+                                <Form.Group as={Row}>
+                                    <Form.Label column sm="4">Weight / age category</Form.Label>
+                                    <Col sm="8" style={{display: "flex", alignItems: "center"}}>
                                         <Select
                                             styles={selectStyles}
-                                            options={this.state.roomTypes}                                    
-                                            value={this.state.itemToUpdate.roomType}
-                                            onChange={roomType => {                                        
-                                                this.setState({ itemToUpdate: {...this.state.itemToUpdate, roomType: roomType} })                                        
+                                            options={this.state.weightAgeCategories}                                    
+                                            value={this.state.itemToUpdate.weightAgeCategory}
+                                            onChange={weightAgeCategory => {                                        
+                                                this.setState({ itemToUpdate: {...this.state.itemToUpdate, weightAgeCategory: weightAgeCategory} })                                        
                                             }}
-                                            isDisabled={!this.state.itemToUpdate.accommodation}
+                                            isDisabled={this.state.itemToUpdate.asJudgeParticipation}
                                         />
-                                    </Form.Group> 
-                                    <Form.Group as={Row}>
-                                        <Form.Label column sm="4">Stay period</Form.Label>
-                                        <Select
-                                            styles={selectStyles}
-                                            options={this.state.stayPeriods}                                    
-                                            value={this.state.itemToUpdate.stayPeriod}
-                                            onChange={stayPeriod => {                                        
-                                                this.setState({ itemToUpdate: {...this.state.itemToUpdate, stayPeriod: stayPeriod} })                                        
-                                            }}
-                                            isDisabled={!this.state.itemToUpdate.accommodation}
-                                        />
-                                    </Form.Group> 
-                                </div>
-                            )}                            
-                            <Form.Group as={Row}>
-                                <Form.Label column sm="4">Weight / age category</Form.Label>
-                                <Select
-                                    styles={selectStyles}
-                                    options={this.state.weightAgeCategories}                                    
-                                    value={this.state.itemToUpdate.weightAgeCategory}
-                                    onChange={weightAgeCategory => {                                        
-                                        this.setState({ itemToUpdate: {...this.state.itemToUpdate, weightAgeCategory: weightAgeCategory} })                                        
-                                    }}
-                                    isDisabled={this.state.itemToUpdate.asJudgeParticipation}
-                                />
-                            </Form.Group>                      
-                            
-                        </Container>                        
+                                    </Col>
+                                </Form.Group> 
+                            </Card.Body>                     
+                        </Card>                                              
                     </Modal.Body>
                     <Modal.Footer>
                         <div>

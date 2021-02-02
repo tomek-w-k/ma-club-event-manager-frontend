@@ -499,7 +499,8 @@ class TournamentDetails extends Component
             ( 
                 <div>
                     {this.state.errorMessage && (<Alert variant="danger">{this.state.errorMessage}</Alert>)}
-                    <Accordion defaultActiveKey="0">
+                    {/* <Accordion defaultActiveKey="0"> Removing defaultActiveKey prop runs accordion collapsed  */}
+                    <Accordion >
                     <Card >
                         {/* style={{backgroundColor: "#EAECEE"}} */}
                         <Card.Header>

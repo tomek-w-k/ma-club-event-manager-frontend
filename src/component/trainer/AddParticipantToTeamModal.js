@@ -225,23 +225,13 @@ class AddParticipantToTeamModal extends Component
             .then(result => {            
                 return new Promise((resolve, reject) => {
                     if(result.ok)
-                        resolve("Participant added successfully.")
+                        resolve()
                     else reject(result);                    
                 })    
             },
             error => { console.log("Error - Participant not added.") })    
-            .then( () => {                
-                this.props.onHide();
-            },
-            error => {
-                error.json()
-                .then((text) => {                    
-                    //alert(text.message);
-                    this.setState({
-                        errorMessage: text.message
-                    })
-                });                
-            });
+            .then( () => this.props.onHide(),
+            error => error.json().then(text => this.setState({ errorMessage: text.message }) ) );
         }        
         else this.setState({ formValidated: true });       
     }
@@ -326,7 +316,7 @@ class AddParticipantToTeamModal extends Component
                             <div style={{height: "16px"}}></div>
                             {this.props.signUpMe && this.state.errorMessage && (<Alert variant="danger">{this.state.errorMessage}</Alert>)}
                             <Card >
-                                <Card.Header>OPTIONS</Card.Header>
+                                <Card.Header>REGISTRATION OPTIONS</Card.Header>
                                 <Card.Body>                                    
                                     <Form.Group as={Row} >
                                         <Form.Label column sm="4">As a judge participation</Form.Label>

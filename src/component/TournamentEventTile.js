@@ -8,6 +8,7 @@ import AuthService from "../service/auth-service";
 import * as Urls from "../servers-urls";
 import {withRouter} from "react-router-dom";
 import {Check, X} from "react-bootstrap-icons";
+import ConfirmationDialogModal from "./ConfirmationDialogModal";
 
 
 const currentUser = AuthService.getCurrentUser();
@@ -21,11 +22,11 @@ class TournamentEventTile extends Component
         this.state = {            
             eventContainsCurrentUser: false,
             teamId: undefined,            
-            eventPicture: ""
+            eventPicture: "",
+            confirmSignOutTeamModalShow: false,            
         }
 
-        this.handleSignUp = this.handleSignUp.bind(this);
-        this.handleSignOut = this.handleSignOut.bind(this);
+        this.handleSignUp = this.handleSignUp.bind(this);        
         this.personsRegistered = this.personsRegistered.bind(this);
     }   
 
@@ -91,30 +92,6 @@ class TournamentEventTile extends Component
         });        
     }
 
-    handleSignOut(e)
-    {
-        e.preventDefault();
-        fetch(Urls.WEBSERVICE_URL + "/user/" + currentUser.id + "/teams/" + this.state.teamId, {
-            method: "DELETE"
-        })
-        .then(response => {
-            if ( response.ok )
-            {
-                console.log("The team has been signed out from ", this.props.event.eventName);
-                this.setState({
-                    eventContainsCurrentUser: false,
-                    teamId: undefined
-                });
-                window.location.reload();
-                return response;
-            }
-            throw new Error(response.message);
-        })
-        .catch(error => {
-            console.log(error);
-        })
-    }
-
     personsRegistered()
     {
         let personsRegistered = 0;
@@ -124,6 +101,26 @@ class TournamentEventTile extends Component
 
         return personsRegistered;
     }
+
+    handleSignOut = result => {
+        if ( result )
+            fetch(Urls.WEBSERVICE_URL + "/user/" + currentUser.id + "/teams/" + this.state.teamId, {
+                method: "DELETE"
+            })
+            .then(response => {
+                if ( response.ok )
+                {                
+                    this.setState({
+                        eventContainsCurrentUser: false,
+                        teamId: undefined
+                    });
+                    this.forceUpdate();                    
+                    return response;
+                }
+                throw new Error(response.message);
+            })
+            .catch(error => console.log(error))
+    }    
 
     render()
     {   
@@ -146,7 +143,11 @@ class TournamentEventTile extends Component
         return(
             currentUser != null && currentUser.roles.includes("ROLE_USER") ? 
             (
-                <div>                    
+                <div>
+                    <ConfirmationDialogModal    show={this.state.confirmSignOutTeamModalShow}
+                                                onHide={() => this.setState({ confirmSignOutTeamModalShow: false }) }
+                                                confirmationResult={this.handleSignOut}                                                
+                    />                                  
                     <Card style={{marginBottom: "20px"}}>
                         <Card.Body>
                             <Card.Title>{event.eventName}</Card.Title>
@@ -167,22 +168,28 @@ class TournamentEventTile extends Component
                                 { event.weightAgeCategories.map(wac => <li>{wac.categoryName}</li> ) }
                                 Teams registered (by trainer):
                                 { event.teams.map(team => <li>{team.trainer.email}</li>) }
-                            </Card.Text>                        
-                            <div className="d-flex flex-row-reverse">                                                        
-                                {!eventContainsCurrentUser && (
-                                    <Button variant="info" onClick={this.handleSignUp} >Sign up a team</Button>
-                                )}
-                                {eventContainsCurrentUser && (
-                                    <div className="d-flex flex-row">
-                                        <div style={{display: "flex", alignItems: "center", marginRight: "10px"}}>
-                                            <Button variant="outline-success" disabled>
-                                                <Check color="#13A84D" size={22}/>
-                                            Signed up</Button>{' '}
-                                        </div>    
-                                        <Button variant="danger" onClick={this.handleSignOut}>Sign out my team</Button> 
-                                    </div>                                        
-                                )}
-                            </div>
+                            </Card.Text>                                           
+                            {!eventContainsCurrentUser && currentUser.roles.includes("ROLE_TRAINER") && (
+                                <div>
+                                    <div className="d-flex flex-row-reverse">
+                                        <Button variant="info" onClick={this.handleSignUp} >Sign up a team *</Button>
+                                    </div> <br />
+                                    <small><i>
+                                        * If you want to participate in a tournament as a judge and register only yourself, click "Sign up a team" and then "Sign up me...".
+                                        Choose your registration options in the window that appeared (don't forget to check "As a judge participation" option) and then click "Sign up"
+                                    </i></small>
+                                </div>
+                            )}
+                            {eventContainsCurrentUser  && currentUser.roles.includes("ROLE_TRAINER") && (
+                                <div className="d-flex flex-row-reverse">
+                                    <div>
+                                        <Button variant="outline-success" disabled>
+                                            <Check color="#13A84D" size={22}/>
+                                        Signed up</Button>{' '}
+                                        <Button variant="danger" onClick={() => this.setState({ confirmSignOutTeamModalShow: true })}>Sign out my team</Button> 
+                                    </div>
+                                </div>                                        
+                            )}                                                     
                         </Card.Body>
                     <Card.Footer>
                         Added: {event.dateCreated}

@@ -1,7 +1,13 @@
 import React, {Component} from "react";
 import TournamentDetails from "./TournamentDetails";
 import TournamentRegistrations from "./TournamentRegistrations";
+import TournamentTeams from "./TournamentTeams";
+import AddTeamModal from "./AddTeamModal";
 import AuthService from "../../../service/auth-service";
+import * as Urls from "../../../servers-urls";
+
+
+const currentUser = AuthService.getCurrentUser();
 
 
 class Tournament extends Component
@@ -9,13 +15,20 @@ class Tournament extends Component
     constructor(props)
     {
         super(props);
-        this.goToEventWall = this.goToEventWall.bind(this);
-        this.handleUpdateRegistration = this.handleUpdateRegistration.bind(this);
-        this.handleAddRegistration = this.handleAddRegistration.bind(this);
-        this.handleDeleteRegistration = this.handleDeleteRegistration.bind(this);
+        this.state = {
+            addTeamModalShow: false,
+            selectedRowsIds: [],
+            crudTableRef: null
+        }
 
-        this.tournamentRegistrationsRef = React.createRef();
+        this.goToEventWall = this.goToEventWall.bind(this);
+        this.handleUpdateRegistration = this.handleUpdateRegistration.bind(this);        
+        this.handleAddTeam = this.handleAddTeam.bind(this);
+        this.handleDeleteRegistration = this.handleDeleteRegistration.bind(this);
+        this.handleDeleteTeam = this.handleDeleteTeam.bind(this);        
+
         this.tournamentDetailsRef = React.createRef();
+        this.tournamentRegistrationsRef = React.createRef();        
     }
 
     goToEventWall()
@@ -29,9 +42,9 @@ class Tournament extends Component
         this.tournamentDetailsRef.current.refreshTournamentDetails();
     }
 
-    handleAddRegistration()
-    {
-        this.tournamentRegistrationsRef.current.handleShowAddParticipantModal();
+    handleAddTeam()
+    {  
+        this.setState({ addTeamModalShow: true });       
     }
 
     handleDeleteRegistration()
@@ -39,18 +52,62 @@ class Tournament extends Component
         this.tournamentRegistrationsRef.current.handleDeleteItem();
     }
 
-    render()
+    handleDeleteTeam()
     {
-        const currentUser = AuthService.getCurrentUser();
-        this.props.navbarControlsHandler();
+        if ( this.state.selectedRowsIds != null && this.state.selectedRowsIds.length == 1 )
+        {
+            console.log("selectedrowsids z handleDeleteTeam :: ", this.state.selectedRowsIds[0])
 
+            if ( !window.confirm("Are you sure?") )
+                return;
+
+            fetch(Urls.WEBSERVICE_URL + "/user/" + currentUser.id + "/teams/" + this.state.selectedRowsIds[0], {
+                method: "DELETE",
+                headers : {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + currentUser.accessToken
+                }
+            })
+            .then(result => {
+                this.setState({ selectedRowsIds: [] });
+                this.state.crudTableRef.current.unselectAllRows();
+                this.state.crudTableRef.current.fillTable();
+            },
+            error => {
+                alert("Item not deleted.")
+            });
+        }            
+        else alert("Please select one team to remove");
+    }
+
+    handleSelectRow = (rows, crudTableRef) => {
+        this.setState({
+            selectedRowsIds: rows,
+            crudTableRef: crudTableRef
+        });        
+    }
+
+    render()
+    {        
+        this.props.navbarControlsHandler();
+       
         return(
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
             (
                 <div>
+                    <AddTeamModal   show={this.state.addTeamModalShow}
+                                    onHide={() => {
+                                        this.setState({ addTeamModalShow: false });                                                                                            
+                                    }}                                    
+                                    eventId={this.props.match.params.id}                                    
+                    /> 
                     <TournamentDetails id={this.props.match.params.id} onTournamentUpdate={this.goToEventWall} ref={this.tournamentDetailsRef} />
                     <br />
                     <TournamentRegistrations id={this.props.match.params.id} onRegistrationUpdate={this.handleUpdateRegistration} ref={this.tournamentRegistrationsRef} />
+                    <br />
+                    <TournamentTeams id={this.props.match.params.id} onRegistrationUpdate={this.handleUpdateRegistration} onSelectRow={this.handleSelectRow} />
+                    
                 </div>
             ): (<h2>You do not have priviledges  granted to view this section.</h2 > )
         )

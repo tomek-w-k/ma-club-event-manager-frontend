@@ -19,13 +19,14 @@ const TOURNAMENT_EVENTS = Urls.WEBSERVICE_URL + "/tournament_events";
 const ColumnNames = Object.freeze({
     ID: 0,
     FULL_NAME: 1,
-    CLUB_NAME: 2,
-    FEE_RECEIVED: 3,
-    SAYONARA_MEETING_PARTICIPATION: 4,
-    AS_JUDGE_PARTICIPATION: 5,
-    ROOM_TYPE_NAME: 6,
-    STAY_PERIOD_NAME: 7,
-    CATEGORY_NAME: 8
+    TRAINER: 2,
+    CLUB_NAME: 3,
+    FEE_RECEIVED: 4,
+    SAYONARA_MEETING_PARTICIPATION: 5,
+    AS_JUDGE_PARTICIPATION: 6,
+    ROOM_TYPE_NAME: 7,
+    STAY_PERIOD_NAME: 8,
+    CATEGORY_NAME: 9
 });
 
 const columns = [
@@ -39,7 +40,13 @@ const columns = [
         text: "Full name",
         sort: true, 
         filter: textFilter()           
-    },    
+    }, 
+    {
+        dataField: "trainerFullName",
+        text: "Trainer",
+        sort: true, 
+        filter: textFilter()           
+    },   
     {
         dataField: "user.club.clubName",
         text: "Club",
@@ -233,12 +240,13 @@ class TournamentRegistrations extends Component
                                                         sayonaraMeeting={this.state.sayonaraMeeting}
                                                         accommodation={this.state.accommodation}
                     /> 
-                    <Accordion defaultActiveKey="0">
+                    {/* <Accordion defaultActiveKey="0"> Removing defaultActiveKey prop runs accordion collapsed  */}
+                    <Accordion >
                     <Card>
                         {/* style={{backgroundColor: "#EAECEE"}} */}
                         <Card.Header >
                             <div className="d-flex">
-                                <div style={{display: "flex", alignItems: "center"}}>PARTICIPANTS</div>
+                                <div style={{display: "flex", alignItems: "center"}}>REGISTRATIONS BY PARTICIPANTS</div>
                                 <Accordion.Toggle className="ml-auto" as={Button} variant="secondary" eventKey="0">Show / Hide</Accordion.Toggle>
                             </div> 
                         </Card.Header>

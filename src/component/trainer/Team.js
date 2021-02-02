@@ -1,6 +1,9 @@
 import React, {Component} from "react";
 import CrudTableComponent from "../CrudTableComponent";
-import {Card} from "react-bootstrap";
+import {
+    Card,
+    Alert
+} from "react-bootstrap";
 import {textFilter} from 'react-bootstrap-table2-filter';
 import {Check, X} from "react-bootstrap-icons";
 import EditTournamentRegistrationInTeamModal from "./EditTournamentRegistrationInTeamModal";
@@ -133,10 +136,12 @@ class Team extends Component
             addModalShow: false,            
             signUpMe: false,
             selectedRowsIds: [],            
-            sayonaraMeeting: false,
-            accommodation: false, 
+            team: null,
             eventId: null,
-            teamId: null
+            teamId: null,
+            sayonaraMeeting: false,
+            accommodation: false,
+            stateUpdated: false,            
         };
 
         this.handleShowAddParticipantToTeamModal = this.handleShowAddParticipantToTeamModal.bind(this);
@@ -160,11 +165,13 @@ class Team extends Component
                 columns[ColumnNames.STAY_PERIOD_NAME] = {...columns[ColumnNames.STAY_PERIOD_NAME], hidden: !eventData.accommodation};
                 
                 this.setState({ 
+                    team: teamData,
                     eventId: eventData.id,
                     teamId: teamData.id,
                     sayonaraMeeting: eventData.sayonaraMeeting,
-                    accommodation: eventData.accommodation                    
-                });                             
+                    accommodation: eventData.accommodation,
+                    stateUpdated: true                    
+                });                                           
             });            
         });
     }
@@ -224,8 +231,6 @@ class Team extends Component
         else alert("Please select one registration to remove");
     }
 
-    
-
     render()
     {
         const TOURNAMENT_REGISTRATIONS_FOR_TEAM = Urls.WEBSERVICE_URL + "/teams/" + this.props.match.params.teamId + "/tournament_registrations";
@@ -233,52 +238,60 @@ class Team extends Component
         this.props.navbarControlsHandler();
 
         return (        
-            currentUser != null && currentUser.roles.includes("ROLE_TRAINER") ? 
-            (
-                <div>
-                    {this.state.eventId !=null ? (
-                        <div>
-                            <EditTournamentRegistrationInTeamModal  show={this.state.editModalShow}
-                                                                    onHide={() => {
-                                                                        this.setState({ editModalShow: false, selectedRowsIds: [] });
-                                                                        this.crudTableRef.current.unselectAllRows();
-                                                                        this.crudTableRef.current.fillTable();                                                            
-                                                                    }}
-                                                                    itemId={this.state.selectedRowsIds[0]}
-                                                                    eventId={this.state.eventId}
-                                                                    teamId={this.state.teamId}
-                                                                    sayonaraMeeting={this.state.sayonaraMeeting}
-                                                                    accommodation={this.state.accommodation}
-                            /> 
-                            <AddParticipantToTeamModal              show={this.state.addModalShow}
-                                                                    onHide={() => {
-                                                                        this.setState({ addModalShow: false, selectedRowsIds: [] });
-                                                                        this.crudTableRef.current.unselectAllRows();
-                                                                        this.crudTableRef.current.fillTable();                                                    
-                                                                    }}                                                                
-                                                                    eventId={this.state.eventId}
-                                                                    teamId={this.state.teamId}
-                                                                    sayonaraMeeting={this.state.sayonaraMeeting}
-                                                                    accommodation={this.state.accommodation}
-                                                                    signUpMe={this.state.signUpMe}
-                            />   
-                        </div>                                    
-                    ) : (<div></div>)}                    
-                    <Card>
-                        <Card.Body>
-                            <Card.Text>
-                                <CrudTableComponent itemsUrl={TOURNAMENT_REGISTRATIONS_FOR_TEAM} 
-                                                    tableColumns={columns} 
-                                                    selectedItemId={this.handleRowClick}
-                                                    selectedIds={this.handleRowSelection}
-                                                    emptyTableMessage={emptyTableMessage}
-                                                    ref={this.crudTableRef}
-                                />
-                            </Card.Text>
-                        </Card.Body>                    
-                    </Card>                    
-                </div>
-            ) : ( <h2>You have no priviledges granted to view this section.</h2> )
+            this.state.stateUpdated && (
+                currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ||
+                                        (this.state.team.trainer.id == currentUser.id && currentUser.roles.includes("ROLE_TRAINER")) ? 
+                (
+                    <div>
+                        {this.state.eventId !=null ? (
+                            <div>
+                                <EditTournamentRegistrationInTeamModal  show={this.state.editModalShow}
+                                                                        onHide={() => {
+                                                                            this.setState({ editModalShow: false, selectedRowsIds: [] });
+                                                                            this.crudTableRef.current.unselectAllRows();
+                                                                            this.crudTableRef.current.fillTable();                                                            
+                                                                        }}
+                                                                        itemId={this.state.selectedRowsIds[0]}
+                                                                        eventId={this.state.eventId}
+                                                                        teamId={this.state.teamId}
+                                                                        sayonaraMeeting={this.state.sayonaraMeeting}
+                                                                        accommodation={this.state.accommodation}
+                                /> 
+                                <AddParticipantToTeamModal              show={this.state.addModalShow}
+                                                                        onHide={() => {
+                                                                            this.setState({ addModalShow: false, selectedRowsIds: [] });
+                                                                            this.crudTableRef.current.unselectAllRows();
+                                                                            this.crudTableRef.current.fillTable();                                                    
+                                                                        }}                                                                
+                                                                        eventId={this.state.eventId}
+                                                                        teamId={this.state.teamId}
+                                                                        sayonaraMeeting={this.state.sayonaraMeeting}
+                                                                        accommodation={this.state.accommodation}
+                                                                        signUpMe={this.state.signUpMe}
+                                />   
+                            </div>                                    
+                        ) : (<div></div>)}                    
+                        <Card>
+                            <Card.Body>
+                                <Card.Text>
+                                    <CrudTableComponent itemsUrl={TOURNAMENT_REGISTRATIONS_FOR_TEAM} 
+                                                        tableColumns={columns} 
+                                                        selectedItemId={this.handleRowClick}
+                                                        selectedIds={this.handleRowSelection}
+                                                        emptyTableMessage={emptyTableMessage}
+                                                        ref={this.crudTableRef}
+                                    />
+                                </Card.Text>
+                            </Card.Body>                    
+                        </Card>                    
+                    </div>
+                ) : (
+                    <Alert variant="danger">
+                        <Alert.Heading>Access denided</Alert.Heading>
+                        <p>You have no priviledges granted to view this section.</p>
+                    </Alert>
+                )
+            )
         );
     }
 }
