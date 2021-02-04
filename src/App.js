@@ -12,6 +12,7 @@ import {MDBIcon} from "mdbreact";
 
 import LoginComponent from "./component/security/LoginComponent";
 import SignUpComponent from "./component/security/SignUpComponent";
+import SignUp from "./component/security/SignUp";
 
 import People from "./component/admin/People";
 
@@ -204,11 +205,11 @@ class App extends Component
 								<div className="navbar-nav ml-auto" style={{display: "flex", alignItems: "center"}}>
 									<li className="nav-item"><Link className="btn btn-outline-secondary btn-sm">{this.state.currentUser.email}</Link></li>
 									<div style={{width: "10px"}}></div>
-									<li className="nav-item"><Link to={"/login"} className="btn btn-secondary btn-sm" onClick={this.logout}>Logout</Link></li>
+									<li className="nav-item"><Link to={"/login/@"} className="btn btn-secondary btn-sm" onClick={this.logout}>Logout</Link></li>
 								</div>															
 								) : ( 
 								<div className="navbar-nav ml-auto">
-									<li className="nav-item"><Link to={"/login"} className="nav-link" >Login</Link></li>
+									<li className="nav-item"><Link to={"/login/@"} className="nav-link" >Login</Link></li>
 									<li className="nav-item"><Link to={"/signup"} className="nav-link">Sign Up</Link></li>
 								</div>
 							)}								
@@ -347,8 +348,9 @@ class App extends Component
 					</div>
 					<div className="content">
 						<Switch>							
-							<Route path="/login" component={LoginComponent} />
-							<Route path="/signup" component={SignUpComponent} />
+							<Route path="/login/:email" component={LoginComponent} />
+							{/* <Route path="/signup" component={SignUpComponent} /> */}
+							<Route path="/signup" component={SignUp} />
 
 							{/* It was necessary to make conditions below nested. Place them on the same level doesn't work - when all three state variables 
 							(showUsersTools, showTrainersTools and showAdministrativeTools) were set to "true", then it's expected that all routes below will be

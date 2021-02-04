@@ -35,6 +35,16 @@ class LoginComponent extends Component
         };
     }
 
+    componentDidMount()
+    {
+        if (this.props.match.params.email != "@")
+            this.setState({ email: this.props.match.params.email });
+        
+        // this.setState({
+        //     email: this.props.match.params.email ? this.props.match.params.email : ""
+        // })
+    }
+
     onChangeEmail(e)
     {
         this.setState({

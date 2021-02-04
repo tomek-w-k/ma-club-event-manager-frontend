@@ -51,6 +51,25 @@ class People extends Component
     constructor(props)
     {
         super(props);
+        this.state = {
+            selectedRowsIds: []
+        }
+        
+
+        this.handleRowClick = this.handleRowClick.bind(this);
+        this.handleRowSelection = this.handleRowSelection.bind(this);
+
+        this.crudTableRef = React.createRef();
+    }
+
+    handleRowClick(selectedRowId)
+    {
+        this.setState({ selectedRowsIds: selectedRowId });
+    }
+
+    handleRowSelection(selectedRows)
+    {
+        this.setState({ selectedRowsIds: selectedRows });
     }
 
     render()
@@ -64,7 +83,12 @@ class People extends Component
                 <Card>
                     <Card.Body>
                         <Card.Text>
-                            <CrudTableComponent itemsUrl={USERS_URL} tableColumns={columns} />             
+                            <CrudTableComponent itemsUrl={USERS_URL} 
+                                                tableColumns={columns} 
+                                                selectedItemId={this.handleRowClick} 
+                                                selectedIds={this.handleRowSelection}
+                                                ref={this.crudTableRef}
+                            />             
                         </Card.Text>
                     </Card.Body>
                 </Card>
