@@ -3,6 +3,7 @@ import TournamentDetails from "./TournamentDetails";
 import TournamentRegistrations from "./TournamentRegistrations";
 import TournamentTeams from "./TournamentTeams";
 import AddTeamModal from "./AddTeamModal";
+import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
@@ -54,6 +55,8 @@ class Tournament extends Component
 
     handleDeleteTeam()
     {
+        const t = this.props.t;
+        
         if ( this.state.selectedRowsIds != null && this.state.selectedRowsIds.length == 1 )
         {
             console.log("selectedrowsids z handleDeleteTeam :: ", this.state.selectedRowsIds[0])
@@ -78,7 +81,7 @@ class Tournament extends Component
                 alert("Item not deleted.")
             });
         }            
-        else alert("Please select one team to remove");
+        else alert(t("select_one_team_to_remove"));
     }
 
     handleSelectRow = (rows, crudTableRef) => {
@@ -114,4 +117,4 @@ class Tournament extends Component
     }
 }
 
-export default Tournament;
+export default withTranslation('translation', { withRef: true })(Tournament)

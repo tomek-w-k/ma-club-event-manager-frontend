@@ -10,12 +10,31 @@ import {
 import CrudTableComponent from "../../CrudTableComponent";
 import { textFilter } from 'react-bootstrap-table2-filter';
 import {withRouter} from "react-router-dom";
+import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
 
 const currentUser = AuthService.getCurrentUser();
 const TRAINERS = Urls.WEBSERVICE_URL + "/roles/ROLE_TRAINER/users"; 
+
+const ColumnNames = Object.freeze({
+    ID: 0,    
+    FULL_NAME: 1,
+    EMAIL: 2,
+    CLUB: 3,
+    COUNTRY: 4
+});
+
+const headerFormatter = (column, colIndex, { sortElement, filterElement }) => {
+    return (
+        <div style={ { display: 'flex', flexDirection: 'column' } }>            
+            { column.text }            
+            { filterElement }
+            { sortElement }
+        </div>
+    );
+};
 
 const columns = [
     {
@@ -27,25 +46,29 @@ const columns = [
         dataField: "fullName",
         text: "Full name",
         sort: true, 
-        filter: textFilter()           
+        filter: textFilter(),
+        headerFormatter: headerFormatter          
     },
     {
         dataField: "email", 
         text: "Email",
         sort: false,        
-        filter: textFilter(),                       
+        filter: textFilter(), 
+        headerFormatter: headerFormatter                      
     },
     {            
         dataField: "club.clubName",
         text: "Club",
         sort: true,
         filter: textFilter(),
+        headerFormatter: headerFormatter
     },
     {            
         dataField: "country",
         text: "Country",
         sort: true,
         filter: textFilter(),
+        headerFormatter: headerFormatter
     },
     
 ];
@@ -102,6 +125,8 @@ class AddTeamModal extends Component
     handleSignUp(e)
     {
         e.preventDefault();
+
+        const t = this.props.t;
         
         if ( this.state.selectedRowsIds.length == 1 )
         {   
@@ -137,7 +162,7 @@ class AddTeamModal extends Component
                 .then(text => this.setState({ errorMessage: text.message }) );                
             }); 
         }
-        else this.setState({ errorMessage: "Please choose one person." });        
+        else this.setState({ errorMessage: t("choose_one_person") });        
     }
 
     render()
@@ -148,6 +173,13 @@ class AddTeamModal extends Component
                 flex: 1,                
             })
         };
+
+        const t = this.props.t;
+
+        columns[ColumnNames.FULL_NAME] = {...columns[ColumnNames.FULL_NAME], text: t("full_name"), filter: textFilter({ placeholder: t("enter_full_name")})};
+        columns[ColumnNames.EMAIL] = {...columns[ColumnNames.EMAIL], text: t("email"), filter: textFilter({ placeholder: t("enter_email")})};
+        columns[ColumnNames.CLUB] = {...columns[ColumnNames.CLUB], text: t("club"), filter: textFilter({ placeholder: t("enter_club")})};
+        columns[ColumnNames.COUNTRY] = {...columns[ColumnNames.COUNTRY], text: t("country"), filter: textFilter({ placeholder: t("enter_country")})};
 
         return (
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
@@ -161,16 +193,13 @@ class AddTeamModal extends Component
                     centered="true"                
                 >
                 <Form onSubmit={this.handleSignUp}>
-                    <Modal.Header>
-                        ADD TEAM
-                    </Modal.Header>
+                    <Modal.Header>{t("add_team_capital")}</Modal.Header>
                     <Modal.Body>
                         <Card>
-                            <Card.Header>TRAINER</Card.Header>
-                            <Card.Body>
-                                                  
+                            <Card.Header>{t("trainer_capital")}</Card.Header>
+                            <Card.Body>                                                  
                                 <Form.Group as={Row}>
-                                    <Form.Label column sm="12">Select a trainer for whom you want to create a team: </Form.Label>
+                                    <Form.Label column sm="12">{t("select_a_trainer_for_whom")}</Form.Label>
                                 </Form.Group>
                                 {this.state.errorMessage && (<Alert variant="danger">{this.state.errorMessage}</Alert>)}      
                                 <CrudTableComponent itemsUrl={TRAINERS} 
@@ -184,15 +213,20 @@ class AddTeamModal extends Component
                     </Modal.Body>
                     <Modal.Footer>
                         <div>
-                            <Button variant="info" type="submit">Save</Button>{' '}                            
-                            <Button variant="secondary" onClick={this.props.onHide}>Cancel</Button>
+                            <Button variant="info" type="submit">{t("save")}</Button>{' '}                            
+                            <Button variant="secondary" onClick={this.props.onHide}>{t("cancel")}</Button>
                         </div>
                     </Modal.Footer>
                 </Form>
             </Modal>
-            ): (<h2>You do not have priviledges  granted to view this section.</h2 >)
+            ) : (
+                <Alert variant="danger">
+                    <Alert.Heading>Access denided</Alert.Heading>
+                    <p>You have no priviledges granted to view this section.</p>
+                </Alert> 
+            )
         );
     }
 }
 
-export default withRouter(AddTeamModal);
+export default withTranslation('translation', { withRef: true })(withRouter(AddTeamModal))

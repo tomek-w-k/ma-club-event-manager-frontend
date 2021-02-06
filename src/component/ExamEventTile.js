@@ -1,10 +1,9 @@
 import React, {Component} from "react";
 import {
     Card,    
-    Button,
-    Col,
-    Row
+    Button,    
 } from "react-bootstrap";
+import { withTranslation } from "react-i18next";
 import AuthService from "../service/auth-service";
 import * as Urls from "../servers-urls";
 
@@ -115,6 +114,7 @@ class ExamEventTile extends Component
         const {
             eventContainsCurrentUser
         } = this.state;
+        const t = this.props.t;
 
         return(
             currentUser != null ? 
@@ -135,18 +135,18 @@ class ExamEventTile extends Component
                         </Card.Text>                        
                         <div className="d-flex flex-row-reverse">                                                        
                             {!eventContainsCurrentUser && (
-                                <Button variant="info" onClick={this.handleSignUp} >Sign Up</Button>
+                                <Button variant="info" onClick={this.handleSignUp} >{t("sign_up_event")}</Button>
                             )}
                             {eventContainsCurrentUser && (
                                 <div className="d-flex flex-row">
-                                    <div style={{display: "flex", alignItems: "center", marginRight: "10px"}}>Signed up</div>    
-                                    <Button variant="danger" onClick={this.handleSignOut}>Sign Out</Button> 
+                                    <div style={{display: "flex", alignItems: "center", marginRight: "10px"}}>{t("signed_up_event")}</div>    
+                                    <Button variant="danger" onClick={this.handleSignOut}>{t("sign_out_event")}</Button> 
                                 </div>                                        
                             )}
                         </div>
                     </Card.Body>
                 <Card.Footer>
-                    Added: {event.dateCreated}
+                    {t("added")} {event.dateCreated}
                     <div style={{float: "right"}}>
                         {event.examRegistrations.length} persons registered
                     </div>                    
@@ -157,4 +157,4 @@ class ExamEventTile extends Component
     }
 }
 
-export default ExamEventTile;
+export default withTranslation()(ExamEventTile);

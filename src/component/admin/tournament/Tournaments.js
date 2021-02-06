@@ -1,7 +1,11 @@
 import React, {Component} from "react";
 import CrudTableComponent from "../../CrudTableComponent";
-import {Card} from "react-bootstrap";
+import {
+    Card,
+    Alert
+} from "react-bootstrap";
 import {textFilter} from 'react-bootstrap-table2-filter';
+import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
@@ -9,6 +13,22 @@ import * as Urls from "../../../servers-urls";
 const TOURNAMENT_EVENTS_URL = Urls.WEBSERVICE_URL + "/tournament_events";
 const EVENTS_API_URL = Urls.WEBSERVICE_URL + "/events";
 
+const Columns = Object.freeze ({
+    ID: 0,
+    TOURNAMENT_NAME: 1,
+    START_DATE: 2,
+    TEAMS_SIGNED_IN: 3,    
+});
+
+const headerFormatter = (column, colIndex, { sortElement, filterElement }) => {
+    return (
+        <div style={ { display: 'flex', flexDirection: 'column' } }>            
+            { column.text }            
+            { filterElement }
+            { sortElement }
+        </div>
+    );
+}; 
 
 const columns = [
     {
@@ -20,20 +40,37 @@ const columns = [
         dataField: "eventName",
         text: "Event name",
         sort: true, 
-        filter: textFilter()           
+        filter: textFilter(),
+        headerFormatter: headerFormatter,
+        style: (colum, colIndex) => {
+            return { width: '60%', textAlign: 'left' };
+        },           
     },
     {
         dataField: "startDate", 
         text: "Start date",
         sort: true,
         type: "date",
-        filter: textFilter(),                       
+        style: (colum, colIndex) => {
+            return { width: '20%', textAlign: 'center' };
+        }, 
+        headerStyle:  { "text-align": "center" },
+        filter: textFilter(),
+        headerFormatter: headerFormatter,                       
     },
     {            
-        dataField: "tournamentRegistrations.length",
+        dataField: "teams.length",        
         text: "Persons signed in",
         sort: false,
-        style:  { "text-align": "center" },
+        style: (colum, colIndex) => {
+            return { width: '20%', textAlign: 'center' };
+        },
+        headerStyle:  { "text-align": "center" },
+        filter: textFilter({            
+            disabled: "true",
+            placeholder: "-"
+        }),
+        headerFormatter: headerFormatter
     }          
 ];
 
@@ -106,7 +143,13 @@ class Tournaments extends Component
 
     render()
     {
-        const currentUser = AuthService.getCurrentUser();        
+        const currentUser = AuthService.getCurrentUser(); 
+        const t = this.props.t;
+
+        columns[Columns.TOURNAMENT_NAME] = {...columns[Columns.TOURNAMENT_NAME], text: t("tournament"), filter: textFilter({ placeholder: t("enter_tournament_name")})};
+        columns[Columns.START_DATE] = {...columns[Columns.START_DATE], text: t("start_date"), filter: textFilter({ placeholder: t("enter_start_date")})};
+        columns[Columns.TEAMS_SIGNED_IN] = {...columns[Columns.TEAMS_SIGNED_IN], text: t("teams_registered")};
+
         this.props.navbarControlsHandler();
 
         return(
@@ -126,10 +169,14 @@ class Tournaments extends Component
                         </Card.Body>
                     </Card>                    
                 </div>
-            ) :
-            ( <h2>You do not have priviledges  granted to view this section.</h2> )
+            ) : (
+                <Alert variant="danger">
+                    <Alert.Heading>{t("access_denided")}</Alert.Heading>
+                    <p>{t("no_priviledges")}</p>
+                </Alert> 
+            )
         );
     }
 }
 
-export default Tournaments;
+export default withTranslation('translation', { withRef: true })(Tournaments);

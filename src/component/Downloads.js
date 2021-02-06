@@ -1,8 +1,9 @@
 import React, {Component} from "react";
 import {
     Table, 
-    Card
+    Alert
 } from "react-bootstrap";
+import { withTranslation } from "react-i18next";
 import AuthService from "../service/auth-service";
 import * as Urls from "../servers-urls";
 
@@ -32,6 +33,7 @@ class Downloads extends Component
     render()
     {
         const currentUser = AuthService.getCurrentUser();
+        const t = this.props.t;
         this.props.navbarControlsHandler();
 
         return(
@@ -45,7 +47,7 @@ class Downloads extends Component
                                     <tr>
                                         <td>{clubDocument.clubDocumentDescription}</td>
                                         <td>
-                                            <a href={clubDocument.clubDocumentPath}>Download</a>
+                                            <a href={clubDocument.clubDocumentPath}>{t("download")}</a>
                                         </td>
                                     </tr>
                                 )
@@ -53,10 +55,14 @@ class Downloads extends Component
                         </tbody>
                     </Table>                    
                 </div>
-            ) :
-            ( <h2>You do not have priviledges  granted to view this section.</h2> )
+            ) : (
+                <Alert variant="danger">
+                    <Alert.Heading>Access denided</Alert.Heading>
+                    <p>You have no priviledges granted to view this section.</p>
+                </Alert> 
+            )
         );
     }
 }
 
-export default Downloads;
+export default withTranslation()(Downloads);

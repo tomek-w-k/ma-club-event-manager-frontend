@@ -29,26 +29,6 @@ class AuthService
         });
     }
 
-    // register(email, password)
-    // {
-    //     return axios.post(API_URL + "signup", {
-    //         email,
-    //         password
-    //     });
-    // }
-
-    // AuthService.register(
-    //     userToRegister.fullName,
-    //     userToRegister.email,
-    //     userToRegister.password,
-    //     userToRegister.club,
-    //     userToRegister.country,
-    //     userToRegister.rank,
-    //     userToRegister.branchChief,
-    //     userToRegister.asTrainer
-    // );
-
-
     register(
         fullName,
         email,

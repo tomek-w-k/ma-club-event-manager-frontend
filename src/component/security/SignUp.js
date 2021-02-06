@@ -7,11 +7,11 @@ import {
     Button,    
     Alert,
     OverlayTrigger,   
-    Popover,
-    FormGroup
+    Popover,    
 } from "react-bootstrap";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
+import { withTranslation } from "react-i18next";
 import AuthService from "../../service/auth-service";
 import * as Urls from "../../servers-urls";
 
@@ -126,8 +126,6 @@ class SignUp extends Component
                 branchChief: selectedBranchChief
             };
 
-            console.log(userToRegister);
-
             AuthService.register(
                 userToRegister.fullName,
                 userToRegister.email,
@@ -138,13 +136,7 @@ class SignUp extends Component
                 userToRegister.branchChief,
                 userToRegister.asTrainer
             )
-            .then(response => {               
-                //console.log("aaaaaa ", response) ;
-                console.log(response.data.email);
-                console.log(response.data.password);
-                
-                this.props.history.push("/login/" + response.data.email);
-            },
+            .then(response => this.props.history.push("/login/" + response.data.email),
             error => {
                 const resMessage = 
                     (error.response &&
@@ -166,7 +158,8 @@ class SignUp extends Component
                 ...base,
                 flex: 1,                
             })            
-        };
+        };        
+        const t = this.props.t;
 
         return (
             <Row>
@@ -177,19 +170,19 @@ class SignUp extends Component
                             {this.state.responseErrorMessage && (<Alert variant="danger">{this.state.responseErrorMessage}</Alert>)}
                             <Form noValidate validated={this.state.formValidated} onSubmit={this.handleSignUp}>
                                 <Card>
-                                    <Card.Header>LOGIN INFORMATION</Card.Header>
+                                    <Card.Header>{t("login_information")}</Card.Header>
                                     <Card.Body>
                                         <Form.Group>                                       
                                             <Form.Control required
-                                                placeholder="Full name"
+                                                placeholder={t("full_name")}
                                                 type="text"
                                                 name="fullName"                                                 
                                                 maxLength="255"                                   
                                                 value={this.state.user.fullName}
                                                 onChange={e => this.setState(state => ({ user: {...state.user, fullName: e.target.value} })) }                            
                                             />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            <Form.Control.Feedback type="invalid">Please provide your full name.</Form.Control.Feedback>                                        
+                                            <Form.Control.Feedback>{t("looks_good")}</Form.Control.Feedback>
+                                            <Form.Control.Feedback type="invalid">{t("provide_full_name")}</Form.Control.Feedback>                                        
                                         </Form.Group>
                                         <Form.Group>                                        
                                             <Form.Control required
@@ -200,8 +193,8 @@ class SignUp extends Component
                                                 value={this.state.user.email}
                                                 onChange={e => this.setState(state => ({ user: {...state.user, email: e.target.value} })) }                            
                                             />
-                                            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                            <Form.Control.Feedback type="invalid">Please provide a valid email.</Form.Control.Feedback>                                        
+                                            <Form.Control.Feedback>{t("looks_good")}</Form.Control.Feedback>
+                                            <Form.Control.Feedback type="invalid">{t("provide_valid_email")}</Form.Control.Feedback>                                        
                                         </Form.Group>
                                         {this.state.passwordNotMatchError && (<Alert variant="danger">{this.state.passwordNotMatchError}</Alert>)}
                                         <Form.Row>
@@ -209,7 +202,7 @@ class SignUp extends Component
                                                 <Form.Group>                                                
                                                     <Form.Control required
                                                         autocomplete="on"                                                        
-                                                        placeholder="Password"
+                                                        placeholder={t("password")}
                                                         type="password"
                                                         name="password"
                                                         minLength="3"
@@ -217,15 +210,15 @@ class SignUp extends Component
                                                         value={this.state.user.password}
                                                         onChange={e => this.setState(state => ({ user: {...state.user, password: e.target.value} })) }                            
                                                     />
-                                                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                                    <Form.Control.Feedback type="invalid">Please provide a password (3 - 40 characters).</Form.Control.Feedback>                                        
+                                                    <Form.Control.Feedback>{t("looks_good")}</Form.Control.Feedback>
+                                                    <Form.Control.Feedback type="invalid">{t("provide_password_limited")}</Form.Control.Feedback>                                        
                                                 </Form.Group>
                                             </Col>
                                             <Col>
                                                 <Form.Group>                                                
                                                     <Form.Control required
                                                         autocomplete="off"
-                                                        placeholder="Repeat password"
+                                                        placeholder={t("repeat_password")}
                                                         type="password"
                                                         name="repeatPassword"  
                                                         minLength="3"
@@ -233,8 +226,8 @@ class SignUp extends Component
                                                         value={this.state.repeatPassword}
                                                         onChange={e => this.setState({ repeatPassword: e.target.value }) }                            
                                                     />
-                                                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                                    <Form.Control.Feedback type="invalid">Please repeat your password (3 - 40 characters).</Form.Control.Feedback>                                        
+                                                    <Form.Control.Feedback>{t("looks_good")}</Form.Control.Feedback>
+                                                    <Form.Control.Feedback type="invalid">{t("repeat_password_limited")}</Form.Control.Feedback>                                        
                                                 </Form.Group>
                                             </Col>
                                         </Form.Row>
@@ -242,17 +235,17 @@ class SignUp extends Component
                                 </Card>
                                 <div style={{height: "16px"}}></div>
                                 <Card>
-                                    <Card.Header>DETAILS</Card.Header>
+                                    <Card.Header>{t("details")}</Card.Header>
                                     <Card.Body>
                                         <Form.Group>                                                                              
                                             <OverlayTrigger trigger="hover" placement="top" overlay={(                            
                                                 <Popover>
-                                                    <Popover.Content>Please select from the list or enter your own</Popover.Content>
+                                                    <Popover.Content>{t("select_or_enter_your_own")}</Popover.Content>
                                                 </Popover>
                                             )}>
                                                 <div>
                                                     <CreatableSelect required
-                                                        placeholder="Club"
+                                                        placeholder={t("club")}
                                                         styles={selectStyles}
                                                         options={this.state.clubs}                                    
                                                         value={this.state.club}
@@ -265,21 +258,21 @@ class SignUp extends Component
                                             <Col md="8">
                                                 <Form.Group>                                                
                                                     <Form.Control required
-                                                        placeholder="Country"
+                                                        placeholder={t("country")}
                                                         type="text"
                                                         name="country" 
                                                         maxLength="255"                                   
                                                         value={this.state.user.country}
                                                         onChange={e => this.setState(state => ({ user: {...state.user, country: e.target.value} }))}                            
                                                     />
-                                                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-                                                    <Form.Control.Feedback type="invalid">Please provide your country.</Form.Control.Feedback>                                        
+                                                    <Form.Control.Feedback>{t("looks_good")}</Form.Control.Feedback>
+                                                    <Form.Control.Feedback type="invalid">{t("provide_country")}</Form.Control.Feedback>                                        
                                                 </Form.Group>
                                             </Col>
                                             <Col md="4">
                                                 <Form.Group>                                                
                                                     <Select
-                                                        placeholder="Rank"
+                                                        placeholder={t("rank")}
                                                         styles={selectStyles}
                                                         options={this.state.ranks}                                    
                                                         value={this.state.rank}
@@ -291,7 +284,7 @@ class SignUp extends Component
                                         <Form.Group>                                        
                                             <OverlayTrigger trigger="hover" placement="top" overlay={(                            
                                                 <Popover>
-                                                    <Popover.Content>Please select from the list or enter your own</Popover.Content>
+                                                    <Popover.Content>{t("select_or_enter_your_own")}</Popover.Content>
                                                 </Popover>
                                             )}>
                                                 <div>
@@ -307,7 +300,7 @@ class SignUp extends Component
                                         </Form.Group>
                                         <Form.Group>                                            
                                             <Form.Check 
-                                                label="I want to be able to register teams for tournaments"
+                                                label={t("want_to_be_trainer")}
                                                 type="checkbox"
                                                 name="asTrainer"                                                 
                                                 checked={this.state.user.asTrainer}
@@ -316,9 +309,9 @@ class SignUp extends Component
                                         </Form.Group> 
                                     </Card.Body>
                                 </Card> <br />                            
-                                <Button variant="info" style={{width: "100%"}} type="submit">Sign up</Button>
+                                <Button variant="info" style={{width: "100%"}} type="submit">{t("sign_up")}</Button>
                             </Form>
-                        </Card.Body>                        
+                        </Card.Body> 
                     </Card>
                 </Col>
                 <Col md="2"></Col>
@@ -327,4 +320,4 @@ class SignUp extends Component
     }
 }
 
-export default SignUp;
+export default withTranslation()(SignUp);

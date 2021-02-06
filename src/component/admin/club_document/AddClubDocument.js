@@ -1,13 +1,12 @@
 import React, {Component} from "react";
 import {
     Card,
-    Form,    
-    Col,   
-    Row, 
+    Form,
     Button,
     Alert,
 } from "react-bootstrap";
 import ClubDocumentDropzone from "./ClubDocumentDropzone";
+import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
@@ -39,6 +38,9 @@ class AddClubDocument extends Component
     handleAddClubDocument(e)
     {
         e.preventDefault();
+
+        const t = this.props.t;
+
         if ( e.currentTarget.checkValidity() )
         {            
             this.setState({ formValidated: true });
@@ -84,7 +86,7 @@ class AddClubDocument extends Component
         }
         else this.setState({ 
             formValidated: true,
-            errorMessage: "Please fill all required fields."
+            errorMessage: t("fill_all_required_fields")
         });
     }
 
@@ -100,7 +102,9 @@ class AddClubDocument extends Component
 
     render()
     {
-        const currentUser = AuthService.getCurrentUser();        
+        const currentUser = AuthService.getCurrentUser();  
+        const t = this.props.t;
+      
         this.props.navbarControlsHandler();
 
         return(
@@ -113,7 +117,7 @@ class AddClubDocument extends Component
                             <Card.Text>                            
                                 <Form noValidate validated={this.state.formValidated} onSubmit={this.handleAddClubDocument}>                            
                                     <Form.Group>
-                                        <Form.Label>Description</Form.Label>
+                                        <Form.Label>{t("description")}</Form.Label>
                                         <Form.Control required
                                             as="textarea"
                                             name="clubDocumentDescription"
@@ -125,7 +129,8 @@ class AddClubDocument extends Component
                                         <Card>
                                             <ClubDocumentDropzone   onDrop={this.onDropClubDocument} 
                                                                     //accept={} 
-                                                                    fileName={ this.state.clubDocumentTemp ? this.state.clubDocumentTemp.name : "" }                                                        
+                                                                    fileName={ this.state.clubDocumentTemp ? this.state.clubDocumentTemp.name : "" }
+                                                                    dropzoneText={t("click_to_load_or_drag")}                                                        
                                             />
                                         </Card>
                                     </Form.Group>
@@ -140,7 +145,7 @@ class AddClubDocument extends Component
                                     <br />
                                     <Card.Footer style={{paddingRight: "0px", paddingBottom: "0px", paddingTop: "1.25rem"}}>
                                         <div className="d-flex flex-row-reverse"> 
-                                            <Button variant="info" type="submit">Post</Button>                            
+                                            <Button variant="info" type="submit">{t("post")}</Button>                            
                                         </div>
                                     </Card.Footer>
                                 </Form>
@@ -148,10 +153,14 @@ class AddClubDocument extends Component
                         </Card.Body>
                     </Card>
                 </div>
-            ) :
-            ( <h2>You do not have priviledges  granted to view this section.</h2> )
+            ) : (
+                <Alert variant="danger">
+                    <Alert.Heading>Access denided</Alert.Heading>
+                    <p>You have no priviledges granted to view this section.</p>
+                </Alert> 
+            )
         );
     }
 }
 
-export default AddClubDocument;
+export default withTranslation()(AddClubDocument);

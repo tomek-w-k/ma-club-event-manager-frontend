@@ -4,11 +4,12 @@ import {
     Button,
     Image    
 } from "react-bootstrap";
-import AuthService from "../service/auth-service";
-import * as Urls from "../servers-urls";
+import { withTranslation } from "react-i18next";
 import {withRouter} from "react-router-dom";
 import {Check, X} from "react-bootstrap-icons";
 import ConfirmationDialogModal from "./ConfirmationDialogModal";
+import AuthService from "../service/auth-service";
+import * as Urls from "../servers-urls";
 
 
 const currentUser = AuthService.getCurrentUser();
@@ -139,6 +140,7 @@ class TournamentEventTile extends Component
             maxWidth: "640px",
             maxHeight: "480px"
         };
+        const t = this.props.t;
 
         return(
             currentUser != null && currentUser.roles.includes("ROLE_USER") ? 
@@ -172,12 +174,9 @@ class TournamentEventTile extends Component
                             {!eventContainsCurrentUser && currentUser.roles.includes("ROLE_TRAINER") && (
                                 <div>
                                     <div className="d-flex flex-row-reverse">
-                                        <Button variant="info" onClick={this.handleSignUp} >Sign up a team *</Button>
+                                        <Button variant="info" onClick={this.handleSignUp} >{t("sign_up_team_event")}</Button>
                                     </div> <br />
-                                    <small><i>
-                                        * If you want to participate in a tournament as a judge and register only yourself, click "Sign up a team" and then "Sign up me...".
-                                        Choose your registration options in the window that appeared (don't forget to check "As a judge participation" option) and then click "Sign up"
-                                    </i></small>
+                                    <small><i>{t("sign_up_hint")}</i></small>
                                 </div>
                             )}
                             {eventContainsCurrentUser  && currentUser.roles.includes("ROLE_TRAINER") && (
@@ -185,14 +184,14 @@ class TournamentEventTile extends Component
                                     <div>
                                         <Button variant="outline-success" disabled>
                                             <Check color="#13A84D" size={22}/>
-                                        Signed up</Button>{' '}
-                                        <Button variant="danger" onClick={() => this.setState({ confirmSignOutTeamModalShow: true })}>Sign out my team</Button> 
+                                        {t("signed_up_event")}</Button>{' '}
+                                        <Button variant="danger" onClick={() => this.setState({ confirmSignOutTeamModalShow: true })}>{t("sign_out_my_team")}</Button> 
                                     </div>
                                 </div>                                        
                             )}                                                     
                         </Card.Body>
                     <Card.Footer>
-                        Added: {event.dateCreated}
+                        {t("added")} {event.dateCreated}
                         <div style={{float: "right"}}>
                             {this.personsRegistered()} persons registered
                         </div>                    
@@ -204,4 +203,4 @@ class TournamentEventTile extends Component
     }
 }
 
-export default withRouter(TournamentEventTile);
+export default withTranslation('translation', { withRef: true })(withRouter(TournamentEventTile))

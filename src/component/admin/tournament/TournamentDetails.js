@@ -11,6 +11,7 @@ import {
 import Datetime from "react-datetime";
 import Dropzone from "../Dropzone";
 import AuthService from "../../../service/auth-service";
+import { withTranslation } from "react-i18next";
 import * as Urls from "../../../servers-urls";
 import { createWriteStream } from "fs";
 
@@ -491,8 +492,9 @@ class TournamentDetails extends Component
 
     render()
     {                
-        const roomTypes = [...this.state.event.roomTypes];
-        const rtImageSize = "300px";      
+        const roomTypes = [...this.state.event.roomTypes];        
+        const rtImageSize = "300px";   
+        const t = this.props.t;
 
         return( 
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
@@ -505,8 +507,8 @@ class TournamentDetails extends Component
                         {/* style={{backgroundColor: "#EAECEE"}} */}
                         <Card.Header>
                             <div className="d-flex">
-                                <div style={{display: "flex", alignItems: "center"}}>DETAILS</div>
-                                <Accordion.Toggle className="ml-auto" as={Button} variant="secondary" eventKey="0">Show / Hide</Accordion.Toggle>
+                                <div style={{display: "flex", alignItems: "center"}}>{t("details")}</div>
+                                <Accordion.Toggle className="ml-auto" as={Button} variant="secondary" eventKey="0">{t("show_hide")}</Accordion.Toggle>
                             </div>                        
                         </Card.Header>
                         <Accordion.Collapse eventKey="0">
@@ -514,7 +516,7 @@ class TournamentDetails extends Component
                             <Card.Text>
                             <Form noValidate validated={this.state.formValidated} onSubmit={this.handleEditEvent}>   
                                     <Form.Group>
-                                        <Form.Label>Name</Form.Label>
+                                        <Form.Label>{t("name")}</Form.Label>
                                         <Form.Control required
                                             type="text"
                                             name="eventName"
@@ -525,7 +527,7 @@ class TournamentDetails extends Component
                                     <Form.Row>
                                         <Col>
                                             <Form.Group>
-                                                <Form.Label>From</Form.Label>
+                                                <Form.Label>{t("from")}</Form.Label>
                                                 <Datetime 
                                                     inputProps={{name: "startDate", autoComplete: "off", required: "true" }}
                                                     value={this.state.event.startDate}
@@ -537,7 +539,7 @@ class TournamentDetails extends Component
                                         </Col>
                                         <Col>
                                             <Form.Group>
-                                                <Form.Label>To</Form.Label>
+                                                <Form.Label>{t("to")}</Form.Label>
                                                 <Datetime 
                                                     inputProps={{ name: "endDate", autoComplete: "off", required: "true" }}
                                                     value={this.state.event.endDate}
@@ -549,7 +551,7 @@ class TournamentDetails extends Component
                                         </Col>                            
                                     </Form.Row>
                                     <Form.Group>
-                                        <Form.Label>Description</Form.Label>
+                                        <Form.Label>{t("description")}</Form.Label>
                                         <Form.Control 
                                             as="textarea"
                                             name="eventDescription"
@@ -580,7 +582,7 @@ class TournamentDetails extends Component
                                     </Form.Group>
                                     <Form.Group >
                                         <Row>
-                                            <Form.Label column sm="2">Sayonara meeting</Form.Label>
+                                            <Form.Label column sm="3">{t("sayonara_meeting")}</Form.Label>
                                             <Form.Check 
                                                 type="checkbox"
                                                 name="sayonaraMeeting"
@@ -592,7 +594,7 @@ class TournamentDetails extends Component
                                     </Form.Group>
                                     <Form.Group >
                                         <Row>
-                                            <Form.Label column sm="2">Accommodation</Form.Label>
+                                            <Form.Label column sm="3">{t("accommodation")}</Form.Label>
                                             <Form.Check 
                                                 type="checkbox"
                                                 name="accommodation"
@@ -624,7 +626,7 @@ class TournamentDetails extends Component
                                     {this.state.event.accommodation && (
                                         <div>
                                             <Form.Row>
-                                                <Col><Form.Label>Room types</Form.Label></Col>
+                                                <Col><Form.Label>{t("room_types")}</Form.Label></Col>
                                             </Form.Row>
                                             {
                                                 roomTypes.map( (roomTypeInputField, index) => (
@@ -682,7 +684,7 @@ class TournamentDetails extends Component
                                             }
                                             <br />
                                             <Form.Row>
-                                                <Col><Form.Label>Stay periods</Form.Label></Col>
+                                                <Col><Form.Label>{t("stay_periods")}</Form.Label></Col>
                                             </Form.Row>
                                             {
                                                 this.state.event.stayPeriods.map( (stayPeriodInputField, index) => (
@@ -718,7 +720,7 @@ class TournamentDetails extends Component
                                     )}
                                     
                                     <Form.Row>
-                                        <Col><Form.Label>Weight / age categories</Form.Label></Col>
+                                        <Col><Form.Label>{t("weight_age_categories")}</Form.Label></Col>
                                     </Form.Row>
                                     {
                                         this.state.event.weightAgeCategories.map( (weightAgeCategoryInputField, index) => (
@@ -752,7 +754,7 @@ class TournamentDetails extends Component
                                 <br />
                                 <Card.Footer style={{paddingRight: "0px", paddingBottom: "0px", paddingTop: "1.25rem"}}>
                                     <div className="d-flex flex-row-reverse">  
-                                        <Button variant="info" type="submit">Post</Button>                            
+                                        <Button variant="info" type="submit">{t("post")}</Button>                            
                                     </div>
                                 </Card.Footer>
                             </Form>
@@ -762,10 +764,14 @@ class TournamentDetails extends Component
                     </Card>
                     </Accordion>
                 </div>
-            ) :
-            ( <h2>You do not have priviledges  granted to view this section.</h2> )
+            ) : ( 
+                <Alert variant="danger">
+                    <Alert.Heading>Access denided</Alert.Heading>
+                    <p>You have no priviledges granted to view this section.</p>
+                </Alert> 
+            )
         );
     }
 }
 
-export default TournamentDetails;
+export default withTranslation('translation', { withRef: true })(TournamentDetails);

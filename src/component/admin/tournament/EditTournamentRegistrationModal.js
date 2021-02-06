@@ -5,9 +5,11 @@ import {
     Button,
     Row,
     Col,    
-    Card
+    Card,
+    Alert
     } from "react-bootstrap";
 import Select from "react-select";
+import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
@@ -208,6 +210,8 @@ class EditTournamentRegistrationModal extends Component
             })
         };
 
+        const t = this.props.t;
+
         return (
             currentUser != null && ( currentUser.roles.includes("ROLE_TRAINER")) ?
             (
@@ -221,14 +225,14 @@ class EditTournamentRegistrationModal extends Component
             >
                 <Form onSubmit={this.handleUpdateRegistration}>
                     <Modal.Header>
-                        EDIT REGISTRATION - {this.state.itemToUpdate.user.fullName}
+                        {t("edit_registration")} - {this.state.itemToUpdate.user.fullName}
                     </Modal.Header>
                     <Modal.Body>
                         <Card>
-                            <Card.Header>ADMINISTRATIVE OPTIONS</Card.Header>
+                            <Card.Header>{t("administrative_tools")}</Card.Header>
                             <Card.Body>
                                 <Form.Group as={Row}>
-                                    <Form.Label column sm="4">Fee received</Form.Label>
+                                    <Form.Label column sm="4">{t("fee_received")}</Form.Label>
                                     <Col sm="8" style={{display: "flex", alignItems: "center"}}>
                                         <Form.Check 
                                             type="checkbox"
@@ -243,10 +247,10 @@ class EditTournamentRegistrationModal extends Component
                         </Card>
                         <div style={{height: "16px"}}></div>
                         <Card>
-                            <Card.Header>REGISTRATION OPTIONS</Card.Header>
+                            <Card.Header>{t("registration_options")}</Card.Header>
                             <Card.Body>                            
                                 <Form.Group as={Row}>
-                                    <Form.Label column sm="4">As a judge participation</Form.Label>
+                                    <Form.Label column sm="4">{t("as_judge")}</Form.Label>
                                     <Col sm="8" style={{display: "flex", alignItems: "center"}}>
                                         <Form.Check 
                                             type="checkbox"
@@ -266,7 +270,7 @@ class EditTournamentRegistrationModal extends Component
                                 </Form.Group>
                                 {this.props.sayonaraMeeting && (
                                     <Form.Group as={Row}>
-                                        <Form.Label column sm="4">Sayonara participation</Form.Label>
+                                        <Form.Label column sm="4">{t("sayonara")}</Form.Label>
                                         <Col sm="8" style={{display: "flex", alignItems: "center"}}>
                                             <Form.Check 
                                                 type="checkbox"
@@ -281,7 +285,7 @@ class EditTournamentRegistrationModal extends Component
                                 {this.props.accommodation && (
                                     <div>
                                         <Form.Group as={Row}>
-                                            <Form.Label column sm="4">Accommodation</Form.Label>
+                                        <Form.Label column sm="4">{t("accommodation")}</Form.Label>
                                             <Col sm="8" style={{display: "flex", alignItems: "center"}}>
                                                 <Form.Check 
                                                     type="checkbox"
@@ -301,7 +305,7 @@ class EditTournamentRegistrationModal extends Component
                                             </Col>
                                         </Form.Group>
                                         <Form.Group as={Row}>
-                                            <Form.Label column sm="4">Room type</Form.Label>
+                                            <Form.Label column sm="4">{t("room_type")}</Form.Label>
                                             <Col sm="8" style={{display: "flex", alignItems: "center"}}>
                                                 <Select
                                                     styles={selectStyles}
@@ -315,7 +319,7 @@ class EditTournamentRegistrationModal extends Component
                                             </Col>
                                         </Form.Group> 
                                         <Form.Group as={Row}>
-                                            <Form.Label column sm="4">Stay period</Form.Label>
+                                            <Form.Label column sm="4">{t("stay_period")}</Form.Label>
                                             <Col sm="8" style={{display: "flex", alignItems: "center"}}>
                                                 <Select
                                                     styles={selectStyles}
@@ -331,7 +335,7 @@ class EditTournamentRegistrationModal extends Component
                                     </div>
                                 )}                            
                                 <Form.Group as={Row}>
-                                    <Form.Label column sm="4">Weight / age category</Form.Label>
+                                    <Form.Label column sm="4">{t("weight_age_category")}</Form.Label>
                                     <Col sm="8" style={{display: "flex", alignItems: "center"}}>
                                         <Select
                                             styles={selectStyles}
@@ -349,15 +353,20 @@ class EditTournamentRegistrationModal extends Component
                     </Modal.Body>
                     <Modal.Footer>
                         <div>
-                            <Button variant="info" onClick={this.props.onHide} type="submit">Save</Button>{' '}                            
-                            <Button variant="secondary" onClick={this.props.onHide}>Cancel</Button>
+                            <Button variant="info" onClick={this.props.onHide} type="submit">{t("save")}</Button>{' '}                            
+                            <Button variant="secondary" onClick={this.props.onHide}>{t("cancel")}</Button>
                         </div>
                     </Modal.Footer>
                 </Form>
             </Modal>
-            ): (<h2>You do not have priviledges  granted to view this section.</h2 > )
+            ) : (
+                <Alert variant="danger">
+                    <Alert.Heading>Access denided</Alert.Heading>
+                    <p>You have no priviledges granted to view this section.</p>
+                </Alert> 
+            )
         );
     }
 }
 
-export default EditTournamentRegistrationModal;
+export default withTranslation()(EditTournamentRegistrationModal);

@@ -87,14 +87,17 @@
 .main {  
   padding-left: 0px;
   width: 100%;  
+  height: auto;
+ 
 }
 
 .content {
+  height: 100vh;
   padding-top: 130px;
   padding-left: 220px;
   padding-right: 20px;
-  background-color: whitesmoke;
-}
+  background-color: whitesmoke;  
+} 
 
 .tooltip { 
   z-index: 1151 !important; 

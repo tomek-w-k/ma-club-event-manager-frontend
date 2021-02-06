@@ -12,6 +12,7 @@ import {MDBIcon} from "mdbreact";
 
 import LoginComponent from "./component/security/LoginComponent";
 import SignUpComponent from "./component/security/SignUpComponent";
+import Login from "./component/security/Login";
 import SignUp from "./component/security/SignUp";
 
 import People from "./component/admin/People";
@@ -38,6 +39,10 @@ import AddClubDocument from "./component/admin/club_document/AddClubDocument";
 import Profile from "./component/Profile";
 import EventWall from "./component/EventWall";
 import Downloads from "./component/Downloads";
+
+import LanguageSelect from "./component/LanguageSelect";
+import { withTranslation } from "react-i18next";
+
 
 import AuthService from "./service/auth-service";
 
@@ -94,13 +99,15 @@ class App extends Component
 			
 			this.deselectAllComponents();
 		}
+
+		document.title = "Ichiban Dojo";
 	}
 
 	logout()
 	{
 		AuthService.logout().then(
 			() => window.location.reload()
-		);
+		); 
 	}
 	
 	deselectAllComponents()
@@ -136,6 +143,7 @@ class App extends Component
 	render()
 	{
 		let USER_TEAMS_ROUTE = user ? "/user/" + user.id + "/teams_component" : "";
+		const t = this.props.t;
 
 		return(			
 			<div>
@@ -146,26 +154,26 @@ class App extends Component
 					<Nav className="flex-column" >
 						{this.state.showAdministrativeTools && (
 							<div>
-								<div style={{fontSize: "small", paddingLeft:"10px", paddingTop:"20px"}}>ADMINISTRATIVE TOOLS</div>
-								<Link to="/people_component" className="nav-link sidenav-text" style={{color:"black"}} >People</Link>
-								<Link to="/exams_component" className="nav-link sidenav-text" style={{color:"black"}} >Exams</Link>
-								<Link to="/camps_component" className="nav-link sidenav-text" style={{color:"black"}} >Camps</Link>
-								<Link to="/tournaments_component" className="nav-link sidenav-text" style={{color:"black"}} >Tournaments</Link>
-								<Link to="/club_documents_component" className="nav-link sidenav-text" style={{color:"black"}} >Documents</Link>								
+								<div style={{fontSize: "small", paddingLeft:"10px", paddingTop:"20px"}}>{t("administrative_tools")}</div>
+								<Link to="/people_component" className="nav-link sidenav-text" style={{color:"black"}} >{t("people")}</Link>
+								<Link to="/exams_component" className="nav-link sidenav-text" style={{color:"black"}} >{t("exams")}</Link>
+								<Link to="/camps_component" className="nav-link sidenav-text" style={{color:"black"}} >{t("camps")}</Link>
+								<Link to="/tournaments_component" className="nav-link sidenav-text" style={{color:"black"}} >{t("tournaments")}</Link>
+								<Link to="/club_documents_component" className="nav-link sidenav-text" style={{color:"black"}} >{t("documents")}</Link>
 							</div>							
 						)}
 						{this.state.showTrainersTools && (
 							<div>
-								<div style={{fontSize: "small", paddingLeft:"10px", paddingTop:"20px"}}>TRAINER'S TOOLS</div>
-								<Link to={USER_TEAMS_ROUTE} className="nav-link sidenav-text" style={{color:"black"}} >Teams</Link>
-								<div style={{fontSize: "small", paddingLeft:"10px", paddingTop:"20px"}}>USER'S TOOLS</div>
+								<div style={{fontSize: "small", paddingLeft:"10px", paddingTop:"20px"}}>{t("trainers_tools")}</div>
+								<Link to={USER_TEAMS_ROUTE} className="nav-link sidenav-text" style={{color:"black"}} >{t("teams")}</Link>
+								<div style={{fontSize: "small", paddingLeft:"10px", paddingTop:"20px"}}>{t("users_tools")}</div>
 							</div>
 						)}	
 						{this.state.showUsersTools && (
 							<div>
-								<Link to="/profile_component" className=" nav-link sidenav-text" style={{color:"black"}} >Profile</Link>
-								<Link to="/event_wall_component" className="nav-link sidenav-text" style={{color:"black"}} >Events</Link>
-								<Link to="/downloads_component" className="nav-link sidenav-text" style={{color:"black"}} >Downloads</Link>
+								<Link to="/profile_component" className=" nav-link sidenav-text" style={{color:"black"}} >{t("profile")}</Link>
+								<Link to="/event_wall_component" className="nav-link sidenav-text" style={{color:"black"}} >{t("events")}</Link>
+								<Link to="/downloads_component" className="nav-link sidenav-text" style={{color:"black"}} >{t("downloads")}</Link>
 							</div>
 						)}						
 					</Nav>
@@ -174,30 +182,30 @@ class App extends Component
 					<div className="topnav">	
 					<Navbar bg="dark" variant="dark" >
 						<Navbar.Brand>
-							{this.state.peopleComponentSelected && (<div>People</div>)}
+							{this.state.peopleComponentSelected && (<div>{t("people")}</div>)}
 
-							{this.state.examsComponentSelected && (<div>Exams</div>)}
-							{this.state.examComponentSelected && (<div>Exam</div>)}
-							{this.state.addExamComponentSelected && (<div>New Exam</div>)}
+							{this.state.examsComponentSelected && (<div>{t("exams")}</div>)}
+							{this.state.examComponentSelected && (<div>{t("exam")}</div>)}
+							{this.state.addExamComponentSelected && (<div>{t("new_exam")}</div>)}
 
-							{this.state.campsComponentSelected && (<div>Camps</div>)}
-							{this.state.campComponentSelected && (<div>Camp</div>)}
-							{this.state.addCampComponentSelected && (<div>New Camp</div>)}
+							{this.state.campsComponentSelected && (<div>{t("camps")}</div>)}
+							{this.state.campComponentSelected && (<div>{t("camp")}</div>)}
+							{this.state.addCampComponentSelected && (<div>{t("new_camp")}</div>)}
 
-							{this.state.tournamentsComponentSelected && (<div>Tournaments</div>)}
-							{this.state.tournamentComponentSelected && (<div>Tournament</div>)}
-							{this.state.addTournamentComponentSelected && (<div>New Tournament</div>)}
+							{this.state.tournamentsComponentSelected && (<div>{t("tournaments")}</div>)}
+							{this.state.tournamentComponentSelected && (<div>{t("tournament")}</div>)}
+							{this.state.addTournamentComponentSelected && (<div>{t("new_tournament")}</div>)}
 
-							{this.state.teamsComponentSelected && (<div>Teams</div>)}
-							{this.state.teamComponentSelected && (<div>Team</div>)}
+							{this.state.clubDocumentsComponentSelected && (<div>{t("documents")}</div>)}
+							{this.state.clubDocumentComponentSelected && (<div>{t("document")}</div>)}
+							{this.state.addClubDocumentComponentSelected && (<div>{t("new_document")}</div>)}
 
-							{this.state.clubDocumentsComponentSelected && (<div>Documents</div>)}
-							{this.state.clubDocumentComponentSelected && (<div>Document</div>)}
-							{this.state.addClubDocumentComponentSelected && (<div>Add Document</div>)}
+							{this.state.teamsComponentSelected && (<div>{t("teams")}</div>)}
+							{this.state.teamComponentSelected && (<div>{t("team")}</div>)}
 
-							{this.state.profileComponentSelected && (<div>Profile</div>)}
-							{this.state.eventWallComponentSelected && (<div>Events</div>)}
-							{this.state.downloadsComponentSelected && (<div>Downloads</div>)}
+							{this.state.profileComponentSelected && (<div>{t("profile")}</div>)}
+							{this.state.eventWallComponentSelected && (<div>{t("events")}</div>)}
+							{this.state.downloadsComponentSelected && (<div>{t("downloads")}</div>)}
 						</Navbar.Brand>
 						<Nav className="mr-auto" ></Nav>
 						<Nav>
@@ -205,111 +213,103 @@ class App extends Component
 								<div className="navbar-nav ml-auto" style={{display: "flex", alignItems: "center"}}>
 									<li className="nav-item"><Link className="btn btn-outline-secondary btn-sm">{this.state.currentUser.email}</Link></li>
 									<div style={{width: "10px"}}></div>
-									<li className="nav-item"><Link to={"/login/@"} className="btn btn-secondary btn-sm" onClick={this.logout}>Logout</Link></li>
+									<li className="nav-item"><Link to={"/login/@"} className="btn btn-secondary btn-sm" onClick={this.logout}>{t("logout")}</Link></li>
 								</div>															
 								) : ( 
 								<div className="navbar-nav ml-auto">
-									<li className="nav-item"><Link to={"/login/@"} className="nav-link" >Login</Link></li>
-									<li className="nav-item"><Link to={"/signup"} className="nav-link">Sign Up</Link></li>
+									<li className="nav-item"><Link to={"/login/@"} className="btn btn-secondary btn-sm" >{t("login")}</Link></li>
+									<div style={{width: "10px"}}></div>
+									<li className="nav-item"><Link to={"/signup"} className="btn btn-secondary btn-sm">{t("sign_up")}</Link></li>
 								</div>
 							)}								
 						</Nav>
 						<Nav><div style={{width: "10px"}}></div></Nav>
+						<Nav><LanguageSelect /></Nav>
 						<Nav>
-							<ButtonGroup toggle >
-								{toggleLanguageRadios.map((radio, idx) => (
-									<ToggleButton
-										key={idx}
-										type="radio"
-										variant="secondary"
-										size="sm"
-										name="radio"
-										value={radio.value}
-										checked={this.state.toggleLanguageRadioValue === radio.value}
-										onChange={(e) => (this.setState({ toggleLanguageRadioValue: e.currentTarget.value }))}
-									>{radio.name}</ToggleButton>
-								))}
-							</ButtonGroup>
-							<div style={{width: "10px"}}></div>
-							{this.state.examComponentSelected && (<Button onClick={this.examRef.current.toggleHelpSection} variant="secondary" size="sm">Help</Button>)}							
+							{this.state.examComponentSelected && (
+								<div className="navbar-nav ml-auto">
+									<div style={{width: "10px"}}></div>
+									<Button onClick={this.examRef.current.toggleHelpSection} variant="secondary" size="sm" style={{paddingLeft: "10px"}}>{t("help")}</Button>
+								</div>								
+							)}							
 						</Nav>																		
 					</Navbar>	
 					<Navbar bg="white" variant="light">
 						<Nav  style={{backgroundColor: "white", width: "100%"}}>				
 						{this.state.peopleComponentSelected && (
 							<div>
-								<Button href="#" variant="info">New</Button>{' '}
-								<Button href="#" variant="danger">Remove</Button>
+								<Button href="#" variant="info">{t("new_person")}</Button>{' '}
+								<Button href="#" variant="danger">{t("remove_person")}</Button>
 							</div>							
 						)}
 						{this.state.examsComponentSelected && (
 							<div>								
-								<Link to="/add_exam_component" className="btn btn-info">New Exam</Link>{' '}
-								<Button variant="danger" onClick={() => { this.examsRef.current.handleDeleteExam() }}>Remove</Button>
+								<Link to="/add_exam_component" className="btn btn-info">{t("new_exam")}</Link>{' '}
+								<Button variant="danger" onClick={() => { this.examsRef.current.handleDeleteExam() }}>{t("remove_exam")}</Button>
 							</div>							
 						)}
 						{this.state.examComponentSelected && (
 							<div>								
-								<Button onClick={() => { this.examRef.current.handleAddRegistration() }} variant="info">Add participnat...</Button>{' '}
-								<Button onClick={() => { this.examRef.current.handleDeleteRegistration() }} variant="danger">Remove participant</Button>								
+								<Button onClick={() => { this.examRef.current.handleAddRegistration() }} variant="info">{t("add_participant")}</Button>{' '}
+								<Button onClick={() => { this.examRef.current.handleDeleteRegistration() }} variant="danger">{t("remove_participant")}</Button>								
 							</div>							
 						)}
 						{this.state.addExamComponentSelected && (
 							<div>
-								<Button href="/add_exam_component" variant="secondary">Clear form</Button>							
+								<Button href="/add_exam_component" variant="secondary">{t("clear_form")}</Button>							
 							</div>							
 						)}
 						{this.state.campsComponentSelected && (
 							<div>								
-								<Link to="/add_camp_component" className="btn btn-info">New Camp</Link>{' '}
-								<Button variant="danger" onClick={() => { this.campsRef.current.handleDeleteCamp() }}>Remove</Button>
+								<Link to="/add_camp_component" className="btn btn-info">{t("new_camp")}</Link>{' '}
+								<Button variant="danger" onClick={() => { this.campsRef.current.handleDeleteCamp() }}>{t("remove_camp")}</Button>
 							</div>							
 						)}
 						{this.state.campComponentSelected && (
 							<div>								
-								<Button onClick={() => { this.campRef.current.handleAddRegistration() }} variant="info">Add participnat...</Button>{' '}
-								<Button onClick={() => { this.campRef.current.handleDeleteRegistration() }} variant="danger">Remove participant</Button>
+								<Button onClick={() => { this.campRef.current.handleAddRegistration() }} variant="info">{t("add_participant")}</Button>{' '}
+								<Button onClick={() => { this.campRef.current.handleDeleteRegistration() }} variant="danger">{t("remove_participant")}</Button>
 							</div>							
 						)}
 						{this.state.addCampComponentSelected && (
 							<div>
-								<Button href="/add_camp_component" variant="secondary">Clear form</Button>							
+								<Button href="/add_camp_component" variant="secondary">{t("clear_form")}</Button>
 							</div>	
 						)}
 						{this.state.tournamentsComponentSelected && (
 							<div>								
-								<Link to="/add_tournament_component" className="btn btn-info">New Tournament</Link>{' '}
-								<Button variant="danger" onClick={() => { this.tournamentsRef.current.handleDeleteTournament() }}>Remove</Button>
+								<Link to="/add_tournament_component" className="btn btn-info">{t("new_tournament")}</Link>{' '}
+								<Button variant="danger" onClick={() => { this.tournamentsRef.current.handleDeleteTournament() }}>{t("remove_tournament")}</Button>
 							</div>							
 						)}
 						{this.state.tournamentComponentSelected && (
 							<div>
-								<Button onClick={() => { this.tournamentRef.current.handleAddTeam() }} variant="info">Add team...</Button>{' '}
-								<Button onClick={() => { this.tournamentRef.current.handleDeleteRegistration() }} variant="danger">Remove participant</Button>{' '}
-								<Button onClick={() => { this.tournamentRef.current.handleDeleteTeam() }} variant="danger">Remove team</Button>
+								<Button onClick={() => { this.tournamentRef.current.handleAddTeam() }} variant="info">{t("add_team")}</Button>{' '}
+								<Button onClick={() => { this.tournamentRef.current.handleDeleteRegistration() }} variant="danger">{t("remove_participant")}</Button>{' '}
+								<Button onClick={() => { this.tournamentRef.current.handleDeleteTeam() }} variant="danger">{t("remove_team")}</Button>
 							</div>							
 						)}
 						{this.state.addTournamentComponentSelected && (
 							<div>
-								<Button href="/add_tournament_component" variant="secondary">Clear form</Button>							
+								<Button href="/add_tournament_component" variant="secondary">{t("clear_form")}</Button>
 							</div>	
 						)}
 						{this.state.teamsComponentSelected && (
 							<div>
-								<Button onClick={() => { this.teamsRef.current.handleDeleteTeam() }} variant="danger">Remove team</Button>
+								<Button onClick={() => { this.teamsRef.current.handleDeleteTeam() }} variant="danger">{t("remove_team")}</Button>
 							</div>
 						)}
 						{this.state.teamComponentSelected && (
 							<div>
-								<Button onClick={() => { this.teamRef.current.handleShowAddParticipantToTeamModal(false) }} variant="info">Sign up participant...</Button>{' '}
-								<Button onClick={() => { this.teamRef.current.handleShowAddParticipantToTeamModal(true) }} variant="info">Sign up me...</Button>{' '}
-								<Button onClick={() => { this.teamRef.current.handleDeleteRegistration() }} variant="danger">Remove participant</Button>
+								<Button onClick={() => { this.teamRef.current.handleShowAddParticipantToTeamModal(false) }} variant="info">{t("sign_up_participant")}</Button>{' '}
+								<Button onClick={() => { this.teamRef.current.handleShowAddParticipantToTeamModal(true) }} variant="info">{t("sign_up_me")}</Button>{' '}
+								<Button onClick={() => { this.teamRef.current.handleDeleteRegistration() }} variant="danger">{t("remove_participant")}</Button>
 							</div>
 						)}
 						{this.state.clubDocumentsComponentSelected && (
 							<div>								
-								<Link to="/add_club_document_component" className="btn btn-info">New Document</Link>{' '}
-								<Button variant="danger" onClick={() => { this.clubDocumentsRef.current.handleDeleteClubDocument() }}>Remove</Button>
+								<Link to="/add_club_document_component" className="btn btn-info">{t("new_document")}</Link>{' '}
+								<Button variant="danger" onClick={() => { this.clubDocumentsRef.current.handleDeleteClubDocument() }}>{t("remove_document")}</Button>
 							</div>							
 						)}
 						{this.state.clubDocumentComponentSelected && (
@@ -318,19 +318,19 @@ class App extends Component
 						)}
 						{this.state.addClubDocumentComponentSelected && (
 							<div>
-								<Button href="/add_club_document_component" variant="secondary">Clear form</Button>							
+								<Button href="/add_club_document_component" variant="secondary">{t("clear_form")}</Button>
 							</div>	
 						)}
 						{this.state.profileComponentSelected && (
 							<div>
-								<Button href="#" variant="danger">Remove my account</Button>
+								<Button href="#" variant="danger">{t("remove_my_account")}</Button>
 							</div>
 						)}
 						{this.state.eventWallComponentSelected && (
 							<Form >
 								<Form.Row>
 									<Col><Form.Control type="text" placeholder="Search"  /></Col>
-									<Col><Button type="submit" variant="info">Search</Button></Col>									
+									<Col><Button type="submit" variant="info">{t("search")}</Button></Col>									
 								</Form.Row>								
 							</Form>							
 						)}
@@ -347,8 +347,9 @@ class App extends Component
 					</Navbar>					
 					</div>
 					<div className="content">
-						<Switch>							
-							<Route path="/login/:email" component={LoginComponent} />
+						<Switch>
+							{/* <Route path="/login/:email" component={LoginComponent} /> */}
+							<Route path="/login/:email" component={Login} />
 							{/* <Route path="/signup" component={SignUpComponent} /> */}
 							<Route path="/signup" component={SignUp} />
 
@@ -496,11 +497,13 @@ class App extends Component
 							)}																		
 						</Switch>
 					</div>
+					{/* <div className="custom-bottom"></div> */}
 				</div>
 			</div>			
 		);
 	}
 }
 
-export default withRouter(App);
+export default withTranslation()(App);
+//export default withRouter(App);
 //export default App;

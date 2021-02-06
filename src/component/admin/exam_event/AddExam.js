@@ -8,6 +8,7 @@ import {
 } from "react-bootstrap";
 import "react-datetime/css/react-datetime.css";
 import Datetime from "react-datetime";
+import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
@@ -73,7 +74,7 @@ class AddExam extends Component
         }
         else this.setState({ 
             formValidated: true,
-            errorMessage: "Please fill all required fields."
+            errorMessage: this.props.t("fill_all_required_fields")
         });
     }
 
@@ -104,6 +105,8 @@ class AddExam extends Component
     render()
     {
         const currentUser = AuthService.getCurrentUser();
+        const t = this.props.t;
+
         this.props.navbarControlsHandler();
 
         return(
@@ -116,7 +119,7 @@ class AddExam extends Component
                             <Card.Text>
                             <Form noValidate validated={this.state.formValidated} onSubmit={this.handleAddEvent}>  
                                     <Form.Group>
-                                        <Form.Label>Name</Form.Label>
+                                        <Form.Label>{t("name")}</Form.Label>
                                         <Form.Control required
                                             type="text"
                                             name="eventName"
@@ -127,7 +130,7 @@ class AddExam extends Component
                                     <Form.Row>
                                         <Col>
                                             <Form.Group>
-                                                <Form.Label>From</Form.Label>
+                                                <Form.Label>{t("from")}</Form.Label>
                                                 <Datetime 
                                                     inputProps={{name: "startDate", autoComplete: "off", required: "true"}} 
                                                     value={this.state.event.startDate}
@@ -139,7 +142,7 @@ class AddExam extends Component
                                         </Col>
                                         <Col>
                                             <Form.Group>
-                                                <Form.Label>To</Form.Label>
+                                                <Form.Label>{t("to")}</Form.Label>
                                                 <Datetime 
                                                     inputProps={{ name: "endDate", autoComplete: "off", required: "true"}} 
                                                     value={this.state.event.endDate}
@@ -151,7 +154,7 @@ class AddExam extends Component
                                         </Col>                            
                                     </Form.Row>
                                     <Form.Group>
-                                        <Form.Label>Description</Form.Label>
+                                        <Form.Label>{t("description")}</Form.Label>
                                         <Form.Control 
                                             as="textarea"
                                             name="eventDescription"
@@ -160,7 +163,7 @@ class AddExam extends Component
                                         />
                                     </Form.Group>                                    
                                     <Form.Row>
-                                        <Col><Form.Label>Fees</Form.Label></Col>
+                                        <Col><Form.Label>{t("fees")}</Form.Label></Col>
                                     </Form.Row>
                                     {
                                         this.state.event.fees.map( (feeInputField, index) => (
@@ -203,7 +206,7 @@ class AddExam extends Component
                                 <br />
                                 <Card.Footer style={{paddingRight: "0px", paddingBottom: "0px", paddingTop: "1.25rem"}}>
                                     <div className="d-flex flex-row-reverse">
-                                        <Button variant="info" type="submit">Post</Button>                            
+                                        <Button variant="info" type="submit">{t("post")}</Button>                            
                                     </div>
                                 </Card.Footer>
                             </Form>
@@ -211,10 +214,14 @@ class AddExam extends Component
                         </Card.Body>
                     </Card>
                 </div>
-            ) :
-            ( <h2>You do not have priviledges  granted to view this section.</h2> )
+            ) : (
+                <Alert variant="danger">
+                    <Alert.Heading>Access denided</Alert.Heading>
+                    <p>You have no priviledges granted to view this section.</p>
+                </Alert>
+            )
         );
     }
 }
 
-export default AddExam;
+export default withTranslation()(AddExam);

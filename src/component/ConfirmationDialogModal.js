@@ -3,6 +3,7 @@ import {
     Modal,     
     Button,   
 } from "react-bootstrap";
+import { withTranslation } from "react-i18next";
 import AuthService from "../service/auth-service";
 
 
@@ -16,8 +17,10 @@ class ConfirmationDialogModal extends Component
         super(props);              
     }
 
-    render()
+    render()    
     {  
+        const t = this.props.t;
+
         return (
             currentUser != null ?
             (
@@ -30,10 +33,10 @@ class ConfirmationDialogModal extends Component
                     centered="true"                
                 >                
                     <Modal.Header>
-                        {this.props.modalTitle ? this.props.modalTitle : "CONFIRMATION"}
+                        {this.props.modalTitle ? this.props.modalTitle : t("confirmation")}
                     </Modal.Header>
                     <Modal.Body>
-                        {this.props.modalContent ? this.props.modalContent : "Are you sure?"}
+                        {this.props.modalContent ? this.props.modalContent : t("are_you_sure")}
                     </Modal.Body>
                     <Modal.Footer>
                         <div>
@@ -42,13 +45,13 @@ class ConfirmationDialogModal extends Component
                                         this.props.onHide();
                                         this.props.confirmationResult(true);
                                     }}                                
-                            >Yes</Button>{' '}                            
+                            >{t("yes")}</Button>{' '}                            
                             <Button variant="secondary" 
                                     onClick={() => {
                                         this.props.onHide();
                                         this.props.confirmationResult(false);
                                     }}
-                            >No</Button>
+                            >{t("no")}</Button>
                         </div>
                     </Modal.Footer>                
                 </Modal>
@@ -57,4 +60,4 @@ class ConfirmationDialogModal extends Component
     }
 }
 
-export default ConfirmationDialogModal;
+export default withTranslation()(ConfirmationDialogModal);

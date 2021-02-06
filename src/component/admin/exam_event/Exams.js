@@ -1,7 +1,11 @@
 import React, {Component} from "react";
 import CrudTableComponent from "../../CrudTableComponent";
-import {Card} from "react-bootstrap";
+import {
+    Card,
+    Alert
+} from "react-bootstrap";
 import {textFilter} from 'react-bootstrap-table2-filter';
+import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
@@ -9,6 +13,22 @@ import * as Urls from "../../../servers-urls";
 const EXAM_EVENTS_URL = Urls.WEBSERVICE_URL + "/exam_events";
 const EVENTS_API_URL = Urls.WEBSERVICE_URL + "/events";
 
+const Columns = Object.freeze ({
+    ID: 0,
+    EXAM_NAME: 1,
+    START_DATE: 2,
+    PERSONS_SIGNED_IN: 3,    
+});
+
+const headerFormatter = (column, colIndex, { sortElement, filterElement }) => {
+    return (
+        <div style={ { display: 'flex', flexDirection: 'column' } }>            
+            { column.text }            
+            { filterElement }
+            { sortElement }
+        </div>
+    );
+}; 
 
 const columns = [
     {
@@ -18,22 +38,39 @@ const columns = [
     },
     {
         dataField: "eventName",
-        text: "Event name",
-        sort: true, 
-        filter: textFilter()           
+        text: "",
+        sort: true,         
+        filter: textFilter(),
+        headerFormatter: headerFormatter,
+        style: (colum, colIndex) => {
+            return { width: '60%', textAlign: 'left' };
+        },
     },
     {
         dataField: "startDate", 
-        text: "Start date",
+        text: "",
         sort: true,
         type: "date",
-        filter: textFilter(),                       
+        style: (colum, colIndex) => {
+            return { width: '20%', textAlign: 'center' };
+        }, 
+        headerStyle:  { "text-align": "center" },
+        filter: textFilter(),
+        headerFormatter: headerFormatter,
     },
     {            
         dataField: "examRegistrations.length",
-        text: "Persons signed in",
+        text: "",
         sort: false,
-        style:  { "text-align": "center" },
+        style: (colum, colIndex) => {
+            return { width: '20%', textAlign: 'center' };
+        },
+        headerStyle:  { "text-align": "center" },
+        filter: textFilter({            
+            disabled: "true",
+            placeholder: "-"
+        }),
+        headerFormatter: headerFormatter            
     }          
 ];
 
@@ -72,6 +109,8 @@ class Exams extends Component
 
     handleDeleteExam()
     {   
+        const t = this.props.t; 
+        
         if ( this.state.selectedRowsIds != null && this.state.selectedRowsIds.length == 1 )
         {
             if ( !window.confirm("Are you sure?") )										
@@ -93,12 +132,18 @@ class Exams extends Component
                 console.log("Item not deleted");
             })
         }            
-        else alert("Please select one camp to remove");
+        else alert(t("select_one_exam_to_remove"));
     }
 
     render()
     {
         const currentUser = AuthService.getCurrentUser();        
+        const t = this.props.t;
+
+        columns[Columns.EXAM_NAME] = {...columns[Columns.EXAM_NAME], text: t("exam"), filter: textFilter({ placeholder: t("enter_exam_name")})};
+        columns[Columns.START_DATE] = {...columns[Columns.START_DATE], text: t("start_date"), filter: textFilter({ placeholder: t("enter_start_date")})};
+        columns[Columns.PERSONS_SIGNED_IN] = {...columns[Columns.PERSONS_SIGNED_IN], text: t("persons_registered")};
+
         this.props.navbarControlsHandler();
         
         return( 
@@ -118,10 +163,14 @@ class Exams extends Component
                         </Card.Body>
                     </Card>                    
                 </div>
-            ) :
-            ( <h2>You do not have priviledges granted to view this section.</h2> )
+            ) : (
+                <Alert variant="danger">
+                    <Alert.Heading>Access denided</Alert.Heading>
+                    <p>You have no priviledges granted to view this section.</p>
+                </Alert> 
+            )
         );
     }
 }
 
-export default Exams;
+export default withTranslation('translation', { withRef: true })(Exams);

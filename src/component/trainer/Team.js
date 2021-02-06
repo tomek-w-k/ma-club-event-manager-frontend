@@ -8,6 +8,7 @@ import {textFilter} from 'react-bootstrap-table2-filter';
 import {Check, X} from "react-bootstrap-icons";
 import EditTournamentRegistrationInTeamModal from "./EditTournamentRegistrationInTeamModal";
 import AddParticipantToTeamModal from "./AddParticipantToTeamModal";
+import { withTranslation } from "react-i18next";
 import AuthService from "../../service/auth-service";
 import * as Urls from "../../servers-urls";
 
@@ -27,6 +28,16 @@ const ColumnNames = Object.freeze({
     CATEGORY_NAME: 8
 });
 
+const headerFormatter = (column, colIndex, { sortElement, filterElement }) => {
+    return (
+        <div style={ { display: 'flex', flexDirection: 'column' } }>            
+            { column.text }            
+            { filterElement }
+            { sortElement }
+        </div>
+    );
+};
+
 const columns = [
     {
         dataField: "id",
@@ -37,47 +48,70 @@ const columns = [
         dataField: "user.fullName",
         text: "Full name",
         sort: true, 
-        filter: textFilter()           
+        filter: textFilter(),
+        headerFormatter: headerFormatter          
     },    
     {
         dataField: "user.club.clubName",
         text: "Club",
         sort: true, 
-        filter: textFilter()           
+        filter: textFilter(),
+        headerFormatter: headerFormatter           
     },
     { 
         dataField: "feeReceived", 
-        text: "Fee received",
+        text: "",
         sort: false,
         type: "bool",
-        style:  { "text-align": "center" },
+        style: (colum, colIndex) => {
+            return { width: '5%', textAlign: 'center' };
+        },
         headerStyle:  { "text-align": "center" },
         formatter: (cell, row) => {
             return cell ? (<div><Check color="#008495" size={22}/></div>) : (<div><X color="#CB2334" size={22}/></div>)            
-        }        
+        },
+        filter: textFilter({            
+            disabled: "true",
+            placeholder: "-"
+        }),        
+        headerFormatter: headerFormatter      
     },
     { 
         dataField: "sayonaraMeetingParticipation", 
-        text: "Sayonara",
+        text: "",
         hidden: true,
         sort: false,
         type: "bool",
-        style:  { "text-align": "center" },
+        style: (colum, colIndex) => {
+            return { width: '5%', textAlign: 'center' };
+        },
         headerStyle:  { "text-align": "center" },
         formatter: (cell, row) => {
             return cell ? (<div><Check color="#008495" size={22}/></div>) : (<div><X color="#CB2334" size={22}/></div>)            
-        }        
+        },
+        filter: textFilter({            
+            disabled: "true",
+            placeholder: "-"
+        }),        
+        headerFormatter: headerFormatter 
     },
     { 
         dataField: "asJudgeParticipation",
-        text: "As a Judge",
+        text: "",
         sort: false,
         type: "bool",
-        style:  { "text-align": "center" },
+        style: (colum, colIndex) => {
+            return { width: '5%', textAlign: 'center' };
+        },
         headerStyle:  { "text-align": "center" },
         formatter: (cell, row) => {
             return cell ? (<div><Check color="#008495" size={22}/></div>) : (<div><X color="#CB2334" size={22}/></div>)            
-        }        
+        },
+        filter: textFilter({            
+            disabled: "true",
+            placeholder: "-"
+        }),        
+        headerFormatter: headerFormatter        
     },             
     {
         dataField: "roomType.roomTypeName",
@@ -89,7 +123,8 @@ const columns = [
             if (typeof cell == "undefined" )
                 return "-"
             else return cell;
-        }
+        },
+        headerFormatter: headerFormatter
     },
     {
         dataField: "stayPeriod.stayPeriodName",
@@ -101,7 +136,8 @@ const columns = [
             if (typeof cell == "undefined" )
                 return "-"
             else return cell;
-        }
+        },
+        headerFormatter: headerFormatter
     },
     {
         dataField: "weightAgeCategory.categoryName",
@@ -112,19 +148,10 @@ const columns = [
             if (typeof cell == "undefined" )
                 return "-"
             else return cell;
-        }
+        },
+        headerFormatter: headerFormatter
     },    
 ];
-
-const emptyTableMessage = () => {
-    return(
-        <div>
-            Please click "Sign up participant" button to register a participant<br />
-            Click "Sign up me" to register yourself 
-        </div>            
-    )
-}
-
 
 class Team extends Component
 {
@@ -207,6 +234,8 @@ class Team extends Component
 
     handleDeleteRegistration()
     {
+        const t = this.props.t;
+        
         if ( this.state.selectedRowsIds.length == 1 )
         {
             if ( !window.confirm("Are you sure?") )
@@ -228,14 +257,26 @@ class Team extends Component
                 alert("Item not deleted.")
             })
         }
-        else alert("Please select one registration to remove");
+        else alert(t("select_one_participant_to_remove"));
     }
 
     render()
     {
         const TOURNAMENT_REGISTRATIONS_FOR_TEAM = Urls.WEBSERVICE_URL + "/teams/" + this.props.match.params.teamId + "/tournament_registrations";
+        const t = this.props.t;
 
-        this.props.navbarControlsHandler();
+        columns[ColumnNames.FULL_NAME] = {...columns[ColumnNames.FULL_NAME], text: t("full_name"), filter: textFilter({ placeholder: t("enter_full_name")})};        
+        columns[ColumnNames.CLUB_NAME] = {...columns[ColumnNames.CLUB_NAME], text: t("club"), filter: textFilter({ placeholder: t("enter_club")})};
+        columns[ColumnNames.FEE_RECEIVED] = {...columns[ColumnNames.FEE_RECEIVED], text: t("fee_received")};
+        columns[ColumnNames.SAYONARA_MEETING_PARTICIPATION] = {...columns[ColumnNames.SAYONARA_MEETING_PARTICIPATION], text: t("sayonara")};
+        columns[ColumnNames.AS_JUDGE_PARTICIPATION] = {...columns[ColumnNames.AS_JUDGE_PARTICIPATION], text: t("as_judge")};
+        columns[ColumnNames.ROOM_TYPE_NAME] = {...columns[ColumnNames.ROOM_TYPE_NAME], text: t("room_type"), filter: textFilter({ placeholder: t("enter_room_type")})};
+        columns[ColumnNames.STAY_PERIOD_NAME] = {...columns[ColumnNames.STAY_PERIOD_NAME], text: t("stay_period"), filter: textFilter({ placeholder: t("enter_stay_period")})};
+        columns[ColumnNames.CATEGORY_NAME] = {...columns[ColumnNames.CATEGORY_NAME], text: t("weight_age_category"), filter: textFilter({ placeholder: t("enter_category")})};
+
+        const emptyTableMessage = () => <div>{t("empty_team_table_message_part_1")}<br />{t("empty_team_table_message_part_2")}</div> 
+
+        this.props.navbarControlsHandler();        
 
         return (        
             this.state.stateUpdated && (
@@ -296,4 +337,4 @@ class Team extends Component
     }
 }
 
-export default Team;
+export default withTranslation('translation', { withRef: true })(Team);

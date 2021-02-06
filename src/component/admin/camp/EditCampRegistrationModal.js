@@ -4,9 +4,11 @@ import {
     Form,
     Button,
     Row,
-    Container
+    Container,
+    Alert
     } from "react-bootstrap";
 import Select from "react-select";
+import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
@@ -120,6 +122,8 @@ class EditCampRegistrationModal extends Component
             })
         };
 
+        const t = this.props.t;
+
         return (
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
             (
@@ -138,7 +142,7 @@ class EditCampRegistrationModal extends Component
                     <Modal.Body>
                         <Container>
                             <Form.Group as={Row}>
-                                <Form.Label column sm="4">Fee received</Form.Label>
+                                <Form.Label column sm="4">{t("fee_received")}</Form.Label>
                                 <Form.Check column sm="4"
                                     type="checkbox"
                                     name="feeReceived" 
@@ -148,7 +152,7 @@ class EditCampRegistrationModal extends Component
                                 />                            
                             </Form.Group>
                             <Form.Group as={Row}>
-                                <Form.Label column sm="4">Sayonara participation</Form.Label>
+                                <Form.Label column sm="4">{t("sayonara")}</Form.Label>
                                 <Form.Check column sm="4"
                                     type="checkbox"
                                     name="sayonaraMeetingParticipation" 
@@ -158,7 +162,7 @@ class EditCampRegistrationModal extends Component
                                 />
                             </Form.Group>
                             <Form.Group as={Row}>
-                                <Form.Label column sm="4">Clothing size</Form.Label>
+                                <Form.Label column sm="4">{t("clothing_size")}</Form.Label>
                                 <Select
                                     styles={clothingSizesSelectStyles}
                                     options={this.state.clothingSizes}                                    
@@ -169,7 +173,7 @@ class EditCampRegistrationModal extends Component
                                 />
                             </Form.Group>                        
                             <Form.Group as={Row}>
-                                <Form.Label column sm="4">Accommodation</Form.Label>
+                                <Form.Label column sm="4">{t("accommodation")}</Form.Label>
                                 <Form.Check column sm="4"
                                     type="checkbox"
                                     name="accommodation" 
@@ -182,15 +186,20 @@ class EditCampRegistrationModal extends Component
                     </Modal.Body>
                     <Modal.Footer>
                         <div>
-                            <Button variant="info" onClick={this.props.onHide} type="submit">Save</Button>{' '}                            
-                            <Button variant="secondary" onClick={this.props.onHide}>Cancel</Button>
+                            <Button variant="info" onClick={this.props.onHide} type="submit">{t("save")}</Button>{' '}                            
+                            <Button variant="secondary" onClick={this.props.onHide}>{t("cancel")}</Button>
                         </div>
                     </Modal.Footer>
                 </Form>
             </Modal>
-            ): (<h2>You do not have priviledges  granted to view this section.</h2 > )
+            ): (
+                <Alert variant="danger">
+                    <Alert.Heading>Access denided</Alert.Heading>
+                    <p>You have no priviledges granted to view this section.</p>
+                </Alert> 
+            )
         );
     }
 }
 
-export default EditCampRegistrationModal;
+export default withTranslation()(EditCampRegistrationModal);

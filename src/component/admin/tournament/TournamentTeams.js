@@ -3,16 +3,33 @@ import CrudTableComponent from "../../CrudTableComponent";
 import {
     Card,
     Button,
-    Accordion
+    Accordion,
+    Alert
 } from "react-bootstrap";
 import {textFilter} from 'react-bootstrap-table2-filter';
 import {withRouter} from "react-router-dom";
+import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
 
 const currentUser = AuthService.getCurrentUser();
 
+const ColumnNames = Object.freeze({
+    ID: 0,    
+    TRAINER: 1,
+    CLUB: 2,    
+});
+
+const headerFormatter = (column, colIndex, { sortElement, filterElement }) => {
+    return (
+        <div style={ { display: 'flex', flexDirection: 'column' } }>            
+            { column.text }            
+            { filterElement }
+            { sortElement }
+        </div>
+    );
+};
 
 const columns = [
     {
@@ -24,13 +41,15 @@ const columns = [
         dataField: "trainer.fullName",
         text: "Trainer",
         sort: true, 
-        filter: textFilter()
+        filter: textFilter(),
+        headerFormatter: headerFormatter
     },
     {
         dataField: "trainer.club.clubName",
         text: "Club",
         sort: true, 
-        filter: textFilter()
+        filter: textFilter(),
+        headerFormatter: headerFormatter
     }             
 ];
 
@@ -83,6 +102,8 @@ class TournamentTeams extends Component
 
     handleDeleteTeam()
     {
+        const t = this.props.t;
+
         if ( this.state.selectedRowsIds != null && this.state.selectedRowsIds.length == 1 )
         {
             if ( !window.confirm("Are you sure?") )										
@@ -104,7 +125,7 @@ class TournamentTeams extends Component
                 console.log("Item not deleted");
             })
         }            
-        else alert("Please select one camp to remove");
+        else alert(t("select_one_team_to_remove"));
     }
 
     handleShowAddTeamModal()
@@ -115,6 +136,10 @@ class TournamentTeams extends Component
     render()
     {
         const TEAMS_FOR_TOURNAMENT = Urls.WEBSERVICE_URL + "/tournament_events/" + this.props.id + "/teams";
+        const t = this.props.t;
+
+        columns[ColumnNames.TRAINER] = {...columns[ColumnNames.TRAINER], text: t("trainer"), filter: textFilter({ placeholder: t("enter_trainer")})};
+        columns[ColumnNames.CLUB] = {...columns[ColumnNames.CLUB], text: t("club"), filter: textFilter({ placeholder: t("enter_club")})};
 
         return (
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ? 
@@ -125,8 +150,8 @@ class TournamentTeams extends Component
                             {/* style={{backgroundColor: "#EAECEE"}} */}
                             <Card.Header >
                                 <div className="d-flex">
-                                    <div style={{display: "flex", alignItems: "center"}}>REGISTRATIONS BY TEAMS</div>
-                                    <Accordion.Toggle className="ml-auto" as={Button} variant="secondary" eventKey="0">Show / Hide</Accordion.Toggle>
+                                    <div style={{display: "flex", alignItems: "center"}}>{t("registrations_by_teams")}</div>
+                                    <Accordion.Toggle className="ml-auto" as={Button} variant="secondary" eventKey="0">{t("show_hide")}</Accordion.Toggle>
                                 </div> 
                             </Card.Header>
                             <Accordion.Collapse eventKey="0">
@@ -144,9 +169,14 @@ class TournamentTeams extends Component
                         </Card>
                     </Accordion>
                 </div>
-            ) : ( <h2>You have no priviledges granted to view this section.</h2> )
+            ) : (
+                <Alert variant="danger">
+                    <Alert.Heading>Access denided</Alert.Heading>
+                    <p>You have no priviledges granted to view this section.</p>
+                </Alert> 
+            )
         );
     }
 }
 
-export default withRouter(TournamentTeams);
+export default withTranslation('translation', { withRef: true })(withRouter(TournamentTeams))

@@ -3,18 +3,39 @@ import CrudTableComponent from "../../CrudTableComponent";
 import {
     Card,  
     Button,
-    Accordion
+    Accordion,
+    Form
 } from "react-bootstrap";
 import { textFilter } from 'react-bootstrap-table2-filter';
 import {Check, X} from "react-bootstrap-icons";
 import EditExamRegistrationModal from "./EditExamRegistrationModal";
 import AddParticipantToExamModal from "./AddParticipantToExamModal";
+import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
 
 const EXAM_REGISTRATIONS = Urls.WEBSERVICE_URL + "/exam_registrations";
 const EXAM_EVENTS = Urls.WEBSERVICE_URL + "/exam_events";
+
+const Columns = Object.freeze ({
+    ID: 0,
+    FULL_NAME: 1,
+    EMAIL: 2,    
+    CLUB: 3,
+    FEE_RECEIVED: 4,
+    PARTICIPATION_ACCEPTED: 5,
+});
+
+const headerFormatter = (column, colIndex, { sortElement, filterElement }) => {
+    return (
+        <div style={ { display: 'flex', flexDirection: 'column' } }>            
+            { column.text }            
+            { filterElement }
+            { sortElement }
+        </div>
+    );
+};
 
 const columns = [
     {
@@ -26,41 +47,58 @@ const columns = [
         dataField: "user.fullName",
         text: "Full name",
         sort: true, 
-        filter: textFilter()           
+        filter: textFilter(),
+        headerFormatter: headerFormatter          
     },
     {
         dataField: "user.email",
         text: "Email",
         sort: true, 
-        filter: textFilter()           
+        filter: textFilter(),
+        headerFormatter: headerFormatter         
     },
     {
         dataField: "user.club.clubName",
         text: "Club",
         sort: true, 
-        filter: textFilter()           
+        filter: textFilter(),
+        headerFormatter: headerFormatter          
     },
     { 
         dataField: "feeReceived", 
         text: "Fee received",
         sort: false,
         type: "bool",
-        style:  { "text-align": "center" },
+        style: (colum, colIndex) => {
+            return { width: '10%', textAlign: 'center' };
+        },
         headerStyle:  { "text-align": "center" },
         formatter: (cell, row) => {
             return cell ? (<div><Check color="#008495" size={22}/></div>) : (<div><X color="#CB2334" size={22}/></div>)            
-        }        
+        },                   
+        filter: textFilter({            
+            disabled: "true",
+            placeholder: "-"
+        }),        
+        headerFormatter: headerFormatter  
     },
     { 
         dataField: "participationAccepted", 
         text: "Participation accepted",
         sort: false,
         type: "bool",
-        style:  { "text-align": "center" },
+        style: (colum, colIndex) => {
+            return { width: '10%', textAlign: 'center' };
+        },
         headerStyle:  { "text-align": "center" },
         formatter: (cell, row) => {
             return cell ? (<div><Check color="#008495" size={22}/></div>) : (<div><X color="#CB2334" size={22}/></div>)            
-        }        
+        },                   
+        filter: textFilter({            
+            disabled: "true",
+            placeholder: "-"
+        }),
+        headerFormatter: headerFormatter          
     },             
 ];
 
@@ -72,11 +110,10 @@ class ExamRegistrations extends Component
         super(props);
         this.state = {
             editModalShow: false,
-            addModalShow: false,
-            //selectedItemId: undefined,
+            addModalShow: false,            
             selectedRowsIds: []
         };
-        
+        this.handleShowAddParticipantModal = this.handleShowAddParticipantModal.bind(this);
         this.handleRowClick = this.handleRowClick.bind(this);
         this.handleRowSelection = this.handleRowSelection.bind(this);
         this.handleDeleteItem = this.handleDeleteItem.bind(this);
@@ -105,10 +142,12 @@ class ExamRegistrations extends Component
     }
 
     handleDeleteItem()
-    {
+    {   
+        const t = this.props.t;
+
         if ( this.state.selectedRowsIds.length == 1 )
         {
-            if ( !window.confirm("Are you sure?") )
+            if ( !window.confirm(t("are_you_sure")) )
                 return;
 
             fetch(EXAM_REGISTRATIONS + "/" + this.state.selectedRowsIds[0], {
@@ -127,12 +166,20 @@ class ExamRegistrations extends Component
                 alert("Item not deleted.")
             })
         }
-        else alert("Please select one registration to remove");
+        else alert(t("select_one_participant_to_remove"));
     }
 
     render()
     {
         const currentUser = AuthService.getCurrentUser();
+        const t = this.props.t;
+
+        columns[Columns.FULL_NAME] = {...columns[Columns.FULL_NAME], text: t("full_name"), filter: textFilter({ placeholder: t("enter_full_name")})};
+        columns[Columns.EMAIL] = {...columns[Columns.EMAIL], text: t("email"), filter: textFilter({ placeholder: t("enter_email")})};
+        columns[Columns.CLUB] = {...columns[Columns.CLUB], text: t("club"), filter: textFilter({ placeholder: t("enter_club")})};
+        columns[Columns.FEE_RECEIVED] = {...columns[Columns.FEE_RECEIVED], text: t("fee_received")};
+        columns[Columns.PARTICIPATION_ACCEPTED] = {...columns[Columns.PARTICIPATION_ACCEPTED], text: t("participation_accepted")};
+
         const EXAM_REGISTRATIONS_FOR_EXAM = Urls.WEBSERVICE_URL + "/exam_events/" + this.props.id + "/exam_registrations";
 
         return(            
@@ -161,8 +208,8 @@ class ExamRegistrations extends Component
                         {/* style={{backgroundColor: "#EAECEE"}} */}
                         <Card.Header >
                             <div className="d-flex">
-                                <div style={{display: "flex", alignItems: "center"}}>PARTICIPANTS</div>
-                                <Accordion.Toggle className="ml-auto" as={Button} variant="secondary" eventKey="0">Show / Hide</Accordion.Toggle>
+                                <div style={{display: "flex", alignItems: "center"}}>{t("participants")}</div>
+                                <Accordion.Toggle className="ml-auto" as={Button} variant="secondary" eventKey="0">{t("show_hide")}</Accordion.Toggle>
                             </div> 
                         </Card.Header>
                         <Accordion.Collapse eventKey="0">
@@ -185,4 +232,4 @@ class ExamRegistrations extends Component
     }
 }
 
-export default ExamRegistrations;
+export default withTranslation('translation', { withRef: true })(ExamRegistrations);

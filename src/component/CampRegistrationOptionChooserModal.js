@@ -7,6 +7,7 @@ import {
     Container
     } from "react-bootstrap";
 import Select from "react-select";
+import { withTranslation } from "react-i18next";
 import AuthService from "../service/auth-service";
 import * as Urls from "../servers-urls";
 
@@ -128,6 +129,7 @@ class CampRegistrationOptionChooserModal extends Component
                 flex: 1,                
             })
         };
+        const t = this.props.t;
 
         return (
             currentUser != null && currentUser.roles.includes("ROLE_USER") ?
@@ -141,14 +143,12 @@ class CampRegistrationOptionChooserModal extends Component
                     centered="true"                
                 >
                 <Form onSubmit={this.handleSignUp}>
-                    <Modal.Header>
-                        Add a participant
-                    </Modal.Header>
+                    <Modal.Header>{t("add_participant_capital")}</Modal.Header>
                     <Modal.Body>
                         <Container>                            
                             {this.props.sayonaraMeeting && (
                                 <Form.Group as={Row}>
-                                    <Form.Label column sm="4">Sayonara participation</Form.Label>
+                                    <Form.Label column sm="4">{t("sayonara")}</Form.Label>
                                     <Form.Check column sm="4"
                                         type="checkbox"
                                         name="sayonaraMeetingParticipation" 
@@ -161,9 +161,19 @@ class CampRegistrationOptionChooserModal extends Component
                                         }}
                                     />
                                 </Form.Group>
-                            )}                            
+                            )}
                             <Form.Group as={Row}>
-                                <Form.Label column sm="4">Clothing size</Form.Label>
+                                <Form.Label column sm="4">{t("accommodation")}</Form.Label>
+                                <Form.Check column sm="4"
+                                    type="checkbox"
+                                    name="accommodation" 
+                                    style={{display: "flex", alignItems: "center"}}
+                                    checked={this.state.campRegistration.accommodation}
+                                    onChange={e => { this.setState({ campRegistration: {...this.state.campRegistration, accommodation: e.target.checked} }) }}
+                                />
+                            </Form.Group>                            
+                            <Form.Group as={Row}>
+                                <Form.Label column sm="4">{t("clothing_size")}</Form.Label>
                                 <Select
                                     styles={clothingSizesSelectStyles}
                                     options={this.state.clothingSizes}                                    
@@ -172,23 +182,13 @@ class CampRegistrationOptionChooserModal extends Component
                                         this.setState({ campRegistration: {...this.state.campRegistration, clothingSize: clothingSize} })                                        
                                     }}
                                 />
-                            </Form.Group>                        
-                            <Form.Group as={Row}>
-                                <Form.Label column sm="4">Accommodation</Form.Label>
-                                <Form.Check column sm="4"
-                                    type="checkbox"
-                                    name="accommodation" 
-                                    style={{display: "flex", alignItems: "center"}}
-                                    checked={this.state.campRegistration.accommodation}
-                                    onChange={e => { this.setState({ campRegistration: {...this.state.campRegistration, accommodation: e.target.checked} }) }}
-                                />
-                            </Form.Group>
+                            </Form.Group> 
                         </Container>                                               
                     </Modal.Body>
                     <Modal.Footer>
                         <div>
-                            <Button variant="info" type="submit">Save</Button>{' '}                            
-                            <Button variant="secondary" onClick={this.props.onHide}>Cancel</Button>
+                            <Button variant="info" type="submit">{t("save")}</Button>{' '}                            
+                            <Button variant="secondary" onClick={this.props.onHide}>{t("cancel")}</Button>
                         </div>
                     </Modal.Footer>
                 </Form>
@@ -198,4 +198,4 @@ class CampRegistrationOptionChooserModal extends Component
     }
 }
 
-export default CampRegistrationOptionChooserModal;
+export default withTranslation()(CampRegistrationOptionChooserModal);

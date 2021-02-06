@@ -4,11 +4,13 @@ import {
     Form,
     Button,
     Row,
-    Container
+    Container,
+    Alert
     } from "react-bootstrap";
 import Select from "react-select";
 import CrudTableComponent from "../../CrudTableComponent";
 import { textFilter } from 'react-bootstrap-table2-filter';
+import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
@@ -18,6 +20,23 @@ const CAMP_REGISTRATION_API_URL = Urls.WEBSERVICE_URL + "/camp_registrations";
 const USERS_API_URL = Urls.WEBSERVICE_URL + "/users";
 const CAMP_EVENTS = Urls.WEBSERVICE_URL + "/camp_events"; 
 const CAMP_REGISTRATIONS = Urls.WEBSERVICE_URL + "/camp_registrations"; 
+
+const Columns = Object.freeze ({
+    ID: 0,
+    FULL_NAME: 1,
+    COUNTRY: 2,
+    CLUB: 3,    
+});
+
+const headerFormatter = (column, colIndex, { sortElement, filterElement }) => {
+    return (
+        <div style={ { display: 'flex', flexDirection: 'column' } }>            
+            { column.text }            
+            { filterElement }
+            { sortElement }
+        </div>
+    );
+};
 
 const columns = [
     {
@@ -29,25 +48,22 @@ const columns = [
         dataField: "fullName",
         text: "Full name",
         sort: true, 
-        filter: textFilter()           
-    },
-    // {
-    //     dataField: "email", 
-    //     text: "Email",
-    //     sort: false,        
-    //     filter: textFilter(),                       
-    // },
+        filter: textFilter(),
+        headerFormatter: headerFormatter            
+    },    
     {            
         dataField: "country",
         text: "Country",
         sort: true,
         filter: textFilter(),
+        headerFormatter: headerFormatter 
     },
     {            
         dataField: "club.clubName",
         text: "Club",
         sort: true,
         filter: textFilter(),
+        headerFormatter: headerFormatter 
     }
 ];
 
@@ -134,6 +150,8 @@ class AddParticipantToCampModal extends Component
     {
         e.preventDefault();
         
+        const t = this.props.t;
+
         if ( this.state.selectedRowsIds.length == 1 )
         {   
             let cs;
@@ -173,7 +191,7 @@ class AddParticipantToCampModal extends Component
                 })                
             })
         }
-        else alert("Please choose one person.");
+        else alert(t("choose_one_person"));
     }
 
     render()
@@ -184,6 +202,12 @@ class AddParticipantToCampModal extends Component
                 flex: 1,                
             })
         };
+
+        const t = this.props.t;
+
+        columns[Columns.FULL_NAME] = {...columns[Columns.FULL_NAME], text: t("full_name"), filter: textFilter({ placeholder: t("enter_full_name")})};
+        columns[Columns.COUNTRY] = {...columns[Columns.COUNTRY], text: t("country"), filter: textFilter({ placeholder: t("enter_country")})};
+        columns[Columns.CLUB] = {...columns[Columns.CLUB], text: t("club"), filter: textFilter({ placeholder: t("enter_club")})};
 
         return (
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
@@ -197,14 +221,12 @@ class AddParticipantToCampModal extends Component
                     centered="true"                
                 >
                 <Form onSubmit={this.handleSignUp}>
-                    <Modal.Header>
-                        Add a participant
-                    </Modal.Header>
+                    <Modal.Header>{t("add_participant_capital")}</Modal.Header>
                     <Modal.Body>
                         <Container>                            
                             {this.props.sayonaraMeeting && (
                                 <Form.Group as={Row}>
-                                    <Form.Label column sm="4">Sayonara participation</Form.Label>
+                                    <Form.Label column sm="4">{t("sayonara_meeting")}</Form.Label>
                                     <Form.Check column sm="4"
                                         type="checkbox"
                                         name="sayonaraMeetingParticipation" 
@@ -219,7 +241,7 @@ class AddParticipantToCampModal extends Component
                                 </Form.Group>
                             )}                            
                             <Form.Group as={Row}>
-                                <Form.Label column sm="4">Clothing size</Form.Label>
+                                <Form.Label column sm="4">{t("clothing_size")}</Form.Label>
                                 <Select
                                     styles={clothingSizesSelectStyles}
                                     options={this.state.clothingSizes}                                    
@@ -230,7 +252,7 @@ class AddParticipantToCampModal extends Component
                                 />
                             </Form.Group>                        
                             <Form.Group as={Row}>
-                                <Form.Label column sm="4">Accommodation</Form.Label>
+                                <Form.Label column sm="4">{t("accommodation")}</Form.Label>
                                 <Form.Check column sm="4"
                                     type="checkbox"
                                     name="accommodation" 
@@ -242,7 +264,7 @@ class AddParticipantToCampModal extends Component
                         </Container>
                         <Container>
                             <Form.Group as={Row}>
-                                <Form.Label column sm="4">Select a person: </Form.Label>
+                                <Form.Label column sm="4">{t("select_a_person")}</Form.Label>
                             </Form.Group>
                             <CrudTableComponent itemsUrl={USERS_API_URL} 
                                                 tableColumns={columns} 
@@ -253,15 +275,20 @@ class AddParticipantToCampModal extends Component
                     </Modal.Body>
                     <Modal.Footer>
                         <div>
-                            <Button variant="info" type="submit">Save</Button>{' '}                            
-                            <Button variant="secondary" onClick={this.props.onHide}>Cancel</Button>
+                            <Button variant="info" type="submit">{t("save")}</Button>{' '}                            
+                            <Button variant="secondary" onClick={this.props.onHide}>{t("cancel")}</Button>
                         </div>
                     </Modal.Footer>
                 </Form>
             </Modal>
-            ): (<h2>You do not have priviledges  granted to view this section.</h2 >)
+            ) : (
+                <Alert variant="danger">
+                    <Alert.Heading>Access denided</Alert.Heading>
+                    <p>You have no priviledges granted to view this section.</p>
+                </Alert>
+            )
         );
     }
 }
 
-export default AddParticipantToCampModal;
+export default withTranslation('translation', { withRef: true })(AddParticipantToCampModal);

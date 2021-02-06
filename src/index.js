@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import {BrowserRouter as Router } from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
+import "./i18nextInit";
+
 
 // MDB styles:
 import '@fortawesome/fontawesome-free/css/all.min.css';

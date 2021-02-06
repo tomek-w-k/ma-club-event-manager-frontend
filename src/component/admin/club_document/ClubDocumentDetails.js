@@ -9,6 +9,7 @@ import {
     Alert
 } from "react-bootstrap";
 import ClubDocumentDropzone from "./ClubDocumentDropzone";
+import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
@@ -131,7 +132,8 @@ class ClubDocumentDetails extends Component
     
     render()
     {
-        const currentUser = AuthService.getCurrentUser();        
+        const currentUser = AuthService.getCurrentUser();
+        const t = this.props.t;      
 
         return( 
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
@@ -143,8 +145,8 @@ class ClubDocumentDetails extends Component
                         {/* style={{backgroundColor: "#EAECEE"}} */}
                         <Card.Header>
                             <div className="d-flex">
-                                <div style={{display: "flex", alignItems: "center"}}>DETAILS</div>
-                                <Accordion.Toggle className="ml-auto" as={Button} variant="secondary" eventKey="0">Show / Hide</Accordion.Toggle>
+                                <div style={{display: "flex", alignItems: "center"}}>{t("details")}</div>
+                                <Accordion.Toggle className="ml-auto" as={Button} variant="secondary" eventKey="0">{t("show_hide")}</Accordion.Toggle>
                             </div>                        
                         </Card.Header>
                         <Accordion.Collapse eventKey="0">
@@ -152,7 +154,7 @@ class ClubDocumentDetails extends Component
                             <Card.Text>
                                 <Form noValidate validated={this.state.formValidated} onSubmit={this.handleEditClubDocument}>   
                                     <Form.Group>
-                                        <Form.Label>Description</Form.Label>
+                                        <Form.Label>{t("description")}</Form.Label>
                                         <Form.Control required
                                             as="textarea"
                                             name="clubDocumentDescription"
@@ -163,7 +165,7 @@ class ClubDocumentDetails extends Component
                                     <Form.Group>
                                         <Card>
                                             <ClubDocumentDropzone   onDrop={this.onDropClubDocument} 
-                                                                    //accept={} 
+                                                                    //accept={} - by skipping this prop onDrop accepts all files
                                                                     fileName={ this.state.clubDocumentTemp ? this.state.clubDocumentTemp.name : "" }                                                        
                                             />
                                         </Card>
@@ -179,7 +181,7 @@ class ClubDocumentDetails extends Component
                                     <br />
                                     <Card.Footer style={{paddingRight: "0px", paddingBottom: "0px", paddingTop: "1.25rem"}}>
                                         <div className="d-flex flex-row-reverse">  
-                                            <Button variant="info" type="submit">Post</Button>                            
+                                            <Button variant="info" type="submit">{t("post")}</Button>                            
                                         </div>
                                     </Card.Footer>
                                 </Form>
@@ -189,10 +191,14 @@ class ClubDocumentDetails extends Component
                     </Card>
                     </Accordion>
                 </div>
-            ) :
-            ( <h2>You do not have priviledges  granted to view this section.</h2> )
+            ) : (
+                <Alert variant="danger">
+                    <Alert.Heading>{t("access_denided")}</Alert.Heading>
+                    <p>{t("no_priviledges")}</p>
+                </Alert> 
+            )
         );
     }
 }
 
-export default ClubDocumentDetails;
+export default withTranslation()(ClubDocumentDetails);

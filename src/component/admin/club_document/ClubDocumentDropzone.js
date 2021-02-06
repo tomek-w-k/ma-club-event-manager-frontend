@@ -1,7 +1,7 @@
 import React from "react";
 import { useDropzone } from "react-dropzone";
 
-const ClubDocumentDropzone = ({ onDrop, accept, fileName }) => {	
+const ClubDocumentDropzone = ({ onDrop, accept, fileName, dropzoneText }) => {	
 	const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop, accept });
 
 	const divStyle = {
@@ -14,9 +14,9 @@ const ClubDocumentDropzone = ({ onDrop, accept, fileName }) => {
 			<input  {...getInputProps()} />
 			<div style={divStyle}>
 				{isDragActive ? (
-					fileName ? (<div>{fileName}</div> ) : ( <div>Click to load a document or drag it here</div> )
+					fileName ? (<div>{fileName}</div> ) : ( <div>{dropzoneText}</div> )
 				) : ( 						
-                    fileName ? (<div>{fileName}</div> ) : ( <div>Click to load a document or drag it here</div> )
+					fileName ? (<div>{fileName}</div> ) : ( <div>{dropzoneText}</div> )
                 )}
 			</div>
 		</div>

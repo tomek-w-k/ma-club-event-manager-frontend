@@ -9,6 +9,7 @@ import {
     Alert
 } from "react-bootstrap";
 import Datetime from "react-datetime";
+import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
@@ -198,7 +199,8 @@ class CampDetailsComponent extends Component
 
     render()
     {
-        const currentUser = AuthService.getCurrentUser();        
+        const currentUser = AuthService.getCurrentUser(); 
+        const t = this.props.t;       
 
         return( 
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
@@ -210,8 +212,8 @@ class CampDetailsComponent extends Component
                         {/* style={{backgroundColor: "#EAECEE"}} */}
                         <Card.Header>
                             <div className="d-flex">
-                                <div style={{display: "flex", alignItems: "center"}}>DETAILS</div>
-                                <Accordion.Toggle className="ml-auto" as={Button} variant="secondary" eventKey="0">Show / Hide</Accordion.Toggle>
+                                <div style={{display: "flex", alignItems: "center"}}>{t("details")}</div>
+                                <Accordion.Toggle className="ml-auto" as={Button} variant="secondary" eventKey="0">{t("show_hide")}</Accordion.Toggle>
                             </div>                        
                         </Card.Header>
                         <Accordion.Collapse eventKey="0">
@@ -219,7 +221,7 @@ class CampDetailsComponent extends Component
                             <Card.Text>
                             <Form noValidate validated={this.state.formValidated} onSubmit={this.handleEditEvent}>   
                                     <Form.Group>
-                                        <Form.Label>Name</Form.Label>
+                                        <Form.Label>{t("name")}</Form.Label>
                                         <Form.Control required
                                             type="text"
                                             name="eventName"
@@ -230,7 +232,7 @@ class CampDetailsComponent extends Component
                                     <Form.Row>
                                         <Col>
                                             <Form.Group>
-                                                <Form.Label>From</Form.Label>
+                                                <Form.Label>{t("from")}</Form.Label>
                                                 <Datetime 
                                                     inputProps={{name: "startDate", autoComplete: "off", required: "true" }}
                                                     value={this.state.event.startDate}
@@ -242,7 +244,7 @@ class CampDetailsComponent extends Component
                                         </Col>
                                         <Col>
                                             <Form.Group>
-                                                <Form.Label>To</Form.Label>
+                                                <Form.Label>{t("to")}</Form.Label>
                                                 <Datetime 
                                                     inputProps={{ name: "endDate", autoComplete: "off", required: "true" }}
                                                     value={this.state.event.endDate}
@@ -254,7 +256,7 @@ class CampDetailsComponent extends Component
                                         </Col>                            
                                     </Form.Row>
                                     <Form.Group>
-                                        <Form.Label>Description</Form.Label>
+                                        <Form.Label>{t("description")}</Form.Label>
                                         <Form.Control 
                                             as="textarea"
                                             name="eventDescription"
@@ -264,7 +266,7 @@ class CampDetailsComponent extends Component
                                     </Form.Group>
                                     <Form.Group >
                                             <Row>
-                                            <Form.Label column sm="2">Sayonara meeting</Form.Label>
+                                            <Form.Label column sm="3">{t("sayonara_meeting")}</Form.Label>
                                             <Form.Check 
                                                 type="checkbox"
                                                 name="sayonaraMeeting"
@@ -275,7 +277,7 @@ class CampDetailsComponent extends Component
                                             </Row>
                                         </Form.Group>
                                         <Form.Group>
-                                            <Form.Label>Clothing type</Form.Label>
+                                            <Form.Label>{t("clothing_type")}</Form.Label>
                                             <Form.Control required
                                                 type="text"
                                                 name="clothingType"
@@ -284,7 +286,7 @@ class CampDetailsComponent extends Component
                                             />
                                         </Form.Group> 
                                     <Form.Row>
-                                        <Col><Form.Label>Clothing sizes</Form.Label></Col>
+                                        <Col><Form.Label>{t("clothing_sizes")}</Form.Label></Col>
                                     </Form.Row>
                                     {
                                         this.state.event.clothingSizes.map( (clothingSizeInputField, index) => (
@@ -317,7 +319,7 @@ class CampDetailsComponent extends Component
                                     }
                                     <br />
                                     <Form.Row>
-                                        <Col><Form.Label>Fees</Form.Label></Col>
+                                        <Col><Form.Label>{t("fees")}</Form.Label></Col>
                                     </Form.Row>
                                     {
                                         this.state.event.fees.map( (feeInputField, index) => (
@@ -360,7 +362,7 @@ class CampDetailsComponent extends Component
                                 <br />
                                 <Card.Footer style={{paddingRight: "0px", paddingBottom: "0px", paddingTop: "1.25rem"}}>
                                     <div className="d-flex flex-row-reverse">  
-                                        <Button variant="info" type="submit">Post</Button>                            
+                                        <Button variant="info" type="submit">{t("post")}</Button>                            
                                     </div>
                                 </Card.Footer>
                             </Form>
@@ -370,10 +372,14 @@ class CampDetailsComponent extends Component
                     </Card>
                     </Accordion>
                 </div>
-            ) :
-            ( <h2>You do not have priviledges  granted to view this section.</h2> )
+            ) : ( 
+                <Alert variant="danger">
+                    <Alert.Heading>Access denided</Alert.Heading>
+                    <p>You have no priviledges granted to view this section.</p>
+                </Alert>
+            )
         );
     }
 }
 
-export default CampDetailsComponent;
+export default withTranslation('translation', { withRef: true })(CampDetailsComponent);
