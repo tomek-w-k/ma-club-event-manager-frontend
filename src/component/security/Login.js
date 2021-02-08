@@ -101,7 +101,7 @@ class Login extends Component
                                             <Form.Control.Feedback type="invalid">{t("provide_password")}</Form.Control.Feedback>                                        
                                         </Form.Group> 
                                     </Card.Body>
-                                </Card>                
+                                </Card> <br />               
                                 <Button variant="info" style={{width: "100%"}} type="submit">{t("login")}</Button>
                             </Form>
                         </Card.Body>                        
