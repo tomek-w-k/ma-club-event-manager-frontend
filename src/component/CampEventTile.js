@@ -104,7 +104,7 @@ class CampEventTile extends Component
                             <Card.Subtitle className="mb-2 text-muted">{event.startDate} - {event.endDate}</Card.Subtitle>
                             <br />
                             {event.eventDescription && (
-                                <Card.Text>                            
+                                <Card.Text style={{whiteSpace: "pre-wrap"}}>                            
                                     { event.eventDescription }                                                        
                                 </Card.Text>
                             )}
