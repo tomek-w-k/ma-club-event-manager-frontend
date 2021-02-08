@@ -103,18 +103,12 @@ class CampEventTile extends Component
                             <Card.Title>{event.eventName}</Card.Title>
                             <Card.Subtitle className="mb-2 text-muted">{event.startDate} - {event.endDate}</Card.Subtitle>
                             <br />
-                            <Card.Text>                            
-                                { event.eventDescription }                                                        
-                            </Card.Text>
-                            <Card.Text>
-                                Fees:                            
-                                { event.fees.map(fee => <li>{fee.title} : {fee.amount} PLN</li>) }
-                                <div>Clothing type: {event.clothingType}</div>
-                                Sizes:
-                                { event.clothingSizes.map(clothingSize => <li>{clothingSize.clothingSizeName}</li>) }
-                                Registrations:
-                                { event.campRegistrations.map(reg => <li>{reg.user.email}</li>) }
-                            </Card.Text>                        
+                            {event.eventDescription && (
+                                <Card.Text>                            
+                                    { event.eventDescription }                                                        
+                                </Card.Text>
+                            )}
+                            <br />                                              
                             <div className="d-flex flex-row-reverse">                                                        
                                 {!eventContainsCurrentUser && (
                                     <Button variant="info" onClick={this.handleSignUp} >{t("sign_up_event")}</Button>

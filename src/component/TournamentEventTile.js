@@ -155,22 +155,14 @@ class TournamentEventTile extends Component
                             <Card.Title>{event.eventName}</Card.Title>
                             <Card.Subtitle className="mb-2 text-muted">{event.startDate} - {event.endDate}</Card.Subtitle>
                             <br />
-                            <Card.Text>                            
-                                { event.eventDescription }                                                        
-                            </Card.Text>
+                            {event.eventDescription && (
+                                <Card.Text>                            
+                                    { event.eventDescription }                                                        
+                                </Card.Text>
+                            )}                            
                             <div style={imageContainerStyle}>
                                 <Image style={imageStyle} src={this.state.eventPicture ? URL.createObjectURL(this.state.eventPicture.file) : ""} />
-                            </div>                            
-                            <Card.Text>                                                                
-                                Room types:
-                                { event.roomTypes.map(rt => <li>{rt.roomTypeName}</li> ) }
-                                Stay periods:
-                                { event.stayPeriods.map(sp => <li>{sp.stayPeriodName}</li> ) }
-                                Weight / age categories:
-                                { event.weightAgeCategories.map(wac => <li>{wac.categoryName}</li> ) }
-                                Teams registered (by trainer):
-                                { event.teams.map(team => <li>{team.trainer.email}</li>) }
-                            </Card.Text>                                           
+                            </div> <br />                            
                             {!eventContainsCurrentUser && currentUser.roles.includes("ROLE_TRAINER") && (
                                 <div>
                                     <div className="d-flex flex-row-reverse">
