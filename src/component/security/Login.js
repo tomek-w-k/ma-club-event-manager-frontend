@@ -90,7 +90,7 @@ class Login extends Component
                                         </Form.Group>                              
                                         <Form.Group>                                                
                                             <Form.Control required
-                                                autocomplete="on"                                                        
+                                                autocomplete="new-password"                                                       
                                                 placeholder={t("password")}
                                                 type="password"
                                                 name="password"                 

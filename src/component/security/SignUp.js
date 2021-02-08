@@ -201,7 +201,7 @@ class SignUp extends Component
                                             <Col>
                                                 <Form.Group>                                                
                                                     <Form.Control required
-                                                        autocomplete="on"                                                        
+                                                        autocomplete="new-password"                                                        
                                                         placeholder={t("password")}
                                                         type="password"
                                                         name="password"
@@ -217,7 +217,7 @@ class SignUp extends Component
                                             <Col>
                                                 <Form.Group>                                                
                                                     <Form.Control required
-                                                        autocomplete="off"
+                                                        autocomplete="new-password"
                                                         placeholder={t("repeat_password")}
                                                         type="password"
                                                         name="repeatPassword"  

@@ -363,6 +363,7 @@ class App extends Component
 					<div className="content">
 						<Switch>
 							{/* <Route path="/login/:email" component={LoginComponent} /> */}
+							
 							<Route path="/login/:email" component={Login} />
 							{/* <Route path="/signup" component={SignUpComponent} /> */}
 							<Route path="/signup" component={SignUp} />
@@ -508,7 +509,8 @@ class App extends Component
 										</div>									
 									)}	
 								</div>
-							)}																		
+							)}	
+							{user == null ? <Route path="/" component={Login} /> : <div></div>}						
 						</Switch>
 					</div>
 					{/* <div className="custom-bottom"></div> */}
