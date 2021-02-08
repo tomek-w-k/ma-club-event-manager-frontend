@@ -49,6 +49,10 @@ import AuthService from "./service/auth-service";
 import './App.css';
 import ichibanDojoLogo from "./resources/images/ichiban_logo.png";
 
+import {PersonPlusFill} from "react-bootstrap-icons";
+import {PersonDashFill} from "react-bootstrap-icons";
+import {PersonCheckFill} from "react-bootstrap-icons";
+
 
 const user = AuthService.getCurrentUser();
 
@@ -304,6 +308,16 @@ class App extends Component
 								<Button onClick={() => { this.teamRef.current.handleShowAddParticipantToTeamModal(false) }} variant="info">{t("sign_up_participant")}</Button>{' '}
 								<Button onClick={() => { this.teamRef.current.handleShowAddParticipantToTeamModal(true) }} variant="info">{t("sign_up_me")}</Button>{' '}
 								<Button onClick={() => { this.teamRef.current.handleDeleteRegistration() }} variant="danger">{t("remove_participant")}</Button>
+								
+								{/* <Link onClick={() => { this.teamRef.current.handleShowAddParticipantToTeamModal(false) }} >
+									<PersonPlusFill color="#008495" size={30} style={{marginLeft: "10px"}} />
+								</Link>
+								<Link onClick={() => { this.teamRef.current.handleShowAddParticipantToTeamModal(true) }} >
+									<PersonCheckFill color="#008495" size={30} style={{marginLeft: "15px"}} />
+								</Link>
+								<Link onClick={() => { this.teamRef.current.handleDeleteRegistration() }} >
+									<PersonDashFill color="#CB2334" size={30} style={{marginLeft: "15px"}} />
+								</Link> */}
 							</div>
 						)}
 						{this.state.clubDocumentsComponentSelected && (
