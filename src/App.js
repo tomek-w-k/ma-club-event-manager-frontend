@@ -87,6 +87,7 @@ class App extends Component
 		this.teamRef = React.createRef();
 		this.clubDocumentsRef = React.createRef();
 		this.clubDocumentRef = React.createRef();
+		this.profileRef = React.createRef();
 	}
 
 	componentDidMount()
@@ -337,7 +338,7 @@ class App extends Component
 						)}
 						{this.state.profileComponentSelected && (
 							<div>
-								<Button href="#" variant="danger">{t("remove_my_account")}</Button>
+								<Button onClick={() => this.profileRef.current.askForProfileRemoving()} variant="danger">{t("remove_my_account")}</Button>
 							</div>
 						)}
 						{this.state.eventWallComponentSelected && (
@@ -375,7 +376,7 @@ class App extends Component
 
 							{this.state.showUsersTools && (
 								<div>
-									<Route path="/profile_component" render={(props) => (<Profile {...props} navbarControlsHandler={() => {
+									<Route path="/profile_component" render={(props) => (<Profile {...props} ref={this.profileRef} navbarControlsHandler={() => {
 										if ( !this.state.profileComponentSelected ) {
 											this.deselectAllComponents();
 											this.setState({ profileComponentSelected: true });

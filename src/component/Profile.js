@@ -13,6 +13,7 @@ import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import { withTranslation } from "react-i18next";
 import InformationDialogModal from "./InformationDialogModal";
+import ConfirmationDialogModal from "./ConfirmationDialogModal";
 import AuthService from "../service/auth-service";
 import * as Urls from "../servers-urls";
 
@@ -32,6 +33,7 @@ class Profile extends Component
         super(props);
         this.state = {
             user: {
+                id: null,
                 fullName: "",
                 email: "",
                 password: "",
@@ -50,11 +52,14 @@ class Profile extends Component
             branchChiefs: [],
             formValidated: false,
             showInformationModal: false,
-            errorMessage: null
+            showConfirmationModal: false,
+            errorMessage: null,            
         }
 
         this.loadUserToUpdate = this.loadUserToUpdate.bind(this);
         this.handleUpdateUser = this.handleUpdateUser.bind(this);
+        this.askForProfileRemoving = this.askForProfileRemoving.bind(this);
+        this.handleRemoveProfile = this.handleRemoveProfile.bind(this);        
     }
 
     componentDidMount()
@@ -188,7 +193,6 @@ class Profile extends Component
         {
             this.setState({ formValidated: true });
             
-console.log(userToUpdate);
             fetch(USERS_URL, {
                 method: "PUT",
                 headers: {
@@ -214,6 +218,50 @@ console.log(userToUpdate);
         });
     }
 
+    askForProfileRemoving()
+    {
+        this.setState({ showConfirmationModal: true });
+    }
+
+    handleRemoveProfile(result)
+    {
+        if (result)
+        {
+            const t = this.props.t;
+            
+            let userToRemove = {...this.state.user, 
+                fullName: "account_removed",
+                email: null,
+                password: "",
+                club: null,
+                country: "",
+                rank: null,
+                branchChief: null,
+                asTrainer: false,
+                roles: []
+            }
+
+            fetch(USERS_URL, {
+                method: "PUT",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(userToRemove)
+            })
+            .then(result => {
+                if(result.ok) 
+                    AuthService.logout().then(() => window.location.reload());                    
+                else return result.json();
+            },
+            error => {this.setState({ errorMessage: error.message })})
+            .then(result => {
+                if(typeof result != "undefined")                   
+                    this.setState({ errorMessage: t(result.message) });
+            });            
+        }            
+    }
+
     render()
     {        
         const selectStyles = {
@@ -229,6 +277,10 @@ console.log(userToUpdate);
             currentUser != null ?
             (   
                 <div>
+                    <ConfirmationDialogModal    show={this.state.showConfirmationModal}
+                                                onHide={() => this.setState({ showConfirmationModal: false }) }
+                                                confirmationResult={this.handleRemoveProfile}                                                
+                    /> 
                     <InformationDialogModal modalContent={t("data_updated_succesfully")} 
                                             show={this.state.showInformationModal}
                                             onHide={() => {
@@ -356,4 +408,4 @@ console.log(userToUpdate);
     }
 }
 
-export default withTranslation()(Profile);
+export default withTranslation('translation', { withRef: true })(Profile);
