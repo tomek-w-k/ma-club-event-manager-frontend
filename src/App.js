@@ -216,7 +216,7 @@ class App extends Component
 						<Nav>
 							{this.state.currentUser ? ( 
 								<div className="navbar-nav ml-auto" style={{display: "flex", alignItems: "center"}}>
-									<li className="nav-item"><Link className="btn btn-outline-secondary btn-sm">{this.state.currentUser.email}</Link></li>
+									<li className="nav-item"><Link to="/profile_component" className="btn btn-outline-secondary btn-sm">{this.state.currentUser.email}</Link></li>
 									<div style={{width: "10px"}}></div>
 									<li className="nav-item"><Link to={"/login/@"} className="btn btn-secondary btn-sm" onClick={this.logout}>{t("logout")}</Link></li>
 								</div>															
