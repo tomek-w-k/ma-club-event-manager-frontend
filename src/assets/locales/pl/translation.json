@@ -80,6 +80,7 @@
     "save": "Zapisz",
     "cancel": "Anuluj",
     "fill_all_required_fields": "Proszę wypełnić wszystkie wymagane pola.",
+    "data_updated_succesfully": "Dane użytkownika zostały zaktualizowane pomyślnie.",
     "details": "SZCZEGÓŁY",
     "show_hide": "Pokaż / Ukryj",
     "fee_received": "Przyjęto opłatę",
@@ -156,7 +157,9 @@
     "repeat_password": "Powtórz hasło",
     "rank": "Stopień",
     "select_or_enter_your_own": "Proszę wybrać z listy lub wpisać własny",
-    "want_to_be_trainer": "Chcę mieć możliwość rejestracji drużyn na turnieje"
+    "want_to_be_trainer": "Chcę mieć możliwość rejestracji drużyn na turnieje",
+    "basic_information": "DANE PODSTAWOWE",
+    "email_already_taken": "Ten email jest już zajęty."
 
 
 

@@ -80,6 +80,7 @@
     "save": "Save",
     "cancel": "Cancel",
     "fill_all_required_fields": "Please fill all required fields.",
+    "data_updated_succesfully": "User's data have been updated succesfully.",
     "details": "DETAILS",
     "show_hide": "Show / Hide",
     "fee_received": "Fee received",
@@ -156,8 +157,9 @@
     "repeat_password": "Repeat password",
     "rank": "Rank",
     "select_or_enter_your_own": "Please select from the list or enter your own",
-    "want_to_be_trainer": "I want to be able to register teams for tournaments"
-    
+    "want_to_be_trainer": "I want to be able to register teams for tournaments",
+    "basic_information": "BASIC INFORMATION",
+    "email_already_taken": "This email is already taken"
     
     
 }
