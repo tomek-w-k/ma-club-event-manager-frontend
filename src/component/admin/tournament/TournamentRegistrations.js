@@ -2,8 +2,6 @@ import React, {Component} from "react";
 import CrudTableComponent from "../../CrudTableComponent";
 import {
     Card,    
-    Button,    
-    Accordion,
     Alert
 } from "react-bootstrap";
 import { textFilter } from 'react-bootstrap-table2-filter';
@@ -291,18 +289,8 @@ class TournamentRegistrations extends Component
                                                         eventId={this.props.id}
                                                         sayonaraMeeting={this.state.sayonaraMeeting}
                                                         accommodation={this.state.accommodation}
-                    /> 
-                    {/* <Accordion defaultActiveKey="0"> Removing defaultActiveKey prop runs accordion collapsed  */}
-                    <Accordion >
-                    <Card>
-                        {/* style={{backgroundColor: "#EAECEE"}} */}
-                        <Card.Header >
-                            <div className="d-flex">
-                                <div style={{display: "flex", alignItems: "center"}}>{t("registrations_by_participants")}</div>
-                                <Accordion.Toggle className="ml-auto" as={Button} variant="secondary" eventKey="0">{t("show_hide")}</Accordion.Toggle>
-                            </div> 
-                        </Card.Header>
-                        <Accordion.Collapse eventKey="0">
+                    />
+                    <Card>                        
                         <Card.Body>
                             <Card.Text>
                                 <CrudTableComponent itemsUrl={TOURNAMENT_REGISTRATIONS_FOR_TOURNAMENT} 
@@ -312,10 +300,8 @@ class TournamentRegistrations extends Component
                                                     ref={this.crudTableRef}
                                 />
                             </Card.Text>
-                        </Card.Body>
-                        </Accordion.Collapse>
-                    </Card>
-                    </Accordion>
+                        </Card.Body>                        
+                    </Card>                   
                 </div>
             ) : (
                 <Alert variant="danger">

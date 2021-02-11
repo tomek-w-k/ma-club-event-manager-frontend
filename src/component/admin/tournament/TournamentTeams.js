@@ -1,9 +1,7 @@
 import React, {Component} from "react";
 import CrudTableComponent from "../../CrudTableComponent";
 import {
-    Card,
-    Button,
-    Accordion,
+    Card,    
     Alert
 } from "react-bootstrap";
 import {textFilter} from 'react-bootstrap-table2-filter';
@@ -144,30 +142,19 @@ class TournamentTeams extends Component
         return (
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ? 
             (
-                <div>                    
-                    <Accordion defaultActiveKey="0">                    
-                        <Card>
-                            {/* style={{backgroundColor: "#EAECEE"}} */}
-                            <Card.Header >
-                                <div className="d-flex">
-                                    <div style={{display: "flex", alignItems: "center"}}>{t("registrations_by_teams")}</div>
-                                    <Accordion.Toggle className="ml-auto" as={Button} variant="secondary" eventKey="0">{t("show_hide")}</Accordion.Toggle>
-                                </div> 
-                            </Card.Header>
-                            <Accordion.Collapse eventKey="0">
-                            <Card.Body>
-                                <Card.Text>
-                                    <CrudTableComponent itemsUrl={TEAMS_FOR_TOURNAMENT}
-                                                        tableColumns={columns} 
-                                                        selectedItemId={this.handleRowClick} 
-                                                        selectedIds={this.handleRowSelection}
-                                                        ref={this.crudTableRef}
-                                    />  
-                                </Card.Text>
-                            </Card.Body>
-                            </Accordion.Collapse>
-                        </Card>
-                    </Accordion>
+                <div>
+                    <Card>                            
+                        <Card.Body>
+                            <Card.Text>
+                                <CrudTableComponent itemsUrl={TEAMS_FOR_TOURNAMENT}
+                                                    tableColumns={columns} 
+                                                    selectedItemId={this.handleRowClick} 
+                                                    selectedIds={this.handleRowSelection}
+                                                    ref={this.crudTableRef}
+                                />  
+                            </Card.Text>
+                        </Card.Body>                            
+                    </Card>                    
                 </div>
             ) : (
                 <Alert variant="danger">

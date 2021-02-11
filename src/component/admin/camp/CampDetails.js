@@ -4,8 +4,7 @@ import {
     Form,
     Row,
     Col,    
-    Button,    
-    Accordion,
+    Button, 
     Alert
 } from "react-bootstrap";
 import Datetime from "react-datetime";
@@ -206,17 +205,8 @@ class CampDetailsComponent extends Component
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
             ( 
                 <div>
-                    {this.state.errorMessage && (<Alert variant="danger">{this.state.errorMessage}</Alert>)}
-                    <Accordion defaultActiveKey="0">
-                    <Card >
-                        {/* style={{backgroundColor: "#EAECEE"}} */}
-                        <Card.Header>
-                            <div className="d-flex">
-                                <div style={{display: "flex", alignItems: "center"}}>{t("details")}</div>
-                                <Accordion.Toggle className="ml-auto" as={Button} variant="secondary" eventKey="0">{t("show_hide")}</Accordion.Toggle>
-                            </div>                        
-                        </Card.Header>
-                        <Accordion.Collapse eventKey="0">
+                    {this.state.errorMessage && (<Alert variant="danger">{this.state.errorMessage}</Alert>)}                    
+                    <Card >                       
                         <Card.Body>
                             <Card.Text>
                             <Form noValidate validated={this.state.formValidated} onSubmit={this.handleEditEvent}>   
@@ -258,6 +248,7 @@ class CampDetailsComponent extends Component
                                     <Form.Group>
                                         <Form.Label>{t("description")}</Form.Label>
                                         <Form.Control 
+                                            rows="6"
                                             as="textarea"
                                             name="eventDescription"
                                             value={this.state.event.eventDescription}
@@ -367,11 +358,9 @@ class CampDetailsComponent extends Component
                                 </Card.Footer>
                             </Form>
                             </Card.Text>
-                        </Card.Body>
-                        </Accordion.Collapse>
-                    </Card>
-                    </Accordion>
-                </div>
+                        </Card.Body>                        
+                    </Card> 
+                </div>                   
             ) : ( 
                 <Alert variant="danger">
                     <Alert.Heading>Access denided</Alert.Heading>

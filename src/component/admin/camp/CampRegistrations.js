@@ -1,9 +1,7 @@
 import React, {Component} from "react";
 import CrudTableComponent from "../../CrudTableComponent";
 import {
-    Card,    
-    Button,    
-    Accordion,
+    Card,
     Alert
 } from "react-bootstrap";
 import { textFilter } from 'react-bootstrap-table2-filter';
@@ -256,17 +254,8 @@ class CampRegistrations extends Component
                                                 itemId={this.state.selectedRowsIds[0]}
                                                 eventId={this.props.id}
                                                 sayonaraMeeting={this.state.sayonaraMeeting}
-                    /> 
-                    <Accordion defaultActiveKey="0">
-                    <Card>
-                        {/* style={{backgroundColor: "#EAECEE"}} */}
-                        <Card.Header >
-                            <div className="d-flex">
-                                <div style={{display: "flex", alignItems: "center"}}>{t("participants")}</div>
-                                <Accordion.Toggle className="ml-auto" as={Button} variant="secondary" eventKey="0">{t("show_hide")}</Accordion.Toggle>
-                            </div> 
-                        </Card.Header>
-                        <Accordion.Collapse eventKey="0">
+                    />                     
+                    <Card>                        
                         <Card.Body>
                             <Card.Text>
                                 <CrudTableComponent itemsUrl={CAMP_REGISTRATIONS_FOR_CAMP} 
@@ -276,10 +265,8 @@ class CampRegistrations extends Component
                                                     ref={this.crudTableRef}
                                 />
                             </Card.Text>
-                        </Card.Body>
-                        </Accordion.Collapse>
-                    </Card>
-                    </Accordion>
+                        </Card.Body>                        
+                    </Card>                   
                 </div>
             ) : (
                 <Alert variant="danger">

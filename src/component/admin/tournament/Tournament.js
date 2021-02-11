@@ -3,6 +3,10 @@ import TournamentDetails from "./TournamentDetails";
 import TournamentRegistrations from "./TournamentRegistrations";
 import TournamentTeams from "./TournamentTeams";
 import AddTeamModal from "./AddTeamModal";
+import {
+    Tabs,
+    Tab
+} from "react-bootstrap";
 import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
@@ -94,6 +98,7 @@ class Tournament extends Component
     render()
     {        
         this.props.navbarControlsHandler();
+        const t = this.props.t;
        
         return(
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
@@ -104,13 +109,19 @@ class Tournament extends Component
                                         this.setState({ addTeamModalShow: false });                                                                                            
                                     }}                                    
                                     eventId={this.props.match.params.id}                                    
-                    /> 
-                    <TournamentDetails id={this.props.match.params.id} onTournamentUpdate={this.goToEventWall} ref={this.tournamentDetailsRef} />
-                    <br />
-                    <TournamentRegistrations id={this.props.match.params.id} onRegistrationUpdate={this.handleUpdateRegistration} ref={this.tournamentRegistrationsRef} />
-                    <br />
-                    <TournamentTeams id={this.props.match.params.id} onRegistrationUpdate={this.handleUpdateRegistration} onSelectRow={this.handleSelectRow} />
-                    
+                    />                     
+                    <Tabs defaultActiveKey="tournament_details" className="tabsHeader">
+                        <Tab eventKey="tournament_details" title={t("details")} >
+                            <TournamentDetails id={this.props.match.params.id} onTournamentUpdate={this.goToEventWall} ref={this.tournamentDetailsRef} />
+                        </Tab>
+                        <Tab eventKey="registrations_by_participants" title={t("participants")}>
+                            <TournamentRegistrations id={this.props.match.params.id} onRegistrationUpdate={this.handleUpdateRegistration} ref={this.tournamentRegistrationsRef} />
+                        </Tab>
+                        <Tab eventKey="registrations_by_teams" title={t("teams_capital")} >
+                            <TournamentTeams id={this.props.match.params.id} onRegistrationUpdate={this.handleUpdateRegistration} onSelectRow={this.handleSelectRow} />
+                        </Tab>
+                    </Tabs>
+
                 </div>
             ): (<h2>You do not have priviledges  granted to view this section.</h2 > )
         )
