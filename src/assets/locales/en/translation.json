@@ -132,8 +132,8 @@
 
     "sign_up_simple": "Sign up",
     "changing_registration_options_not_allowed": "Changing registration options is not allowed since the fee for this participant has been accepted by administrator.",
-    "empty_team_table_message_part_1": "Please click \"Sign up participant\" button to add a participant to the team.",
-    "empty_team_table_message_part_2": "Click \"Sign up me\" to register yourself.",
+    "empty_team_table_message_part_1": "Please click \"Sign up participant...\" icon on the toolbar at the top to add a participant to the team.",
+    "empty_team_table_message_part_2": "Click \"Sign up me...\" icon to register yourself.",
     "team_for_tournament": "Team for tournament",
     "file_name": "File name",
     "click_to_load_or_drag": "Click to load a document or drag it here",

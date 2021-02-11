@@ -132,8 +132,8 @@
     
     "sign_up_simple": "Zapisz",
     "changing_registration_options_not_allowed": "Zmiana opcji rejestracji nie jest dozwolona ponieważ opłata dla tego uczestnika została zaakceptowana przez administratora.",
-    "empty_team_table_message_part_1": "Kliknij przycisk \"Zarejestruj uczestnika\" aby dodać uczestnika do drużyny.",
-    "empty_team_table_message_part_2": "Kliknij \"Zarejestruj mnie\" aby zarejestrować siebie.",
+    "empty_team_table_message_part_1": "Kliknij ikonę \"Zarejestruj uczestnika...\" na pasku narzędzi u góry aby dodać uczestnika do drużyny.",
+    "empty_team_table_message_part_2": "Kliknij ikonę \"Zarejestruj mnie...\" aby zarejestrować siebie.",
     "team_for_tournament": "Drużyna na zawody",
     "file_name": "Nazwa pliku",
     "click_to_load_or_drag": "Kliknij aby wczytać dokument lub przeciągnij go tutaj",

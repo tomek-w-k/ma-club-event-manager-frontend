@@ -1,9 +1,13 @@
 import React, {Component} from "react";
 import {
     Table, 
-    Alert
+    Alert,
+    OverlayTrigger,
+    Tooltip,    
 } from "react-bootstrap";
+import {Link} from "react-router-dom";
 import { withTranslation } from "react-i18next";
+import {AiOutlineDownload} from "react-icons/ai";
 import AuthService from "../service/auth-service";
 import * as Urls from "../servers-urls";
 
@@ -47,7 +51,15 @@ class Downloads extends Component
                                     <tr>
                                         <td>{clubDocument.clubDocumentDescription}</td>
                                         <td>
-                                            <a href={clubDocument.clubDocumentPath}>{t("download")}</a>
+                                            {/* <a href={clubDocument.clubDocumentPath}>{t("download")}</a> */}
+                                            <OverlayTrigger placement="bottom" overlay={<Tooltip>{t("download")}</Tooltip>} >
+                                                <a href={clubDocument.clubDocumentPath}>
+                                                    <AiOutlineDownload color="gray" size={30} style={{marginLeft: "10px"}} />
+                                                </a>
+                                                {/* <Link to={clubDocument.clubDocumentPath} >									
+                                                    <AiOutlineDownload color="gray" size={30} style={{marginLeft: "10px"}} />
+                                                </Link> */}
+                                            </OverlayTrigger>
                                         </td>
                                     </tr>
                                 )
