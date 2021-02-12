@@ -72,9 +72,24 @@ class Profile extends Component
             BRANCH_CHIEFS: 2
         });
         
-        requests.push(fetch(CLUBS_URL));
-        requests.push(fetch(RANKS_URL));
-        requests.push(fetch(BRANCH_CHIEFS_URL));
+        requests.push(fetch(CLUBS_URL, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        }));
+        requests.push(fetch(RANKS_URL, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        }));
+        requests.push(fetch(BRANCH_CHIEFS_URL, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        }));
 
         Promise.all(requests)
         .then(responses => responses.map(response => response.json()))
@@ -107,7 +122,12 @@ class Profile extends Component
 
     loadUserToUpdate()
     {
-        fetch(USERS_URL + currentUser.id)
+        fetch(USERS_URL + currentUser.id, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        })
         .then(response => response.json())
         .then(data => {
             let club;
@@ -197,7 +217,8 @@ class Profile extends Component
                 method: "PUT",
                 headers: {
                     "Accept": "application/json",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + currentUser.accessToken
                 },
                 body: JSON.stringify(userToUpdate)
             })
@@ -245,7 +266,8 @@ class Profile extends Component
                 method: "PUT",
                 headers: {
                     "Accept": "application/json",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + currentUser.accessToken
                 },
                 body: JSON.stringify(userToRemove)
             })

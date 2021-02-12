@@ -160,7 +160,22 @@
     "select_or_enter_your_own": "Proszę wybrać z listy lub wpisać własny",
     "want_to_be_trainer": "Chcę mieć możliwość rejestracji drużyn na turnieje",
     "basic_information": "DANE PODSTAWOWE",
-    "email_already_taken": "Ten email jest już zajęty."
+    "email_already_taken": "Ten email jest już zajęty.",
+    "go_to_login_page": "Przejdź do strony logowania",
+    "password_changed_succesfully": "Twoje hasło zostało pomyślnie zmienione.",
+    "password_resetting_capital": "ZMIANA HASŁA",
+    "reset_password": "Zmień hasło",
+    "error_password_not_changed": "Wystąpił błąd - hasło nie zostało zmienione.",
+    "passwords_not_identical": "Hasła nie są jednakowe. Proszę wpisać je ponownie.",
+    "reset_password_link_expired": "Link resetowania hasła którego użyłeś jest przestarzały. Wróć do strony logowania i kliknij \"Zapomniałem hasła\" aby uzyskać nowy.",
+    "reset_password_link_damaged": "Link resetowania hasła którego użyłeś jest uszkodzony. Wróć do strony logowania i kliknij \"Zapomniałem hasła\" aby uzyskać nowy.",
+    "i_forgot_password": "Zapomniałem hasła",
+    "email_not_exist": "Podany email nie istnieje w naszej bazie danych. Proszę podać email na który dokonano rejestracji.",
+    "email_not_sent": "Błąd - email nie został wysłany.",
+    "email_sent_confirmation": "Sprawdź swoją skrzynkę pocztową i kliknij link w wiadomości otrzymanej od ClubEventManager aby przejść do formularza zmiany hasła. Użyj linku w ciągu godziny. Po tym czasie będzie on przeterminowany. Jeśli nie otrzymałeś wiadomości - poczekaj kilka minut a potem spróbuj ponownie.",
+    "login_failed": "Logowanie nie powiodło się. Upewnij się że podałeś prawidłowy email i hasło."
+
+    
 
 
 

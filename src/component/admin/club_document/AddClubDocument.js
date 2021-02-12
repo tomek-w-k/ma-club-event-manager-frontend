@@ -11,6 +11,7 @@ import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
 
+const currentUser = AuthService.getCurrentUser();  
 const CLUB_DOCUMENTS_API_URL = Urls.WEBSERVICE_URL + "/club_documents";
 
 
@@ -49,7 +50,8 @@ class AddClubDocument extends Component
                 method: "POST",
                 headers: {
                     "Accept": "application/json",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + currentUser.accessToken
                 },
                 body: JSON.stringify( this.state.clubDocument )            
             })        
@@ -62,6 +64,9 @@ class AddClubDocument extends Component
 
                 fetch(Urls.EXPRESS_JS_URL + "/save_club_document", {
                     method: "POST",
+                    headers: {
+                        "Authorization": "Bearer " + currentUser.accessToken
+                    },
                     body: formData
                 })
                 .then(response => response.json())
@@ -73,7 +78,8 @@ class AddClubDocument extends Component
                         method: "PUT",
                         headers: {
                             "Accept": "application/json",
-                            "Content-Type": "application/json"
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + currentUser.accessToken
                         },
                         body: JSON.stringify( clubDocument )
                     })
@@ -102,7 +108,6 @@ class AddClubDocument extends Component
 
     render()
     {
-        const currentUser = AuthService.getCurrentUser();  
         const t = this.props.t;
       
         this.props.navbarControlsHandler();

@@ -10,6 +10,7 @@ import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
 
+const currentUser = AuthService.getCurrentUser();
 const TOURNAMENT_EVENTS_URL = Urls.WEBSERVICE_URL + "/tournament_events";
 const EVENTS_API_URL = Urls.WEBSERVICE_URL + "/events";
 
@@ -115,9 +116,10 @@ class Tournaments extends Component
             
             fetch(EVENTS_API_URL + "/" + this.state.selectedRowsIds[0], {
                 method: "DELETE",
-                header : {
+                headers : {
                     "Accept": "application/json",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + currentUser.accessToken
                 }
             })
             .then(result => {
@@ -126,6 +128,9 @@ class Tournaments extends Component
 
                 fetch(Urls.EXPRESS_JS_URL + "/clear_dir", {
                     method: "DELETE",
+                    headers: {
+                        "Authorization": "Bearer " + currentUser.accessToken
+                    },
                     body: formData
                 })
                 .then(() => { console.log("Image directory removed.") });
@@ -143,7 +148,6 @@ class Tournaments extends Component
 
     render()
     {
-        const currentUser = AuthService.getCurrentUser(); 
         const t = this.props.t;
 
         columns[Columns.TOURNAMENT_NAME] = {...columns[Columns.TOURNAMENT_NAME], text: t("tournament"), filter: textFilter({ placeholder: t("enter_tournament_name")})};

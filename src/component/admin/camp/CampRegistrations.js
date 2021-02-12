@@ -13,6 +13,7 @@ import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
 
+const currentUser = AuthService.getCurrentUser();
 const CAMP_REGISTRATIONS = Urls.WEBSERVICE_URL + "/camp_registrations";
 const CAMP_EVENTS = Urls.WEBSERVICE_URL + "/camp_events";
 
@@ -158,7 +159,12 @@ class CampRegistrations extends Component
 
     componentDidMount()
     {
-        fetch(CAMP_EVENTS + "/" + this.props.id)
+        fetch(CAMP_EVENTS + "/" + this.props.id, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        })
         .then(response => response.json())        
         .then(data => {
             let sayonaraColumnDef = Object.assign(columns[5], { hidden: !data.sayonaraMeeting });            
@@ -199,9 +205,10 @@ class CampRegistrations extends Component
 
             fetch(CAMP_REGISTRATIONS + "/" + this.state.selectedRowsIds[0], {
                 method: "DELETE",
-                header : {
+                headers : {
                     "Accept": "application/json",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + currentUser.accessToken
                 }
             })
             .then(result => {
@@ -218,7 +225,6 @@ class CampRegistrations extends Component
 
     render()
     {
-        const currentUser = AuthService.getCurrentUser();
         const CAMP_REGISTRATIONS_FOR_CAMP = Urls.WEBSERVICE_URL + "/camp_events/" + this.props.id + "/camp_registrations";
         const t = this.props.t;
 

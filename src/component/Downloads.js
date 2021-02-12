@@ -12,6 +12,7 @@ import AuthService from "../service/auth-service";
 import * as Urls from "../servers-urls";
 
 
+const currentUser = AuthService.getCurrentUser();
 const CLUB_DOCUMENTS_API_URL = Urls.WEBSERVICE_URL + "/club_documents";
 
 
@@ -27,7 +28,12 @@ class Downloads extends Component
 
     componentDidMount()
     {
-        fetch(CLUB_DOCUMENTS_API_URL)
+        fetch(CLUB_DOCUMENTS_API_URL, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        })
         .then(response => response.json())
         .then(data => {
             this.setState({ clubDocuments: data })
@@ -36,7 +42,6 @@ class Downloads extends Component
 
     render()
     {
-        const currentUser = AuthService.getCurrentUser();
         const t = this.props.t;
         this.props.navbarControlsHandler();
 

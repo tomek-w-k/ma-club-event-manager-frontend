@@ -10,6 +10,7 @@ import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
 
+const currentUser = AuthService.getCurrentUser();
 const CLUB_DOCUMENTS_URL = Urls.WEBSERVICE_URL + "/club_documents";
 
 const Columns = Object.freeze ({
@@ -94,9 +95,10 @@ class ClubDocuments extends Component
             
             fetch(CLUB_DOCUMENTS_URL + "/" + this.state.selectedRowsIds[0], {
                 method: "DELETE",
-                header : {
+                headers : {
                     "Accept": "application/json",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + currentUser.accessToken
                 }
             })
             .then(result => {
@@ -105,6 +107,9 @@ class ClubDocuments extends Component
 
                 fetch(Urls.EXPRESS_JS_URL + "/clear_dir", {
                     method: "DELETE",
+                    headers: {
+                        "Authorization": "Bearer " + currentUser.accessToken
+                    },
                     body: formData
                 })
                 .then(() => { console.log("Club document directory removed.") });
@@ -122,7 +127,6 @@ class ClubDocuments extends Component
 
     render()
     {
-        const currentUser = AuthService.getCurrentUser();
         const t = this.props.t;
 
         columns[Columns.DESCRIPTION] = {...columns[Columns.DESCRIPTION], text: t("description"), filter: textFilter({ placeholder: t("enter_description")})};

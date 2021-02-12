@@ -44,7 +44,12 @@ class EditExamRegistrationModal extends Component
 
     loadItemToUpdate()
     {
-        fetch(EXAM_REGISTRATIONS + "/" + this.props.itemId)
+        fetch(EXAM_REGISTRATIONS + "/" + this.props.itemId, {
+            method: "GET",
+            headers: {                
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        })
         .then(response => response.json())
         .then(data => this.setState({ itemToUpdate: data } ));        
     }
@@ -56,7 +61,8 @@ class EditExamRegistrationModal extends Component
             method: "PUT",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + currentUser.accessToken
             },
             body: JSON.stringify(this.state.itemToUpdate)           
         })

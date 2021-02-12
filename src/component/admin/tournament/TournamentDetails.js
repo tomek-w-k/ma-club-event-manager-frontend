@@ -87,16 +87,36 @@ class TournamentDetails extends Component
             WEIGHT_AGE_CATEGORIES: 2
         });
 
-        fetch(TOURNAMENT_EVENTS_API_URL + "/" + this.props.id)
+        fetch(TOURNAMENT_EVENTS_API_URL + "/" + this.props.id, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        })
         .then(response => response.json())        
         .then(data => {                
             let roomTypeUrls = data.roomTypes.map(roomType => ROOM_TYPES_API_URL + "/" + roomType.id + "/tournament_registrations" );
             let stayPeriodUrls = data.stayPeriods.map(stayPeriod => STAY_PERIODS_API_URL + "/" + stayPeriod.id + "/tournament_registrations");
             let weightAgeCategoryUrls = data.weightAgeCategories.map(weightAgeCategory => WEIGHT_AGE_CATEGORIES_API_URL + "/" + weightAgeCategory.id + "/tournament_registrations");
             
-            let roomTypeRequests = roomTypeUrls.map(url => fetch(url));
-            let stayPeriodRequests = stayPeriodUrls.map(url => fetch(url));
-            let weightAgeCategoryRequests = weightAgeCategoryUrls.map(url => fetch(url));
+            let roomTypeRequests = roomTypeUrls.map(url => fetch(url, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + currentUser.accessToken
+                }
+            }));
+            let stayPeriodRequests = stayPeriodUrls.map(url => fetch(url, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + currentUser.accessToken
+                }
+            }));
+            let weightAgeCategoryRequests = weightAgeCategoryUrls.map(url => fetch(url, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + currentUser.accessToken
+                }
+            }));
 
             let rtCount = Promise.all(roomTypeRequests)
             .then( responses => {
@@ -126,7 +146,12 @@ class TournamentDetails extends Component
             let rtTempPicturesRequests = data.roomTypes.map(rt => {                
                 let imageName = rt.roomTypePicturePath ? rt.roomTypePicturePath.split('\\').pop().split('/').pop() : "";                 
                 let url = Urls.EXPRESS_JS_URL + "/get_rt_picture/" + data.id + "/" + imageName;                
-                return fetch(url);
+                return fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": "Bearer " + currentUser.accessToken
+                    }
+                });
             });
 
             Promise.all(rtTempPicturesRequests)
@@ -152,7 +177,12 @@ class TournamentDetails extends Component
             let eventPictureName = data.eventPicturePath ? data.eventPicturePath.split('\\').pop().split('/').pop() : "";
             let getTournamentPictureUrl = Urls.EXPRESS_JS_URL + "/get_tournament_picture/" + data.id + "/" + eventPictureName;
 
-            fetch(getTournamentPictureUrl)
+            fetch(getTournamentPictureUrl, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + currentUser.accessToken
+                }
+            })
             .then(response => response.blob())
             .then(blob => {
                 let fileName = data.eventPicturePath ? data.eventPicturePath.split('\\').pop().split('/').pop() : "";
@@ -202,7 +232,12 @@ class TournamentDetails extends Component
             this.setState({ formValidated: true });
             let tournamentEvent = {...this.state.event};
 
-            fetch(TOURNAMENT_EVENTS_API_URL + "/" + this.props.id + "/tournament_registrations")
+            fetch(TOURNAMENT_EVENTS_API_URL + "/" + this.props.id + "/tournament_registrations", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + currentUser.accessToken
+                }
+            })
             .then(response => response.json())
             .then(data => {
                 tournamentEvent = {...tournamentEvent, tournamentRegistrations: data};
@@ -214,6 +249,9 @@ class TournamentDetails extends Component
                 formData.append("imageTargetDir", rtImagesDir);
                 fetch(Urls.EXPRESS_JS_URL + "/clear_rt_dir", {
                     method: "DELETE",
+                    headers: {
+                        "Authorization": "Bearer " + currentUser.accessToken
+                    },
                     body: formData
                 })
                 .then(() => {
@@ -224,6 +262,9 @@ class TournamentDetails extends Component
                         
                         return fetch(Urls.EXPRESS_JS_URL + "/save_rt_picture", {
                             method: "POST",
+                            headers: {
+                                "Authorization": "Bearer " + currentUser.accessToken
+                            },
                             body: formData
                         });
                     });
@@ -245,6 +286,9 @@ class TournamentDetails extends Component
 
                         fetch(Urls.EXPRESS_JS_URL + "/save_event_picture", {
                             method: "POST",
+                            headers: {
+                                "Authorization": "Bearer " + currentUser.accessToken
+                            },
                             body: formData
                         })
                         .then(response => response.json())
@@ -256,7 +300,8 @@ class TournamentDetails extends Component
                                 method: "PUT",
                                 headers: {
                                     "Accept": "application/json",
-                                    "Content-Type": "application/json"
+                                    "Content-Type": "application/json",
+                                    "Authorization": "Bearer " + currentUser.accessToken
                                 },
                                 body: JSON.stringify( {...tournamentEvent, startDate: e.target.startDate.value, endDate: e.target.endDate.value} )            
                             })                                      

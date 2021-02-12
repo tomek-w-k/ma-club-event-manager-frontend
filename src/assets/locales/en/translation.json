@@ -160,7 +160,20 @@
     "select_or_enter_your_own": "Please select from the list or enter your own",
     "want_to_be_trainer": "I want to be able to register teams for tournaments",
     "basic_information": "BASIC INFORMATION",
-    "email_already_taken": "This email is already taken"
+    "email_already_taken": "This email is already taken",
+    "go_to_login_page": "Go to the login page",
+    "password_changed_succesfully": "Your password has been changed succesfully.",
+    "password_resetting_capital": "PASSWORD RESETTING",
+    "reset_password": "Reset password",
+    "error_password_not_changed": "An error occured - password has not been changed.",
+    "passwords_not_identical": "Passwords are not identical. Please type them again.",
+    "reset_password_link_expired": "Reset password link you used has expired. Please go back to the login page and click \"I forgot my password\" to obtain a new one.",
+    "reset_password_link_damaged": "Reset password link you used has damaged. Please go back to the login page and click \"I forgot my password\" to obtain a new one.",
+    "i_forgot_password": "I forgot my password",
+    "email_not_exist": "This email does not exist in our database. Please enter an email you've been registered with and try again.",
+    "email_not_sent": "Error - email has not been sent.",
+    "email_sent_confirmation": "Please check your email and click a link in a message obtained from ClubEventManager to navigate to the reset password form. Use the link within an hour. After that time it will be expired. If you have not received an email - please wait a several minutes more and then try again.",
+    "login_failed": "Login failed. Make sure you enter the correct email and password."
     
     
 }

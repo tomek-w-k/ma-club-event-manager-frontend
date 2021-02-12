@@ -13,6 +13,7 @@ import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
 
+const currentUser = AuthService.getCurrentUser();
 const TOURNAMENT_REGISTRATIONS = Urls.WEBSERVICE_URL + "/tournament_registrations";
 const TOURNAMENT_EVENTS = Urls.WEBSERVICE_URL + "/tournament_events";
 
@@ -177,6 +178,7 @@ class TournamentRegistrations extends Component
                
         this.handleRowClick = this.handleRowClick.bind(this);
         this.handleRowSelection = this.handleRowSelection.bind(this);
+        this.fillTable = this.fillTable.bind(this);
         this.handleDeleteItem = this.handleDeleteItem.bind(this);
 
         this.crudTableRef = React.createRef();
@@ -184,7 +186,12 @@ class TournamentRegistrations extends Component
 
     componentDidMount()
     {
-        fetch(TOURNAMENT_EVENTS + "/" + this.props.id)
+        fetch(TOURNAMENT_EVENTS + "/" + this.props.id, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+         })
         .then(response => response.json())        
         .then(data => {            
             columns[ColumnNames.SAYONARA] = {...columns[ColumnNames.SAYONARA],  hidden: !data.sayonaraMeeting };
@@ -219,6 +226,11 @@ class TournamentRegistrations extends Component
         });
     }
 
+    fillTable()
+    {
+        this.crudTableRef.current.fillTable();
+    }
+
     handleDeleteItem()
     {
         const t = this.props.t;
@@ -230,9 +242,10 @@ class TournamentRegistrations extends Component
 
             fetch(TOURNAMENT_REGISTRATIONS + "/" + this.state.selectedRowsIds[0], {
                 method: "DELETE",
-                header : {
+                headers: {
                     "Accept": "application/json",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + currentUser.accessToken
                 }
             })
             .then(result => {
@@ -249,7 +262,6 @@ class TournamentRegistrations extends Component
 
     render()
     {
-        const currentUser = AuthService.getCurrentUser();
         const TOURNAMENT_REGISTRATIONS_FOR_TOURNAMENT = Urls.WEBSERVICE_URL + "/tournament_events/" + this.props.id + "/tournament_registrations";
         const t = this.props.t;
 
@@ -271,7 +283,7 @@ class TournamentRegistrations extends Component
                                                         onHide={() => {
                                                             this.setState({ editModalShow: false, selectedRowsIds: [] });
                                                             this.crudTableRef.current.unselectAllRows();
-                                                            this.crudTableRef.current.fillTable();
+                                                            this.fillTable();
                                                             this.props.onRegistrationUpdate();
                                                         }}
                                                         itemId={this.state.selectedRowsIds[0]}
@@ -283,7 +295,7 @@ class TournamentRegistrations extends Component
                                                         onHide={() => {
                                                             this.setState({ addModalShow: false, selectedRowsIds: [] });
                                                             this.crudTableRef.current.unselectAllRows();
-                                                            this.crudTableRef.current.fillTable();                                                    
+                                                            this.fillTable();                                                    
                                                         }}
                                                         itemId={this.state.selectedRowsIds[0]}
                                                         eventId={this.props.id}

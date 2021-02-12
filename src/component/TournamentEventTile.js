@@ -81,9 +81,10 @@ class TournamentEventTile extends Component
         
         fetch(Urls.WEBSERVICE_URL + "/tournament_events/" + this.props.event.id + "/teams", {
             method: "POST",
-            headers : {
+            headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + currentUser.accessToken
             },
             body: JSON.stringify(team)
         })
@@ -106,7 +107,10 @@ class TournamentEventTile extends Component
     handleSignOut = result => {
         if ( result )
             fetch(Urls.WEBSERVICE_URL + "/user/" + currentUser.id + "/teams/" + this.state.teamId, {
-                method: "DELETE"
+                method: "DELETE",
+                headers: {
+                    "Authorization": "Bearer " + currentUser.accessToken
+                }
             })
             .then(response => {
                 if ( response.ok )

@@ -57,7 +57,12 @@ class TournamentRegistrationOptionChooserModal extends Component
 
     componentDidMount()
     {        
-        fetch(TOURNAMENT_EVENTS + "/" + this.props.eventId + "/room_types")
+        fetch(TOURNAMENT_EVENTS + "/" + this.props.eventId + "/room_types", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        })
         .then(response => response.json())
         .then((data) => {                
             let rt = [];
@@ -68,7 +73,12 @@ class TournamentRegistrationOptionChooserModal extends Component
             this.setState({ roomTypes: rt });
         });
 
-        fetch(TOURNAMENT_EVENTS + "/" + this.props.eventId + "/stay_periods")
+        fetch(TOURNAMENT_EVENTS + "/" + this.props.eventId + "/stay_periods", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        })
         .then(response => response.json())
         .then((data) => {                
             let sp = [];
@@ -79,7 +89,12 @@ class TournamentRegistrationOptionChooserModal extends Component
             this.setState({ stayPeriods: sp });
         });
 
-        fetch(TOURNAMENT_EVENTS + "/" + this.props.eventId + "/weight_age_categories")
+        fetch(TOURNAMENT_EVENTS + "/" + this.props.eventId + "/weight_age_categories", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        })
         .then(response => response.json())
         .then((data) => {                
             let wac = [];
@@ -162,7 +177,8 @@ class TournamentRegistrationOptionChooserModal extends Component
             method: "POST",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + currentUser.accessToken
             },
             body: JSON.stringify(tournamentRegistration)           
         })            

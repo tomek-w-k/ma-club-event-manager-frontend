@@ -181,10 +181,20 @@ class Team extends Component
 
     componentDidMount()
     {
-        fetch(Urls.WEBSERVICE_URL + "/teams/" + this.props.match.params.teamId)
+        fetch(Urls.WEBSERVICE_URL + "/teams/" + this.props.match.params.teamId, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        })
         .then(response => response.json())
         .then(teamData => {
-            fetch(Urls.WEBSERVICE_URL + "/tournament_events/" + teamData.eventId)
+            fetch(Urls.WEBSERVICE_URL + "/tournament_events/" + teamData.eventId, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + currentUser.accessToken
+                }
+            })
             .then(response => response.json())        
             .then(eventData => {            
                 columns[ColumnNames.SAYONARA_MEETING_PARTICIPATION] = {...columns[ColumnNames.SAYONARA_MEETING_PARTICIPATION],  hidden: !eventData.sayonaraMeeting };
@@ -242,19 +252,34 @@ class Team extends Component
                 return;
 
             fetch(Urls.WEBSERVICE_URL + "/tournament_registrations/" + this.state.selectedRowsIds[0], {
-                method: "DELETE",
-                header : {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json"
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + currentUser.accessToken
                 }
             })
+            .then(response => response.json())
             .then(result => {
-                this.setState({ selectedRowsIds: [] });
-                this.crudTableRef.current.unselectAllRows();
-                this.crudTableRef.current.fillTable();
-            },
-            error => {
-                alert("Item not deleted.")
+                if (result.feeReceived == true && !currentUser.roles.includes("ROLE_ADMIN"))
+                    alert(t("changing_registration_options_not_allowed"))
+                else
+                {
+                    fetch(Urls.WEBSERVICE_URL + "/tournament_registrations/" + this.state.selectedRowsIds[0], {
+                        method: "DELETE",
+                        headers : {
+                            "Accept": "application/json",
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + currentUser.accessToken
+                        }
+                    })
+                    .then(result => {
+                        this.setState({ selectedRowsIds: [] });
+                        this.crudTableRef.current.unselectAllRows();
+                        this.crudTableRef.current.fillTable();
+                    },
+                    error => {
+                        alert("Item not deleted.")
+                    })
+                }               
             })
         }
         else alert(t("select_one_participant_to_remove"));

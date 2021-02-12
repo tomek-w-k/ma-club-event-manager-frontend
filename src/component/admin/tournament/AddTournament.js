@@ -14,6 +14,7 @@ import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
 
+const currentUser = AuthService.getCurrentUser();  
 const TOURNAMENT_EVENTS_API_URL = Urls.WEBSERVICE_URL + "/tournament_events";
 
 
@@ -90,7 +91,8 @@ class AddTournament extends Component
                 method: "POST",
                 headers: {
                     "Accept": "application/json",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + currentUser.accessToken
                 },
                 body: JSON.stringify( tournamentToSave )
             })        
@@ -187,7 +189,6 @@ class AddTournament extends Component
 
     render()
     {
-        const currentUser = AuthService.getCurrentUser();  
         const t = this.props.t;
       
         this.props.navbarControlsHandler();

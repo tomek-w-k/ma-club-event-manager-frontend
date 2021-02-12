@@ -51,7 +51,8 @@ class ExamEventTile extends Component
             method: "POST",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + currentUser.accessToken
             },
             body: JSON.stringify({
                 id: null,
@@ -88,24 +89,24 @@ class ExamEventTile extends Component
     {
         e.preventDefault();
         fetch(EXAM_REGISTRATION_API_URL + "/" + this.state.examRegistrationId, {
-            method: "DELETE"
+            method: "DELETE",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
         })
         .then(response => {
             if ( response.ok )
-            {
-                console.log("wypisano z egzaminu pomyślnie");
+            {                
                 this.setState({
                     eventContainsCurrentUser: false,
                     examRegistrationId: undefined
                 });
-                window.location.reload();
+                this.forceUpdate();                    
                 return response;
             }
             throw new Error(response.message);
         })
-        .catch(error => {
-            console.log(error);
-        })
+        .catch(error => console.log(error)) 
     }
 
     render()

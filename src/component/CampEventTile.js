@@ -58,24 +58,24 @@ class CampEventTile extends Component
     {
         e.preventDefault();
         fetch(CAMP_REGISTRATION_API_URL + "/" + this.state.campRegistrationId, {
-            method: "DELETE"
+            method: "DELETE",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
         })
         .then(response => {
             if ( response.ok )
-            {
-                console.log("wypisano z egzaminu pomyślnie");
+            {                
                 this.setState({
                     eventContainsCurrentUser: false,
                     campRegistrationId: undefined
                 });
-                window.location.reload();
+                this.forceUpdate();                    
                 return response;
             }
             throw new Error(response.message);
         })
-        .catch(error => {
-            console.log(error);
-        })
+        .catch(error => console.log(error))        
     }
 
     render()
@@ -92,7 +92,9 @@ class CampEventTile extends Component
                 <div>
                     <CampRegistrationOptionChooserModal     show={this.state.showChooserModal}
                                                             onHide={() => {
-                                                                this.setState({ showChooserModal: false });
+                                                                this.setState({ 
+                                                                    showChooserModal: false,
+                                                                 });                                                                
                                                                 window.location.reload();                                                                 
                                                             }}                                                            
                                                             eventId={event.id}

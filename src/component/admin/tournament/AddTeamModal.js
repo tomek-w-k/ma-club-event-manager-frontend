@@ -139,9 +139,10 @@ class AddTeamModal extends Component
             
             fetch(Urls.WEBSERVICE_URL + "/tournament_events/" + this.props.eventId + "/teams", {
                 method: "POST",
-                headers : {
+                headers: {
                     "Accept": "application/json",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + currentUser.accessToken
                 },
                 body: JSON.stringify(team)
             })            

@@ -12,6 +12,7 @@ import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
 
+const currentUser = AuthService.getCurrentUser();
 const EXAM_EVENTS_API_URL = Urls.WEBSERVICE_URL + "/exam_events";
 
 
@@ -45,7 +46,12 @@ class ExamDetails extends Component
 
     componentDidMount()
     {        
-        fetch(EXAM_EVENTS_API_URL + "/" + this.props.id)
+        fetch(EXAM_EVENTS_API_URL + "/" + this.props.id, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        })
         .then(response => response.json())
         .then(data => { this.setState({ event: data }) });
     }
@@ -61,7 +67,12 @@ class ExamDetails extends Component
         { 
             this.setState({ formValidated: true });
 
-            fetch(EXAM_EVENTS_API_URL + "/" + this.props.id + "/exam_registrations")
+            fetch(EXAM_EVENTS_API_URL + "/" + this.props.id + "/exam_registrations", {
+                method: "PUT",
+                headers: {
+                    "Authorization": "Bearer " + currentUser.accessToken
+                }
+            })
             .then(response => response.json())
             .then(data => {
                 this.setState(state => ({
@@ -72,7 +83,8 @@ class ExamDetails extends Component
                         method: "PUT",
                         headers: {
                             "Accept": "application/json",
-                            "Content-Type": "application/json"
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + currentUser.accessToken
                         },
                         body: JSON.stringify( {...this.state.event, startDate: e.target.startDate.value, endDate: e.target.endDate.value} )            
                     })                    
@@ -138,7 +150,6 @@ class ExamDetails extends Component
 
     render()
     {
-        const currentUser = AuthService.getCurrentUser();
         const t = this.props.t;
         
         return(             

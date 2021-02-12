@@ -12,6 +12,7 @@ import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
 
+const currentUser = AuthService.getCurrentUser();
 const EXAM_REGISTRATIONS = Urls.WEBSERVICE_URL + "/exam_registrations";
 const EXAM_EVENTS = Urls.WEBSERVICE_URL + "/exam_events";
 
@@ -149,9 +150,10 @@ class ExamRegistrations extends Component
 
             fetch(EXAM_REGISTRATIONS + "/" + this.state.selectedRowsIds[0], {
                 method: "DELETE",
-                header : {
+                headers : {
                     "Accept": "application/json",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + currentUser.accessToken
                 }
             })
             .then(result => {
@@ -168,7 +170,6 @@ class ExamRegistrations extends Component
 
     render()
     {
-        const currentUser = AuthService.getCurrentUser();
         const t = this.props.t;
 
         columns[Columns.FULL_NAME] = {...columns[Columns.FULL_NAME], text: t("full_name"), filter: textFilter({ placeholder: t("enter_full_name")})};

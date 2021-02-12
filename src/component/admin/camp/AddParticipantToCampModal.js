@@ -99,7 +99,12 @@ class AddParticipantToCampModal extends Component
 
     componentDidMount()
     {        
-        fetch(CAMP_EVENTS + "/" + this.props.eventId + "/clothing_sizes")
+        fetch(CAMP_EVENTS + "/" + this.props.eventId + "/clothing_sizes", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        })
         .then(response => response.json())
         .then((data) => {                
             let cs = [];
@@ -169,7 +174,8 @@ class AddParticipantToCampModal extends Component
                 method: "POST",
                 headers: {
                     "Accept": "application/json",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + currentUser.accessToken
                 },
                 body: JSON.stringify(campRegistration)           
             })            

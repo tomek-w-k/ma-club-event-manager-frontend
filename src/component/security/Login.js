@@ -7,8 +7,11 @@ import {
     Button,    
     Alert,    
 } from "react-bootstrap";
+import {Link} from "react-router-dom";
 import { withTranslation } from "react-i18next";
+import InformationDialogModal from "../InformationDialogModal";
 import AuthService from "../../service/auth-service";
+import * as Urls from "../../servers-urls";
 
 
 class Login extends Component
@@ -22,10 +25,12 @@ class Login extends Component
                 password: ""                
             },            
             formValidated: false,            
-            responseErrorMessage: false            
+            responseErrorMessage: false,
+            emailSentToPasswordResetDialogShow: false            
         };
 
         this.handleLogin = this.handleLogin.bind(this);
+        this.handleSendEmailToPasswordReset = this.handleSendEmailToPasswordReset.bind(this);
     }
 
     componentDidMount()
@@ -37,6 +42,8 @@ class Login extends Component
     {
         e.preventDefault();
 
+        const t =  this.props.t;
+
         if ( e.currentTarget.checkValidity() )
         {
             this.setState({ formValidated: true });
@@ -46,18 +53,29 @@ class Login extends Component
                 this.props.history.push("/event_wall_component");
                 window.location.reload();
             },
-            error => {
-                const resMessage = 
-                    (error.response &&
-                        error.response.data &&
-                        error.response.data.message) ||
-                    error.message ||
-                    error.toString();
-
-                this.setState({ responseErrorMessage: resMessage });
-            });
+            error => this.setState({ responseErrorMessage: t("login_failed") }) );
         }
         else this.setState({ formValidated: true });
+    }
+
+    handleSendEmailToPasswordReset()
+    {        
+        const t = this.props.t;
+        
+        fetch(Urls.WEBSERVICE_URL + "/reset_password/generate_token", {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"                
+            },
+            body: JSON.stringify({ email: this.state.user.email })
+        })
+        .then(result => {
+            if ( result.ok )            
+                this.setState({ emailSentToPasswordResetDialogShow: true });                        
+            else this.setState({ responseErrorMessage: t("email_not_exist") });                        
+        },
+        error => this.setState({ responseErrorMessage: t("email_not_sent") }) )
     }
 
     render()
@@ -65,50 +83,63 @@ class Login extends Component
         const t = this.props.t;
         
         return (
-            <Row>
-                <Col md="2"></Col>
-                <Col md="8" style={{marginTop: '150px'}}>
-                    <Card>
-                        <Card.Body>
-                            {this.state.responseErrorMessage && (<Alert variant="danger">{this.state.responseErrorMessage}</Alert>)}
-                            <Form noValidate validated={this.state.formValidated} onSubmit={this.handleLogin}>
-                                <Card>
-                                    <Card.Header>{t("login_capital")}</Card.Header>
-                                    <Card.Body>                                        
-                                        {this.state.passwordNotMatchError && (<Alert variant="danger">{this.state.passwordNotMatchError}</Alert>)}  
-                                        <Form.Group>                                        
-                                            <Form.Control required
-                                                placeholder="Email"
-                                                type="email"
-                                                name="email" 
-                                                maxLength="255"                                   
-                                                value={this.state.user.email}
-                                                onChange={e => this.setState(state => ({ user: {...state.user, email: e.target.value} })) }                            
-                                            />
-                                            <Form.Control.Feedback>{t("looks_good")}</Form.Control.Feedback>
-                                            <Form.Control.Feedback type="invalid">{t("provide_valid_email")}</Form.Control.Feedback>                                        
-                                        </Form.Group>                              
-                                        <Form.Group>                                                
-                                            <Form.Control required
-                                                autocomplete="new-password"                                                       
-                                                placeholder={t("password")}
-                                                type="password"
-                                                name="password"                 
-                                                value={this.state.user.password}
-                                                onChange={e => this.setState(state => ({ user: {...state.user, password: e.target.value} })) }                            
-                                            />
-                                            <Form.Control.Feedback>{t("looks_good")}</Form.Control.Feedback>
-                                            <Form.Control.Feedback type="invalid">{t("provide_password")}</Form.Control.Feedback>                                        
-                                        </Form.Group> 
-                                    </Card.Body>
-                                </Card> <br />               
-                                <Button variant="info" style={{width: "100%"}} type="submit">{t("login")}</Button>
-                            </Form>
-                        </Card.Body>                        
-                    </Card>
-                </Col>
-                <Col md="2"></Col>
-            </Row>
+            <div>
+                <InformationDialogModal modalTitle={t("password_resetting_capital")}
+                                        modalContent={t("email_sent_confirmation")} 
+                                        show={this.state.emailSentToPasswordResetDialogShow}
+                                        onHide={() => {
+                                            this.setState({ 
+                                                emailSentToPasswordResetDialogShow: false,
+                                                responseErrorMessage: false
+                                            });                                               
+                                        }} 
+                />
+                <Row>
+                    <Col md="2"></Col>
+                    <Col md="8" style={{marginTop: '150px'}}>
+                        <Card>
+                            <Card.Body>
+                                {this.state.responseErrorMessage && (<Alert variant="danger">{this.state.responseErrorMessage}</Alert>)}
+                                <Form noValidate validated={this.state.formValidated} onSubmit={this.handleLogin}>
+                                    <Card>
+                                        <Card.Header>{t("login_capital")}</Card.Header>
+                                        <Card.Body>                                        
+                                            {this.state.passwordNotMatchError && (<Alert variant="danger">{this.state.passwordNotMatchError}</Alert>)}  
+                                            <Form.Group>                                        
+                                                <Form.Control required
+                                                    placeholder="Email"
+                                                    type="email"
+                                                    name="email" 
+                                                    maxLength="255"                                   
+                                                    value={this.state.user.email}
+                                                    onChange={e => this.setState(state => ({ user: {...state.user, email: e.target.value} })) }                            
+                                                />
+                                                <Form.Control.Feedback>{t("looks_good")}</Form.Control.Feedback>
+                                                <Form.Control.Feedback type="invalid">{t("provide_valid_email")}</Form.Control.Feedback>                                        
+                                            </Form.Group>                              
+                                            <Form.Group>                                                
+                                                <Form.Control required
+                                                    autocomplete="new-password"                                                       
+                                                    placeholder={t("password")}
+                                                    type="password"
+                                                    name="password"                 
+                                                    value={this.state.user.password}
+                                                    onChange={e => this.setState(state => ({ user: {...state.user, password: e.target.value} })) }                            
+                                                />
+                                                <Form.Control.Feedback>{t("looks_good")}</Form.Control.Feedback>
+                                                <Form.Control.Feedback type="invalid">{t("provide_password")}</Form.Control.Feedback>                                        
+                                            </Form.Group>
+                                            <Link onClick={() => this.handleSendEmailToPasswordReset()}>{t("i_forgot_password")}</Link> 
+                                        </Card.Body>
+                                    </Card> <br />               
+                                    <Button variant="info" style={{width: "100%"}} type="submit">{t("login")}</Button>
+                                </Form>
+                            </Card.Body>                        
+                        </Card>
+                    </Col>
+                    <Col md="2"></Col>
+                </Row>
+            </div>
         );
     }
 }

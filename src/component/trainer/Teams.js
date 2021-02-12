@@ -81,14 +81,15 @@ class Teams extends Component
         
         if ( this.state.selectedRowsIds != null && this.state.selectedRowsIds.length == 1 )
         {
-            if ( !window.confirm("Are you sure?") )										
+            if ( !window.confirm(t("are_you_sure")) )										
 		        return;
             
             fetch(Urls.WEBSERVICE_URL + "/user/" + this.props.match.params.userId + "/teams/" + this.state.selectedRowsIds[0], {
                 method: "DELETE",
-                header : {
+                headers : {
                     "Accept": "application/json",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + currentUser.accessToken
                 }
             })
             .then(result => {

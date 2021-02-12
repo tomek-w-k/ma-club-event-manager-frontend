@@ -13,6 +13,7 @@ import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
 
+const currentUser = AuthService.getCurrentUser();
 const EXAM_EVENTS_API_URL = Urls.WEBSERVICE_URL + "/exam_events";
 
 
@@ -58,7 +59,8 @@ class AddExam extends Component
                 method: "POST",
                 headers: {
                     "Accept": "application/json",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + currentUser.accessToken
                 },
                 body: JSON.stringify( {...this.state.event, startDate: e.target.startDate.value, endDate: e.target.endDate.value} )                
             })
@@ -104,7 +106,6 @@ class AddExam extends Component
 
     render()
     {
-        const currentUser = AuthService.getCurrentUser();
         const t = this.props.t;
 
         this.props.navbarControlsHandler();

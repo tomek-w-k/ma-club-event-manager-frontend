@@ -13,6 +13,7 @@ import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
 
+const currentUser = AuthService.getCurrentUser(); 
 const CAMP_EVENTS_API_URL = Urls.WEBSERVICE_URL + "/camp_events";
 const CLOTHING_SIZES_API_URL = Urls.WEBSERVICE_URL + "/clothing_sizes";
 
@@ -56,11 +57,21 @@ class CampDetailsComponent extends Component
 
     loadCampOptions()
     {        
-        fetch(CAMP_EVENTS_API_URL + "/" + this.props.id)
+        fetch(CAMP_EVENTS_API_URL + "/" + this.props.id, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        })
         .then(response => response.json())
         .then(data => {
             let clothingSizeUrls = data.clothingSizes.map(clothingSize => CLOTHING_SIZES_API_URL + "/" + clothingSize.id + "/camp_registrations");
-            let clothingSizeRequests = clothingSizeUrls.map(url => fetch(url));
+            let clothingSizeRequests = clothingSizeUrls.map(url => fetch(url, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + currentUser.accessToken
+                }
+            }));
 
             Promise.all(clothingSizeRequests)
             .then( responses => {                
@@ -93,7 +104,12 @@ class CampDetailsComponent extends Component
         {
             this.setState({ formValidated: true });
 
-            fetch(CAMP_EVENTS_API_URL + "/" + this.props.id + "/camp_registrations")
+            fetch(CAMP_EVENTS_API_URL + "/" + this.props.id + "/camp_registrations", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + currentUser.accessToken
+                }
+            })
             .then(response => response.json())
             .then(data => {            
                 this.setState(state => (
@@ -104,7 +120,8 @@ class CampDetailsComponent extends Component
                         method: "PUT",
                         headers: {
                             "Accept": "application/json",
-                            "Content-Type": "application/json"
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + currentUser.accessToken
                         },
                         body: JSON.stringify( {...this.state.event, startDate: e.target.startDate.value, endDate: e.target.endDate.value} )            
                     })                    
@@ -198,7 +215,6 @@ class CampDetailsComponent extends Component
 
     render()
     {
-        const currentUser = AuthService.getCurrentUser(); 
         const t = this.props.t;       
 
         return( 

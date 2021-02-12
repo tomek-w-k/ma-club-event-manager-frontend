@@ -6,6 +6,7 @@ import AuthService from "../service/auth-service";
 import * as Urls from "../servers-urls";
 
 
+const currentUser = AuthService.getCurrentUser();
 const EVENTS_API_URL = Urls.WEBSERVICE_URL + "/events";
 
 
@@ -21,7 +22,12 @@ class EventWall extends Component
 
     componentDidMount()
     {
-        fetch(EVENTS_API_URL)
+        fetch(EVENTS_API_URL, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        })
         .then(response => response.json())
         .then(data => {
             this.setState({
@@ -32,7 +38,6 @@ class EventWall extends Component
 
     render()
     {
-        const currentUser = AuthService.getCurrentUser();
         this.props.navbarControlsHandler();
 
         return(

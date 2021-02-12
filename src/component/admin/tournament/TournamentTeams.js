@@ -63,8 +63,7 @@ class TournamentTeams extends Component
         }
 
         this.handleRowClick = this.handleRowClick.bind(this);
-        this.handleRowSelection = this.handleRowSelection.bind(this);
-        this.handleDeleteTeam = this.handleDeleteTeam.bind(this);
+        this.handleRowSelection = this.handleRowSelection.bind(this);        
         this.handleShowAddTeamModal = this.handleShowAddTeamModal.bind(this);
 
         this.crudTableRef = React.createRef();
@@ -72,7 +71,12 @@ class TournamentTeams extends Component
 
     componentDidMount()
     {
-        fetch(Urls.WEBSERVICE_URL + "/tournament_events/" + this.props.id + "/teams")
+        fetch(Urls.WEBSERVICE_URL + "/tournament_events/" + this.props.id + "/teams", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        })
         .then(response => response.json())
         .then(teams => {
             this.setState({ teams: teams });
@@ -96,35 +100,7 @@ class TournamentTeams extends Component
         this.setState({
             selectedRowsIds: selectedRows
         }, () => this.props.onSelectRow(this.state.selectedRowsIds, this.crudTableRef));        
-    }
-
-    handleDeleteTeam()
-    {
-        const t = this.props.t;
-
-        if ( this.state.selectedRowsIds != null && this.state.selectedRowsIds.length == 1 )
-        {
-            if ( !window.confirm("Are you sure?") )										
-		        return;
-            
-            fetch(Urls.WEBSERVICE_URL + "/user/" + this.props.match.params.userId + "/teams/" + this.state.selectedRowsIds[0], {
-                method: "DELETE",
-                header : {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json"
-                }
-            })
-            .then(result => {
-                this.setState({ selectedRowsIds: [] });
-                this.crudTableRef.current.unselectAllRows();
-                this.crudTableRef.current.fillTable();
-            },
-            error => {
-                console.log("Item not deleted");
-            })
-        }            
-        else alert(t("select_one_team_to_remove"));
-    }
+    }   
 
     handleShowAddTeamModal()
     {

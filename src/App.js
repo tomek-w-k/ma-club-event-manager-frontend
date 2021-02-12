@@ -14,6 +14,7 @@ import {MDBIcon} from "mdbreact";
 
 import Login from "./component/security/Login";
 import SignUp from "./component/security/SignUp";
+import PasswordReset from "./component/security/PasswordReset";
 
 import People from "./component/admin/People";
 
@@ -512,11 +513,9 @@ class App extends Component
 					</div>
 					<div className="content">
 						<Switch>
-							{/* <Route path="/login/:email" component={LoginComponent} /> */}
-							
-							<Route path="/login/:email" component={Login} />
-							{/* <Route path="/signup" component={SignUpComponent} /> */}
+							<Route path="/login/:email" component={Login} />							
 							<Route path="/signup" component={SignUp} />
+							<Route path="/password_reset/:token" render={(props) => (<PasswordReset {...props} /> )} />
 
 							{/* It was necessary to make conditions below nested. Place them on the same level doesn't work - when all three state variables 
 							(showUsersTools, showTrainersTools and showAdministrativeTools) were set to "true", then it's expected that all routes below will be

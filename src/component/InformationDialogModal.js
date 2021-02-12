@@ -21,28 +21,25 @@ class InformationDialogModal extends Component
     {  
         const t = this.props.t;
 
-        return (
-            currentUser != null ?
-            (
-                <Modal 
-                    show={this.props.show}                
-                    onHide={this.props.onHide}
-                    onEnter={this.loadItemToUpdate}
-                    animation="true"
-                    size="lg"
-                    centered="true"                
-                >                
-                    <Modal.Header>
-                        {this.props.modalTitle ? this.props.modalTitle : t("confirmation")}
-                    </Modal.Header>
-                    <Modal.Body>
-                        {this.props.modalContent ? this.props.modalContent : t("are_you_sure")}
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="info" onClick={() => this.props.onHide()} >Ok</Button>                            
-                    </Modal.Footer>                
-                </Modal>
-            ): (<h2>You do not have priviledges  granted to view this section.</h2 > )
+        return (            
+            <Modal 
+                show={this.props.show}                
+                onHide={this.props.onHide}
+                onEnter={this.loadItemToUpdate}
+                animation="true"
+                size="lg"
+                centered="true"                
+            >                
+                <Modal.Header>
+                    {this.props.modalTitle ? this.props.modalTitle : t("confirmation")}
+                </Modal.Header>
+                <Modal.Body>
+                    {this.props.modalContent ? this.props.modalContent : t("are_you_sure")}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="info" onClick={() => this.props.onHide()} >Ok</Button>                            
+                </Modal.Footer>                
+            </Modal>            
         );
     }
 }

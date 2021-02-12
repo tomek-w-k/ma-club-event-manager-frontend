@@ -14,6 +14,7 @@ import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 
 
+const currentUser = AuthService.getCurrentUser();
 const CLUB_DOCUMENTS_API_URL = Urls.WEBSERVICE_URL + "/club_documents";
 
 
@@ -39,12 +40,22 @@ class ClubDocumentDetails extends Component
 
     loadClubDocument()
     {
-        fetch(CLUB_DOCUMENTS_API_URL + "/" + this.props.id)
+        fetch(CLUB_DOCUMENTS_API_URL + "/" + this.props.id, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        })
         .then(response => response.json())
         .then(data => {            
             let getClubDocumentUrl = data.clubDocumentPath ? data.clubDocumentPath : "";
 
-            fetch(getClubDocumentUrl)
+            fetch(getClubDocumentUrl, {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + currentUser.accessToken
+                }
+            })
             .then(response => response.blob())
             .then(blob => {
                 let fileName = data.clubDocumentPath ? data.clubDocumentPath.split('\\').pop().split('/').pop() : "";
@@ -83,6 +94,9 @@ class ClubDocumentDetails extends Component
 
             fetch(Urls.EXPRESS_JS_URL + "/save_club_document", {
                 method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + currentUser.accessToken
+                },
                 body: formData
             })
             .then(response => response.json())
@@ -96,7 +110,8 @@ class ClubDocumentDetails extends Component
                         method: "PUT",
                         headers: {
                             "Accept": "application/json",
-                            "Content-Type": "application/json"
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + currentUser.accessToken
                         },
                         body: JSON.stringify( clubDocument )
                     })                    
@@ -132,7 +147,6 @@ class ClubDocumentDetails extends Component
     
     render()
     {
-        const currentUser = AuthService.getCurrentUser();
         const t = this.props.t;      
 
         return( 

@@ -80,6 +80,7 @@ class Tournament extends Component
                 this.setState({ selectedRowsIds: [] });
                 this.state.crudTableRef.current.unselectAllRows();
                 this.state.crudTableRef.current.fillTable();
+                this.tournamentRegistrationsRef.current.fillTable();
             },
             error => {
                 alert("Item not deleted.")
@@ -118,7 +119,10 @@ class Tournament extends Component
                             <TournamentRegistrations id={this.props.match.params.id} onRegistrationUpdate={this.handleUpdateRegistration} ref={this.tournamentRegistrationsRef} />
                         </Tab>
                         <Tab eventKey="registrations_by_teams" title={t("teams_capital")} >
-                            <TournamentTeams id={this.props.match.params.id} onRegistrationUpdate={this.handleUpdateRegistration} onSelectRow={this.handleSelectRow} />
+                            <TournamentTeams    id={this.props.match.params.id} 
+                                                onRegistrationUpdate={this.handleUpdateRegistration} 
+                                                onSelectRow={this.handleSelectRow}                                                
+                            />
                         </Tab>
                     </Tabs>
 

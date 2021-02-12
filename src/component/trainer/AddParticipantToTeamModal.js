@@ -78,9 +78,16 @@ class AddParticipantToTeamModal extends Component
             WEIGHT_AGE_CATEGORIES: 2
         });
 
-        requests.push(fetch(TOURNAMENT_EVENTS + "/" + this.props.eventId + "/room_types"));
-        requests.push(fetch(TOURNAMENT_EVENTS + "/" + this.props.eventId + "/stay_periods"));
-        requests.push(fetch(TOURNAMENT_EVENTS + "/" + this.props.eventId + "/weight_age_categories"));
+        let requestHeader = {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        };
+
+        requests.push(fetch(TOURNAMENT_EVENTS + "/" + this.props.eventId + "/room_types", requestHeader));
+        requests.push(fetch(TOURNAMENT_EVENTS + "/" + this.props.eventId + "/stay_periods", requestHeader));
+        requests.push(fetch(TOURNAMENT_EVENTS + "/" + this.props.eventId + "/weight_age_categories", requestHeader));
         
         Promise.all(requests)
         .then(responses =>  responses.map(response => response.json()) )
@@ -219,7 +226,8 @@ class AddParticipantToTeamModal extends Component
                 method: "POST",
                 headers: {
                     "Accept": "application/json",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + currentUser.accessToken
                 },
                 body: JSON.stringify(tournamentRegistration)           
             })            
@@ -245,7 +253,7 @@ class AddParticipantToTeamModal extends Component
                 flex: 1,                
             })
         };
-
+        
         const t = this.props.t;
         
         return (

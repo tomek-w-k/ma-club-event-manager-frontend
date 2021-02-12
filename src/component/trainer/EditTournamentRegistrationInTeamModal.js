@@ -70,9 +70,16 @@ class EditTournamentRegistrationInTeamModal extends Component
             WEIGHT_AGE_CATEGORIES: 2
         });
 
-        requests.push(fetch(TOURNAMENT_EVENTS + "/" + this.props.eventId + "/room_types"));
-        requests.push(fetch(TOURNAMENT_EVENTS + "/" + this.props.eventId + "/stay_periods"));
-        requests.push(fetch(TOURNAMENT_EVENTS + "/" + this.props.eventId + "/weight_age_categories"));
+        let requestHeader = {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        };
+
+        requests.push(fetch(TOURNAMENT_EVENTS + "/" + this.props.eventId + "/room_types", requestHeader));
+        requests.push(fetch(TOURNAMENT_EVENTS + "/" + this.props.eventId + "/stay_periods", requestHeader));
+        requests.push(fetch(TOURNAMENT_EVENTS + "/" + this.props.eventId + "/weight_age_categories", requestHeader));
         
         Promise.all(requests)
         .then(responses =>  responses.map(response => response.json()) )
@@ -123,7 +130,12 @@ class EditTournamentRegistrationInTeamModal extends Component
 
     loadItemToUpdate()
     {        
-        fetch(TOURNAMENT_REGISTRATIONS + "/" + this.props.itemId)
+        fetch(TOURNAMENT_REGISTRATIONS + "/" + this.props.itemId, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        })
         .then(response => response.json())
         .then(data => {
             let rt;
@@ -207,7 +219,8 @@ class EditTournamentRegistrationInTeamModal extends Component
             method: "PUT",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + currentUser.accessToken
             },
             body: JSON.stringify(itemToUpdate)           
         })

@@ -50,7 +50,12 @@ class EditCampRegistrationModal extends Component
 
     componentDidMount()
     {        
-        fetch(CAMP_EVENTS + "/" + this.props.eventId + "/clothing_sizes")
+        fetch(CAMP_EVENTS + "/" + this.props.eventId + "/clothing_sizes", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        })
         .then(response => response.json())
         .then((data) => {                
             let cs = [];
@@ -64,7 +69,12 @@ class EditCampRegistrationModal extends Component
 
     loadItemToUpdate()
     {        
-        fetch(CAMP_REGISTRATIONS + "/" + this.props.itemId)
+        fetch(CAMP_REGISTRATIONS + "/" + this.props.itemId, {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + currentUser.accessToken
+            }
+        })
         .then(response => response.json())
         .then(data => {
             let cs;
@@ -100,7 +110,8 @@ class EditCampRegistrationModal extends Component
             method: "PUT",
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + currentUser.accessToken
             },
             body: JSON.stringify(itemToUpdate)           
         })
