@@ -2,6 +2,12 @@ import React, { Component } from "react";
 import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+import { withTranslation } from "react-i18next";
+import {
+    OverlayTrigger,
+    Tooltip
+} from "react-bootstrap";
 import AuthService from "../service/auth-service";
 
 
@@ -139,8 +145,24 @@ class CrudTable extends Component
             );
         }
 
+        const t = this.props.t;
+
         return (
-            <div>   
+            <div> 
+                <div className="d-flex flex-row-reverse" style={{marginBottom: "10px"}}>
+                    <OverlayTrigger placement="bottom" overlay={<Tooltip>{t("saves_to_xls")}</Tooltip>} >
+                        <div>
+                            <ReactHTMLTableToExcel
+                                id="test-table-xls-button"
+                                className="btn btn-secondary btn-sm"
+                                table="crudTable"
+                                filename="tablexls"
+                                sheet="tablexls"
+                                buttonText={t("write_to_xls")}
+                            />   
+                        </div>
+                    </OverlayTrigger> 
+                </div>   
                 <BootstrapTable     id="crudTable" 
                                     keyField='id'
                                     data={ this.state.items }
@@ -160,4 +182,4 @@ class CrudTable extends Component
     }
 }
 
-export default CrudTable;
+export default withTranslation('translation', { withRef: true })(CrudTable);

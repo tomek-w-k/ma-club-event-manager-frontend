@@ -173,7 +173,9 @@
     "email_not_exist": "This email does not exist in our database. Please enter an email you've been registered with and try again.",
     "email_not_sent": "Error - email has not been sent.",
     "email_sent_confirmation": "Please check your email and click a link in a message obtained from ClubEventManager to navigate to the reset password form. Use the link within an hour. After that time it will be expired. If you have not received an email - please wait a several minutes more and then try again.",
-    "login_failed": "Login failed. Make sure you enter the correct email and password."
+    "login_failed": "Login failed. Make sure you enter the correct email and password.",
+    "write_to_xls": "Write to XLS file",
+    "saves_to_xls": "Saves data from current table view to XLS file"
     
     
 }

@@ -75,7 +75,8 @@ const columns = [
         },
         headerStyle:  { "text-align": "center" },
         formatter: (cell, row) => {
-            return cell ? (<div><Check color="#008495" size={22}/></div>) : (<div><X color="#CB2334" size={22}/></div>)            
+            return cell ? ( <div><Check color="#008495" size={22}/><div style={{opacity: "0"}}>V</div></div> ) : 
+                          ( <div><X color="#CB2334" size={22}/><div style={{opacity: "0"}}>X</div></div> )            
         },
         filter: textFilter({            
             disabled: "true",
@@ -94,7 +95,8 @@ const columns = [
         },
         headerStyle:  { "text-align": "center" },
         formatter: (cell, row) => {
-            return cell ? (<div><Check color="#008495" size={22}/></div>) : (<div><X color="#CB2334" size={22}/></div>)            
+            return cell ? ( <div><Check color="#008495" size={22}/><div style={{opacity: "0"}}>V</div></div> ) : 
+                          ( <div><X color="#CB2334" size={22}/><div style={{opacity: "0"}}>X</div></div> )            
         },
         filter: textFilter({            
             disabled: "true",
@@ -127,7 +129,8 @@ const columns = [
         },
         headerStyle:  { "text-align": "center" },
         formatter: (cell, row) => {
-            return cell ? (<div><Check color="#008495" size={22}/></div>) : (<div><X color="#CB2334" size={22}/></div>)            
+            return cell ? ( <div><Check color="#008495" size={22}/><div style={{opacity: "0"}}>V</div></div> ) : 
+                          ( <div><X color="#CB2334" size={22}/><div style={{opacity: "0"}}>X</div></div> )           
         },
         filter: textFilter({            
             disabled: "true",

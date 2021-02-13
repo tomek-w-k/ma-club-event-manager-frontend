@@ -173,7 +173,10 @@
     "email_not_exist": "Podany email nie istnieje w naszej bazie danych. Proszę podać email na który dokonano rejestracji.",
     "email_not_sent": "Błąd - email nie został wysłany.",
     "email_sent_confirmation": "Sprawdź swoją skrzynkę pocztową i kliknij link w wiadomości otrzymanej od ClubEventManager aby przejść do formularza zmiany hasła. Użyj linku w ciągu godziny. Po tym czasie będzie on przeterminowany. Jeśli nie otrzymałeś wiadomości - poczekaj kilka minut a potem spróbuj ponownie.",
-    "login_failed": "Logowanie nie powiodło się. Upewnij się że podałeś prawidłowy email i hasło."
+    "login_failed": "Logowanie nie powiodło się. Upewnij się że podałeś prawidłowy email i hasło.",
+    "write_to_xls": "Zapisz do pliku XLS",
+    "saves_to_xls": "Zapisuje dane z bieżącego widoku tabeli do pliku XLS"
+
 
     
 
