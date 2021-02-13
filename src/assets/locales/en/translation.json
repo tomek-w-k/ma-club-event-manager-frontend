@@ -175,7 +175,17 @@
     "email_sent_confirmation": "Please check your email and click a link in a message obtained from ClubEventManager to navigate to the reset password form. Use the link within an hour. After that time it will be expired. If you have not received an email - please wait a several minutes more and then try again.",
     "login_failed": "Login failed. Make sure you enter the correct email and password.",
     "write_to_xls": "Write to XLS file",
-    "saves_to_xls": "Saves data from current table view to XLS file"
-    
-    
+    "saves_to_xls": "Saves data from current table view to XLS file",
+    "person": "Person",    
+    "registrations_capital": "REGISTRATIONS",
+    "exams_capital": "EXAMS",
+    "camps_capital": "CAMPS",
+    "tournaments_capital": "TOURNAMENTS",
+    "profile_capital": "PROFILE",
+    "select_one_person_to_remove": "Please select one person to remove.",
+    "cannot_remove_person": "The person you want to remove cannot be registered at any event and have any registered team (if he is a trainer).",
+    "information_capital": "INFORMATION",
+    "options_capital": "OPTIONS",
+    "add_person": "Add Person",
+    "ability_to_register_teams": "Trainer - ability to register teams for tournaments"
 }

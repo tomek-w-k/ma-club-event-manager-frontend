@@ -31,7 +31,7 @@ class InformationDialogModal extends Component
                 centered="true"                
             >                
                 <Modal.Header>
-                    {this.props.modalTitle ? this.props.modalTitle : t("confirmation")}
+                    {this.props.modalTitle ? this.props.modalTitle : t("information_capital")}
                 </Modal.Header>
                 <Modal.Body>
                     {this.props.modalContent ? this.props.modalContent : t("are_you_sure")}

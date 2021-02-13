@@ -17,6 +17,8 @@ import SignUp from "./component/security/SignUp";
 import PasswordReset from "./component/security/PasswordReset";
 
 import People from "./component/admin/People";
+import Person from "./component/admin/Person";
+import AddPerson from "./component/admin/AddPerson";
 
 import Exams from "./component/admin/exam_event/Exams";
 import Exam from "./component/admin/exam_event/Exam";
@@ -85,6 +87,9 @@ class App extends Component
 		this.logout = this.logout.bind(this);
 		this.deselectAllComponents = this.deselectAllComponents.bind(this);
 
+		this.peopleRef = React.createRef();
+		this.personRef = React.createRef();
+		this.addPersonRef = React.createRef();
 		this.examsRef = React.createRef();
 		this.examRef = React.createRef();
 		this.campsRef = React.createRef();
@@ -127,6 +132,8 @@ class App extends Component
 	{
 		this.setState({			
 			peopleComponentSelected: false,
+			personComponentSelected: false,
+			addPersonComponentSelected: false,
 
 			examsComponentSelected: false,
 			examComponentSelected: false,
@@ -196,6 +203,8 @@ class App extends Component
 					<Navbar bg="dark" variant="dark" >
 						<Navbar.Brand>
 							{this.state.peopleComponentSelected && (<div>{t("people")}</div>)}
+							{this.state.personComponentSelected && (<div>{t("person")}</div>)}							
+							{this.state.addPersonComponentSelected && (<div>{t("add_person")}</div>)}							
 
 							{this.state.examsComponentSelected && (<div>{t("exams")}</div>)}
 							{this.state.examComponentSelected && (<div>{t("exam")}</div>)}
@@ -255,16 +264,29 @@ class App extends Component
 								<Button href="#" variant="danger">{t("remove_person")}</Button> */}
 
 								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("new_person")}</Tooltip>} >
-									<Link to="#" >									
+									<Link to="/add_person_component" >									
 										<AiOutlineUserAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
 									</Link>
 								</OverlayTrigger>
 								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("remove_person")}</Tooltip>} >
-									<Link to="#" >									
+									<Link onClick={() => { this.peopleRef.current.askForProfileRemoving() }} >									
 										<AiOutlineUserDelete color="#CB2334" size={30} style={{marginLeft: "15px"}} />
 									</Link>
 								</OverlayTrigger>
 							</div>							
+						)}
+						{this.state.personComponentSelected && (
+							<div>								
+							</div>
+						)}
+						{this.state.addPersonComponentSelected && (
+							<div>
+								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("clear_form")}</Tooltip>} >
+									<Link onClick={() => window.location.reload()} >									
+										<AiOutlineClear color="gray" size={30} style={{marginLeft: "10px"}} />
+									</Link>
+								</OverlayTrigger>
+							</div>
 						)}
 						{this.state.examsComponentSelected && (
 							<div>								
@@ -562,13 +584,25 @@ class App extends Component
 											}} />)} />
 											{this.state.showAdministrativeTools && (
 												<div>
-													<Route path="/people_component" render={(props) => (<People {...props} navbarControlsHandler={() => {
+													<Route path="/people_component" render={(props) => (<People {...props} ref={this.peopleRef} navbarControlsHandler={() => {
 														if ( !this.state.peopleComponentSelected )
 														{
 															this.deselectAllComponents();
 															this.setState({ peopleComponentSelected: true });
 														}
 													}} />)} />
+													<Route path="/person_component/:id" render={(props) => (<Person {...props} ref={this.personRef} navbarControlsHandler={() => {
+														if ( !this.state.personComponentSelected ) {
+															this.deselectAllComponents();
+															this.setState({ personComponentSelected:  true });
+														}
+													}} /> )} />
+													<Route path="/add_person_component/" render={(props) => (<AddPerson {...props} ref={this.addPersonRef} navbarControlsHandler={() => {
+														if ( !this.state.addPersonComponentSelected ) {
+															this.deselectAllComponents();
+															this.setState({ addPersonComponentSelected:  true });
+														}
+													}} /> )} />
 													<Route path="/exams_component" render={(props) => (<Exams {...props} ref={this.examsRef} navbarControlsHandler={() => {
 														if ( !this.state.examsComponentSelected )
 														{

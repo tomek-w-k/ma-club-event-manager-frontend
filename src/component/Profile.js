@@ -166,7 +166,7 @@ class Profile extends Component
                     label: data.branchChief.branchChiefName
                 }
 
-            this.setState({ user: {...data, club: club, rank: rank, branchChief: branchChief} });
+            this.setState({ user: {...data, club: club, rank: rank, branchChief: branchChief} });            
         })
     }
 
