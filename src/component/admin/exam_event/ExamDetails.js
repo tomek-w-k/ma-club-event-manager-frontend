@@ -68,7 +68,7 @@ class ExamDetails extends Component
             this.setState({ formValidated: true });
 
             fetch(EXAM_EVENTS_API_URL + "/" + this.props.id + "/exam_registrations", {
-                method: "PUT",
+                method: "GET",
                 headers: {
                     "Authorization": "Bearer " + currentUser.accessToken
                 }
