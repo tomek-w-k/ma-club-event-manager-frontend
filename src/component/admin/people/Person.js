@@ -16,10 +16,10 @@ import {Link, withRouter} from "react-router-dom";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import { withTranslation } from "react-i18next";
-import InformationDialogModal from "../InformationDialogModal";
-import ConfirmationDialogModal from "../ConfirmationDialogModal";
-import AuthService from "../../service/auth-service";
-import * as Urls from "../../servers-urls";
+import InformationDialogModal from "../../InformationDialogModal";
+import ConfirmationDialogModal from "../../ConfirmationDialogModal";
+import AuthService from "../../../service/auth-service";
+import * as Urls from "../../../servers-urls";
 
 
 const currentUser = AuthService.getCurrentUser();

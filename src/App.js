@@ -16,9 +16,9 @@ import Login from "./component/security/Login";
 import SignUp from "./component/security/SignUp";
 import PasswordReset from "./component/security/PasswordReset";
 
-import People from "./component/admin/People";
-import Person from "./component/admin/Person";
-import AddPerson from "./component/admin/AddPerson";
+import People from "./component/admin/people/People";
+import Person from "./component/admin/people/Person";
+import AddPerson from "./component/admin/people/AddPerson";
 
 import Exams from "./component/admin/exam_event/Exams";
 import Exam from "./component/admin/exam_event/Exam";

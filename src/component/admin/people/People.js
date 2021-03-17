@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import CrudTableComponent from "../CrudTableComponent";
+import CrudTableComponent from "../../CrudTableComponent";
 import {
     Card,
     Form,    
@@ -8,10 +8,10 @@ import {
 } from "react-bootstrap";
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import { withTranslation } from "react-i18next";
-import InformationDialogModal from "../InformationDialogModal";
-import ConfirmationDialogModal from "../ConfirmationDialogModal";
-import AuthService from "../../service/auth-service";
-import * as Urls from "../../servers-urls";
+import InformationDialogModal from "../../InformationDialogModal";
+import ConfirmationDialogModal from "../../ConfirmationDialogModal";
+import AuthService from "../../../service/auth-service";
+import * as Urls from "../../../servers-urls";
 
 
 const currentUser = AuthService.getCurrentUser();

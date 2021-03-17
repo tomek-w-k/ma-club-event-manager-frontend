@@ -12,8 +12,8 @@ import {
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import { withTranslation } from "react-i18next";
-import AuthService from "../../service/auth-service";
-import * as Urls from "../../servers-urls";
+import AuthService from "../../../service/auth-service";
+import * as Urls from "../../../servers-urls";
 
 
 const currentUser = AuthService.getCurrentUser();
