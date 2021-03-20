@@ -187,5 +187,11 @@
     "information_capital": "INFORMATION",
     "options_capital": "OPTIONS",
     "add_person": "Add Person",
-    "ability_to_register_teams": "Trainer - ability to register teams for tournaments"
+    "ability_to_register_teams": "Trainer - ability to register teams for tournaments",
+    "settings": "Settings",
+    "branch_chiefs_capital": "BRANCH CHIEFS",
+    "clubs_capital": "CLUBS",
+    "ranks_capital": "RANKS",
+    "branch_chief": "Branch chief",
+    "enter_name": "Enter name"
 }

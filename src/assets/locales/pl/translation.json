@@ -187,9 +187,13 @@
     "information_capital": "INFORMACJA",
     "options_capital": "OPCJE",
     "add_person": "Dodaj Osobę",
-    "ability_to_register_teams": "Trener - możliwość rejestracji drużyn na turnieje"
-
-
+    "ability_to_register_teams": "Trener - możliwość rejestracji drużyn na turnieje",
+    "settings": "Ustawienia",
+    "branch_chiefs_capital": "BRANCH CHIEFS",
+    "clubs_capital": "KLUBY",
+    "ranks_capital": "STOPNIE",
+    "branch_chief": "Branch chief",
+    "enter_name": "Podaj nazwę"
     
 
 

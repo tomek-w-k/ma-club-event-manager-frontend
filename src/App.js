@@ -52,6 +52,8 @@ import AuthService from "./service/auth-service";
 import './App.css';
 import ichibanDojoLogo from "./resources/images/ichiban_logo.png";
 
+import Settings from "./component/admin/settings/Settings";
+
 import {AiOutlineUsergroupAdd} from "react-icons/ai";
 import {AiOutlineUsergroupDelete} from "react-icons/ai";
 import {AiOutlineUserAdd} from "react-icons/ai";
@@ -101,6 +103,7 @@ class App extends Component
 		this.clubDocumentsRef = React.createRef();
 		this.clubDocumentRef = React.createRef();
 		this.profileRef = React.createRef();
+		this.settingsRef = React.createRef();
 	}
 
 	componentDidMount()
@@ -157,6 +160,8 @@ class App extends Component
 			profileComponentSelected: false,
 			eventWallComponentSelected: false,
 			downloadsComponentSelected: false,
+
+			settingsComponentSelected: false,
 		})
 	}
 
@@ -180,6 +185,7 @@ class App extends Component
 								<Link to="/camps_component" className="nav-link sidenav-text" style={{color:"black"}} >{t("camps")}</Link>
 								<Link to="/tournaments_component" className="nav-link sidenav-text" style={{color:"black"}} >{t("tournaments")}</Link>
 								<Link to="/club_documents_component" className="nav-link sidenav-text" style={{color:"black"}} >{t("documents")}</Link>
+								<Link to="/settings_component" className="nav-link sidenav-text" style={{color:"black"}} >{t("settings")}</Link>
 							</div>							
 						)}
 						{this.state.showTrainersTools && (
@@ -228,6 +234,8 @@ class App extends Component
 							{this.state.profileComponentSelected && (<div>{t("profile")}</div>)}
 							{this.state.eventWallComponentSelected && (<div>{t("events")}</div>)}
 							{this.state.downloadsComponentSelected && (<div>{t("downloads")}</div>)}
+
+							{this.state.settingsComponentSelected && (<div>{t("settings")}</div>)}
 						</Navbar.Brand>
 						<Nav className="mr-auto" ></Nav>
 						<Nav>
@@ -484,6 +492,10 @@ class App extends Component
 							<div>	
 							</div>							
 						)}
+						{this.state.settingsComponentSelected && (
+							<div>								
+							</div>
+						)}
 						{this.state.addClubDocumentComponentSelected && (
 							<div>
 								{/* <Button href="/add_club_document_component" variant="secondary">{t("clear_form")}</Button> */}
@@ -685,6 +697,13 @@ class App extends Component
 														{
 															this.deselectAllComponents();
 															this.setState({ addClubDocumentComponentSelected: true });
+														}
+													}} />)} />
+													<Route path="/settings_component" render={(props) => (<Settings {...props} navbarControlsHandler={() => {
+														if ( !this.state.settingsComponentSelected )
+														{
+															this.deselectAllComponents();
+															this.setState({ settingsComponentSelected: true });
 														}
 													}} />)} />
 												</div>
