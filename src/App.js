@@ -46,13 +46,13 @@ import Downloads from "./component/Downloads";
 import LanguageSelect from "./component/LanguageSelect";
 import { withTranslation } from "react-i18next";
 
-
 import AuthService from "./service/auth-service";
 
 import './App.css';
 import ichibanDojoLogo from "./resources/images/ichiban_logo.png";
 
 import Settings from "./component/admin/settings/Settings";
+import AddSelectableUserOption from "./component/admin/settings/AddSelectableUserOption";
 
 import {AiOutlineUsergroupAdd} from "react-icons/ai";
 import {AiOutlineUsergroupDelete} from "react-icons/ai";
@@ -73,6 +73,10 @@ const toggleLanguageRadios = [
 	{ name: 'EN', value: '2' },
 ];
 
+const BRANCH_CHIEFS_SELECTABLE_OPTION = "branchChiefs";
+const CLUBS_SELECTABLE_OPTION = "clubs";
+const RANKS_SELECTABLE_OPTION = "ranks";
+
 
 class App extends Component
 {
@@ -85,9 +89,12 @@ class App extends Component
 			showUsersTools: false,
 			showTrainersTools: false,
 			toggleLanguageRadioValue: '2',
+			settingsSelectedTab: "",
 		};
 		this.logout = this.logout.bind(this);
 		this.deselectAllComponents = this.deselectAllComponents.bind(this);
+		this.renderOptionNameTooltip = this.renderOptionNameTooltip.bind(this);
+		this.renderRemoveOptionNameTooltip = this.renderRemoveOptionNameTooltip.bind(this);
 
 		this.peopleRef = React.createRef();
 		this.personRef = React.createRef();
@@ -104,6 +111,7 @@ class App extends Component
 		this.clubDocumentRef = React.createRef();
 		this.profileRef = React.createRef();
 		this.settingsRef = React.createRef();
+		this.addSelectableUserOptionRef = React.createRef();
 	}
 
 	componentDidMount()
@@ -162,8 +170,33 @@ class App extends Component
 			downloadsComponentSelected: false,
 
 			settingsComponentSelected: false,
+			addSelectableUserOptionComponentSelected: false,
 		})
 	}
+
+	renderOptionNameTooltip(option)
+    {
+        const t = this.props.t;
+        
+        switch(option)
+        {
+            case BRANCH_CHIEFS_SELECTABLE_OPTION: return <Tooltip>{t("add_branch_chief")}</Tooltip>;
+            case CLUBS_SELECTABLE_OPTION: return <Tooltip>{t("add_club")}</Tooltip>;
+            case RANKS_SELECTABLE_OPTION: return <Tooltip>{t("add_rank")}</Tooltip>;
+        }
+	}
+	
+	renderRemoveOptionNameTooltip(option)
+    {
+        const t = this.props.t;
+        
+        switch(option)
+        {
+            case BRANCH_CHIEFS_SELECTABLE_OPTION: return <Tooltip>{t("remove_branch_chief")}</Tooltip>;
+            case CLUBS_SELECTABLE_OPTION: return <Tooltip>{t("remove_club")}</Tooltip>;
+            case RANKS_SELECTABLE_OPTION: return <Tooltip>{t("remove_rank")}</Tooltip>;
+        }
+    }
 
 	render()
 	{
@@ -236,6 +269,12 @@ class App extends Component
 							{this.state.downloadsComponentSelected && (<div>{t("downloads")}</div>)}
 
 							{this.state.settingsComponentSelected && (<div>{t("settings")}</div>)}
+							{this.state.addSelectableUserOptionComponentSelected && 
+								(localStorage.getItem("settingsSelectedTab") == BRANCH_CHIEFS_SELECTABLE_OPTION) && (<div>{t("add_branch_chief")}</div>)}
+							{this.state.addSelectableUserOptionComponentSelected && 
+								(localStorage.getItem("settingsSelectedTab") == CLUBS_SELECTABLE_OPTION) && (<div>{t("add_club")}</div>)}
+							{this.state.addSelectableUserOptionComponentSelected && 
+								(localStorage.getItem("settingsSelectedTab") == RANKS_SELECTABLE_OPTION) && (<div>{t("add_rank")}</div>)}							
 						</Navbar.Brand>
 						<Nav className="mr-auto" ></Nav>
 						<Nav>
@@ -493,14 +532,33 @@ class App extends Component
 							</div>							
 						)}
 						{this.state.settingsComponentSelected && (
-							<div>								
+							<div>
+								<OverlayTrigger placement="bottom" overlay={this.renderOptionNameTooltip(localStorage.getItem("settingsSelectedTab"))} >
+									<Link to="/add_selectable_user_option_component" >									
+										<HiOutlineViewGridAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
+									</Link>
+								</OverlayTrigger>
+								<OverlayTrigger placement="bottom" overlay={this.renderRemoveOptionNameTooltip(localStorage.getItem("settingsSelectedTab"))} >
+									<Link onClick={() => { this.settingsRef.current.confirmDeleteSelectableUserOption() }} >									
+										<IoTrashBinOutline color="#CB2334" size={30} style={{marginLeft: "10px"}} />
+									</Link>
+								</OverlayTrigger>								
+							</div>
+						)}
+						{this.state.addSelectableUserOptionComponentSelected && (
+							<div>
+								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("clear_form")}</Tooltip>} >
+									<Link onClick={() => window.location.reload()} >									
+										<AiOutlineClear color="gray" size={30} style={{marginLeft: "10px"}} />
+									</Link>
+								</OverlayTrigger>
 							</div>
 						)}
 						{this.state.addClubDocumentComponentSelected && (
 							<div>
 								{/* <Button href="/add_club_document_component" variant="secondary">{t("clear_form")}</Button> */}
 
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("clear_form")}</Tooltip>} >
+								 <OverlayTrigger placement="bottom" overlay={<Tooltip>{t("clear_form")}</Tooltip>} >
 									<Link onClick={() => window.location.reload()} >									
 										<AiOutlineClear color="gray" size={30} style={{marginLeft: "10px"}} />
 									</Link>
@@ -699,13 +757,28 @@ class App extends Component
 															this.setState({ addClubDocumentComponentSelected: true });
 														}
 													}} />)} />
-													<Route path="/settings_component" render={(props) => (<Settings {...props} navbarControlsHandler={() => {
-														if ( !this.state.settingsComponentSelected )
-														{
-															this.deselectAllComponents();
-															this.setState({ settingsComponentSelected: true });
-														}
-													}} />)} />
+													<Route path="/settings_component" render={(props) => (<Settings {...props} ref={this.settingsRef} 
+														navbarControlsHandler={() => {
+															if ( !this.state.settingsComponentSelected )
+															{
+																this.deselectAllComponents();
+																this.setState({ settingsComponentSelected: true });																
+															}
+														}}
+														setSelectedTab={(tabIndex) => {
+															this.setState({ settingsSelectedTab: tabIndex });
+															localStorage.setItem("settingsSelectedTab", tabIndex);
+														}}
+													 />)} />
+													<Route path="/add_selectable_user_option_component" render={(props) => (<AddSelectableUserOption {...props} ref={this.addSelectableUserOptionRef}
+														navbarControlsHandler={() => {
+															if ( !this.state.addSelectableUserOptionComponentSelected )
+															{
+																this.deselectAllComponents();
+																this.setState({ addSelectableUserOptionComponentSelected: true });															
+															}
+														}}														
+													/>)} />
 												</div>
 											)}									
 										</div>									
