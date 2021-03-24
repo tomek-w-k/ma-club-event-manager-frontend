@@ -205,12 +205,27 @@
     "select_one_rank_to_remove": "Proszę wybrać jeden stopień do usunięcia.",
     "provide_valid_value": "Proszę podać poprawną wartość",
     "error_item_not_updated": "Wystąpił błąd - pozycja nie została zaktualizowana.",
+    "error_item_not_added": "Wystąpił błąd - pozycja nie została dodana.",
     "error_item_cannot_be_loaded": "Wystąpił błąd - nie można wczytać pozycji.",
     "already_exists": "już istnieje.",
     "branch_chief_cannot_be_removed_because": "nie może być usunięty ponieważ posiada on przypisaną jedną lub więcej osób. Zmień kierownika oddziału tych osób i spróbuj ponownie.",
     "club_cannot_be_removed_because": "nie może być usunięty ponieważ posiada on przypisaną jedną lub więcej osób. Zmień klub tych osób i spróbuj ponownie.",
-    "rank_cannot_be_removed_because": "nie może być usunięty ponieważ posiada on przypisaną jedną lub więcej osób. Zmień stopień tych osób i spróbuj ponownie."
-    
+    "rank_cannot_be_removed_because": "nie może być usunięty ponieważ posiada on przypisaną jedną lub więcej osób. Zmień stopień tych osób i spróbuj ponownie.",
+    "general_capital": "OGÓLNE",
+    "add_admin": "Dodaj administratora",
+    "add_admin_capital": "DODAJ ADMINISTRATORA",
+    "remove_admin": "Usuń administratora",
+    "logo_capital": "LOGO",
+    "club_name_capital": "NAZWA KLUBU",
+    "contact_email_capital": "EMAIL DO KONTAKTU",
+    "administrators_capital": "ADMINISTRATORZY",
+    "failed_to_fetch": "Błąd: Nie udało się pobrać danych.",
+    "failed_to_remove_admin": "Błąd: Nie udało się usunąć uprawnień administratora dla wybranej osoby.",
+    "restore_saved_settings": "Przywróć zachowane ustawienia",
+    "cannot_remove_currently_logged_in_admin": "Nie można odebrać uprawnień administratora tej osobie ponieważ jest ona w tej chwili zalogowana.",
+    "social_media_capital": "MEDIA SPOŁECZNOŚCIOWE",
+    "restore_default": "Przywróć domyślne"
+
 
 
 

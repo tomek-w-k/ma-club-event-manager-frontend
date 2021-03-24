@@ -205,11 +205,25 @@
     "select_one_rank_to_remove": "Please select one rank to remove.",
     "provide_valid_value": "Please enter a valid value",
     "error_item_not_updated": "An error occured - item has not been updated.",
+    "error_item_not_added": "An error occured - item has not been added.",
     "error_item_cannot_be_loaded": "An error occured - item cannot be loaded.",
     "already_exists": "already exist.",
     "branch_chief_cannot_be_removed_because": "cannot be removed because it has one or more people assigned. Change their branch chief and try again.",
     "club_cannot_be_removed_because": "cannot be removed because it has one or more people assigned. Change their club and try again.",
-    "rank_cannot_be_removed_because": "cannot be removed because it has one or more people assigned. Change their rank and try again."
-
+    "rank_cannot_be_removed_because": "cannot be removed because it has one or more people assigned. Change their rank and try again.",
+    "general_capital": "GENERAL",
+    "add_admin": "Add administrator",
+    "add_admin_capital": "ADD ADMINISTRATOR",
+    "remove_admin": "Remove administrator",
+    "logo_capital": "LOGO",
+    "club_name_capital": "CLUB NAME",
+    "contact_email_capital": "CONTACT EMAIL",
+    "administrators_capital": "ADMINISTRATORS",
+    "failed_to_fetch": "Error: Failed to fetch data.",
+    "failed_to_remove_admin": "Error: Failed to remove admin privileges for a selected person.",
+    "restore_saved_settings": "Restore saved settings",
+    "cannot_remove_currently_logged_in_admin": "Administrator privileges cannot be removed for this user because it is currently logged in.",
+    "social_media_capital": "SOCIAL MEDIA",
+    "restore_default": "Restore default"
 
 }

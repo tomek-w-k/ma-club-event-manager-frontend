@@ -49,10 +49,11 @@ import { withTranslation } from "react-i18next";
 import AuthService from "./service/auth-service";
 
 import './App.css';
-import ichibanDojoLogo from "./resources/images/ichiban_logo.png";
 
 import Settings from "./component/admin/settings/Settings";
 import AddSelectableUserOption from "./component/admin/settings/AddSelectableUserOption";
+import * as SettingsConstants from "./component/admin/settings/settingsConstants";
+import { getGeneralSettings } from "./component/admin/settings/getGeneralSettings";
 
 import {AiOutlineUsergroupAdd} from "react-icons/ai";
 import {AiOutlineUsergroupDelete} from "react-icons/ai";
@@ -73,10 +74,6 @@ const toggleLanguageRadios = [
 	{ name: 'EN', value: '2' },
 ];
 
-const BRANCH_CHIEFS_SELECTABLE_OPTION = "branchChiefs";
-const CLUBS_SELECTABLE_OPTION = "clubs";
-const RANKS_SELECTABLE_OPTION = "ranks";
-
 
 class App extends Component
 {
@@ -90,11 +87,17 @@ class App extends Component
 			showTrainersTools: false,
 			toggleLanguageRadioValue: '2',
 			settingsSelectedTab: "",
+			clubLogoPath: "",
+			clubName: "",            
+            facebookUrl: "",
+            youtubeUrl: "",
+            instagramUrl: "",
 		};
 		this.logout = this.logout.bind(this);
 		this.deselectAllComponents = this.deselectAllComponents.bind(this);
 		this.renderOptionNameTooltip = this.renderOptionNameTooltip.bind(this);
 		this.renderRemoveOptionNameTooltip = this.renderRemoveOptionNameTooltip.bind(this);
+		this.showToolbarIconsForSettingsTab = this.showToolbarIconsForSettingsTab.bind(this);
 
 		this.peopleRef = React.createRef();
 		this.personRef = React.createRef();
@@ -116,6 +119,8 @@ class App extends Component
 
 	componentDidMount()
 	{
+		const t = this.props.t;
+		
 		if ( user )
 		{
 			this.setState({
@@ -129,9 +134,20 @@ class App extends Component
 			this.deselectAllComponents();
 		}
 
-		document.title = "Ichiban Dojo";
+		getGeneralSettings(user)
+		.then(data => {
+			this.setState({
+				clubLogoPath: data[SettingsConstants.PropertyNames.CLUB_LOGO_PATH] ? data[SettingsConstants.PropertyNames.CLUB_LOGO_PATH].value : "",
+				clubName: data[SettingsConstants.PropertyNames.CLUB_NAME] ? data[SettingsConstants.PropertyNames.CLUB_NAME].value : "",					
+				facebookUrl: data[SettingsConstants.PropertyNames.FACEBOOK_URL] ? data[SettingsConstants.PropertyNames.FACEBOOK_URL].value : "",
+				youtubeUrl: data[SettingsConstants.PropertyNames.YOUTUBE_URL] ? data[SettingsConstants.PropertyNames.YOUTUBE_URL].value : "",
+				instagramUrl: data[SettingsConstants.PropertyNames.INSTAGRAM_URL] ? data[SettingsConstants.PropertyNames.INSTAGRAM_URL].value : ""
+			}, 
+			() =>{ document.title = this.state.clubName ? this.state.clubName : "ClubEventManager" });
+		})
+		.catch(error => this.setState({ errorMessage: t("failed_to_fetch") }));
 	}
-
+	
 	logout()
 	{
 		AuthService.logout().then(
@@ -180,9 +196,10 @@ class App extends Component
         
         switch(option)
         {
-            case BRANCH_CHIEFS_SELECTABLE_OPTION: return <Tooltip>{t("add_branch_chief")}</Tooltip>;
-            case CLUBS_SELECTABLE_OPTION: return <Tooltip>{t("add_club")}</Tooltip>;
-            case RANKS_SELECTABLE_OPTION: return <Tooltip>{t("add_rank")}</Tooltip>;
+            case SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION: return <Tooltip>{t("add_branch_chief")}</Tooltip>;
+            case SettingsConstants.CLUBS_SELECTABLE_OPTION: return <Tooltip>{t("add_club")}</Tooltip>;
+			case SettingsConstants.RANKS_SELECTABLE_OPTION: return <Tooltip>{t("add_rank")}</Tooltip>;
+			default: return <div></div>;
         }
 	}
 	
@@ -192,11 +209,67 @@ class App extends Component
         
         switch(option)
         {
-            case BRANCH_CHIEFS_SELECTABLE_OPTION: return <Tooltip>{t("remove_branch_chief")}</Tooltip>;
-            case CLUBS_SELECTABLE_OPTION: return <Tooltip>{t("remove_club")}</Tooltip>;
-            case RANKS_SELECTABLE_OPTION: return <Tooltip>{t("remove_rank")}</Tooltip>;
+            case SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION: return <Tooltip>{t("remove_branch_chief")}</Tooltip>;
+            case SettingsConstants.CLUBS_SELECTABLE_OPTION: return <Tooltip>{t("remove_club")}</Tooltip>;
+			case SettingsConstants.RANKS_SELECTABLE_OPTION: return <Tooltip>{t("remove_rank")}</Tooltip>;
+			default: return <div></div>;
         }
-    }
+	}
+	
+	showToolbarIconsForSettingsTab(option)
+	{
+		const t = this.props.t;
+		
+		let generalSettingsIcons = (
+			<div>
+				<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("restore_saved_settings")}</Tooltip>} >
+					<Link onClick={() => window.location.reload()} >									
+						<AiOutlineClear color="gray" size={30} style={{marginLeft: "10px"}} />
+					</Link>
+				</OverlayTrigger>
+			</div>
+		);
+
+		let administratorsSettingsIcons = (
+			<div>
+				<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("add_admin")}</Tooltip>} >
+					<Link onClick={() => { this.settingsRef.current.handleManageAdminPrivileges(true) }} >									
+						<AiOutlineUserAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
+					</Link>
+				</OverlayTrigger>
+				<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("remove_admin")}</Tooltip>} >
+					<Link onClick={() => { this.settingsRef.current.handleManageAdminPrivileges(false) }} >									
+						<AiOutlineUserDelete color="#CB2334" size={30} style={{marginLeft: "15px"}} />
+					</Link>
+				</OverlayTrigger>
+			</div>
+		);
+
+		let selectableUserOptionIcons = (
+			<div>
+				<OverlayTrigger placement="bottom" overlay={this.renderOptionNameTooltip(localStorage.getItem("settingsSelectedTab"))} >
+					<Link to="/add_selectable_user_option_component" >									
+						<HiOutlineViewGridAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
+					</Link>
+				</OverlayTrigger>
+				<OverlayTrigger placement="bottom" overlay={this.renderRemoveOptionNameTooltip(localStorage.getItem("settingsSelectedTab"))} >
+					<Link onClick={() => { this.settingsRef.current.confirmDeleteSelectableUserOption() }} >									
+						<IoTrashBinOutline color="#CB2334" size={30} style={{marginLeft: "10px"}} />
+					</Link>
+				</OverlayTrigger>								
+			</div>
+		);
+
+		switch(option)
+        {            
+			case SettingsConstants.GENERAL_SETTINGS: return generalSettingsIcons;
+			case SettingsConstants.ADMINISTRATORS_SETTINGS: return administratorsSettingsIcons;
+			case SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION: return selectableUserOptionIcons;
+            case SettingsConstants.CLUBS_SELECTABLE_OPTION: return selectableUserOptionIcons;
+			case SettingsConstants.RANKS_SELECTABLE_OPTION: return selectableUserOptionIcons;
+			default: return <div></div>;
+        }
+	}
 
 	render()
 	{
@@ -207,7 +280,7 @@ class App extends Component
 			<div>
 				<div className="sidenav">
 					<div className="club-logo">
-						<img src={ichibanDojoLogo} style={{width: "100%", height: "100%", objectFit: "contain", padding: "4px"}} />							
+						<img src={this.state.clubLogoPath} style={{width: "100%", height: "100%", objectFit: "contain", padding: "4px"}} />							
 					</div>						
 					<Nav className="flex-column" >
 						{this.state.showAdministrativeTools && (
@@ -224,10 +297,12 @@ class App extends Component
 						{this.state.showTrainersTools && (
 							<div>
 								<div style={{fontSize: "small", paddingLeft:"10px", paddingTop:"20px"}}>{t("trainers_tools")}</div>
-								<Link to={USER_TEAMS_ROUTE} className="nav-link sidenav-text" style={{color:"black"}} >{t("teams")}</Link>
-								<div style={{fontSize: "small", paddingLeft:"10px", paddingTop:"20px"}}>{t("users_tools")}</div>
+								<Link to={USER_TEAMS_ROUTE} className="nav-link sidenav-text" style={{color:"black"}} >{t("teams")}</Link>								
 							</div>
 						)}	
+						{(this.state.showAdministrativeTools || this.state.showTrainersTools) && (							
+							<div style={{fontSize: "small", paddingLeft:"10px", paddingTop:"20px"}}>{t("users_tools")}</div>							
+						)}						
 						{this.state.showUsersTools && (
 							<div>
 								<Link to="/profile_component" className=" nav-link sidenav-text" style={{color:"black"}} >{t("profile")}</Link>
@@ -270,11 +345,11 @@ class App extends Component
 
 							{this.state.settingsComponentSelected && (<div>{t("settings")}</div>)}
 							{this.state.addSelectableUserOptionComponentSelected && 
-								(localStorage.getItem("settingsSelectedTab") == BRANCH_CHIEFS_SELECTABLE_OPTION) && (<div>{t("add_branch_chief")}</div>)}
+								(localStorage.getItem("settingsSelectedTab") == SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION) && (<div>{t("add_branch_chief")}</div>)}
 							{this.state.addSelectableUserOptionComponentSelected && 
-								(localStorage.getItem("settingsSelectedTab") == CLUBS_SELECTABLE_OPTION) && (<div>{t("add_club")}</div>)}
+								(localStorage.getItem("settingsSelectedTab") == SettingsConstants.CLUBS_SELECTABLE_OPTION) && (<div>{t("add_club")}</div>)}
 							{this.state.addSelectableUserOptionComponentSelected && 
-								(localStorage.getItem("settingsSelectedTab") == RANKS_SELECTABLE_OPTION) && (<div>{t("add_rank")}</div>)}							
+								(localStorage.getItem("settingsSelectedTab") == SettingsConstants.RANKS_SELECTABLE_OPTION) && (<div>{t("add_rank")}</div>)}							
 						</Navbar.Brand>
 						<Nav className="mr-auto" ></Nav>
 						<Nav>
@@ -527,24 +602,8 @@ class App extends Component
 								</OverlayTrigger>
 							</div>							
 						)}
-						{this.state.clubDocumentComponentSelected && (
-							<div>	
-							</div>							
-						)}
-						{this.state.settingsComponentSelected && (
-							<div>
-								<OverlayTrigger placement="bottom" overlay={this.renderOptionNameTooltip(localStorage.getItem("settingsSelectedTab"))} >
-									<Link to="/add_selectable_user_option_component" >									
-										<HiOutlineViewGridAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-								<OverlayTrigger placement="bottom" overlay={this.renderRemoveOptionNameTooltip(localStorage.getItem("settingsSelectedTab"))} >
-									<Link onClick={() => { this.settingsRef.current.confirmDeleteSelectableUserOption() }} >									
-										<IoTrashBinOutline color="#CB2334" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>								
-							</div>
-						)}
+						{this.state.clubDocumentComponentSelected && (<div></div>)}
+						{this.state.settingsComponentSelected && this.showToolbarIconsForSettingsTab(localStorage.getItem("settingsSelectedTab"))}
 						{this.state.addSelectableUserOptionComponentSelected && (
 							<div>
 								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("clear_form")}</Tooltip>} >
@@ -597,9 +656,9 @@ class App extends Component
 						)}
 						</Nav>
 						<Nav className="ml-auto">
-							<Link className="nav-link"><MDBIcon fab icon="facebook-f" /></Link>
-							<Link className="nav-link"><MDBIcon fab icon="youtube" /></Link>
-							<Link className="nav-link"><MDBIcon fab icon="instagram" /></Link>
+							<a href={this.state.facebookUrl} target="_blank" className="nav-link"><MDBIcon fab icon="facebook-f" /></a>
+							<a href={this.state.youtubeUrl} target="_blank" className="nav-link"><MDBIcon fab icon="youtube" /></a>
+							<a href={this.state.instagramUrl} target="_blank" className="nav-link"><MDBIcon fab icon="instagram" /></a>
 						</Nav>
 					</Navbar>					
 					</div>

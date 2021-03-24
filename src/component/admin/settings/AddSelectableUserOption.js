@@ -7,17 +7,10 @@ import {
 } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
-import * as Urls from "../../../servers-urls";
+import * as SettingsConstants from "./settingsConstants";
 
 
 const currentUser = AuthService.getCurrentUser();
-
-const BRANCH_CHIEFS_SELECTABLE_OPTION = "branchChiefs";
-const CLUBS_SELECTABLE_OPTION = "clubs";
-const RANKS_SELECTABLE_OPTION = "ranks";
-const BRANCH_CHIEFS_URL = Urls.WEBSERVICE_URL + "/branch_chiefs";
-const CLUBS_URL = Urls.WEBSERVICE_URL + "/clubs";
-const RANKS_URL = Urls.WEBSERVICE_URL + "/ranks";
 
 
 class AddSelectableUserOption extends Component
@@ -45,9 +38,9 @@ class AddSelectableUserOption extends Component
         
         switch(option)
         {
-            case BRANCH_CHIEFS_SELECTABLE_OPTION: return <Form.Label>{t("full_name")}</Form.Label>;
-            case CLUBS_SELECTABLE_OPTION: return <Form.Label>{t("club")}</Form.Label>;
-            case RANKS_SELECTABLE_OPTION: return <Form.Label>{t("rank")}</Form.Label>;
+            case SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION: return <Form.Label>{t("full_name")}</Form.Label>;
+            case SettingsConstants.CLUBS_SELECTABLE_OPTION: return <Form.Label>{t("club")}</Form.Label>;
+            case SettingsConstants.RANKS_SELECTABLE_OPTION: return <Form.Label>{t("rank")}</Form.Label>;
         }
     }
 
@@ -55,9 +48,9 @@ class AddSelectableUserOption extends Component
     {
         switch ( localStorage.getItem("settingsSelectedTab") )
         {
-            case BRANCH_CHIEFS_SELECTABLE_OPTION: return BRANCH_CHIEFS_URL;
-            case CLUBS_SELECTABLE_OPTION: return CLUBS_URL;
-            case RANKS_SELECTABLE_OPTION: return RANKS_URL;
+            case SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION: return SettingsConstants.BRANCH_CHIEFS_URL;
+            case SettingsConstants.CLUBS_SELECTABLE_OPTION: return SettingsConstants.CLUBS_URL;
+            case SettingsConstants.RANKS_SELECTABLE_OPTION: return SettingsConstants.RANKS_URL;
         }
     }
     
@@ -65,14 +58,16 @@ class AddSelectableUserOption extends Component
     {
         switch ( localStorage.getItem("settingsSelectedTab") )
         {
-            case BRANCH_CHIEFS_SELECTABLE_OPTION: return JSON.stringify( {branchChiefName: this.state.selectableOption.optionName} );
-            case CLUBS_SELECTABLE_OPTION: return JSON.stringify( {clubName: this.state.selectableOption.optionName} );
-            case RANKS_SELECTABLE_OPTION: return JSON.stringify( {rankName: this.state.selectableOption.optionName} );
+            case SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION: return JSON.stringify( {branchChiefName: this.state.selectableOption.optionName} );
+            case SettingsConstants.CLUBS_SELECTABLE_OPTION: return JSON.stringify( {clubName: this.state.selectableOption.optionName} );
+            case SettingsConstants.RANKS_SELECTABLE_OPTION: return JSON.stringify( {rankName: this.state.selectableOption.optionName} );
         }
     }
 
     handleAddSelectableUserOption(e)
     {
+        const t = this.props.t;
+        
         e.preventDefault();
 
         if ( e.currentTarget.checkValidity() )        
@@ -95,14 +90,15 @@ class AddSelectableUserOption extends Component
                 } 
                 else return result.json();
             },            
-            // error => { this.setState({ errorMessage: error.message }) })
-            error => { 
-                //this.setState({ errorMessage: error.message }) 
-                console.log(error);
-            })
+             error => this.setState({ errorMessage: t("error_item_not_updated") }))
             .then( result => {                 
                 if ( result )
-                    this.setState({ errorMessage: result.message }); 
+                    this.setState({ 
+                        errorMessage: result.message.replace("branch_chief", t("branch_chief"))
+                                                    .replace("club", t("club"))
+                                                    .replace("rank", t("rank"))
+                                                    .replace("already_exists", t("already_exists")) 
+                    }); 
             });
         }
         else this.setState({ formValidated: true });

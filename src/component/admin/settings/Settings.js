@@ -3,26 +3,22 @@ import {
     Alert,
     Card,
     Tabs,
-    Tab
+    Tab,    
 } from "react-bootstrap";
-import {Link, withRouter} from "react-router-dom";
 import { withTranslation } from "react-i18next";
 import CrudTableComponent from "../../CrudTableComponent";
 import { textFilter } from 'react-bootstrap-table2-filter';
 import InformationDialogModal from "../../InformationDialogModal";
 import ConfirmationDialogModal from "../../ConfirmationDialogModal";
 import EditSelectableUserOptionModal from "./EditSelectableUserOptionModal";
+import GeneralSettings from "./GeneralSettings";
+import Administrators from "./Administrators";
+import { searchableHeaderFormatter } from "../../../utils/searchableHeaderFormatter";
 import AuthService from "../../../service/auth-service";
-import * as Urls from "../../../servers-urls";
+import * as SettingsConstants from "./settingsConstants";
 
 
 const currentUser = AuthService.getCurrentUser();
-const BRANCH_CHIEFS_SELECTABLE_OPTION = "branchChiefs";
-const CLUBS_SELECTABLE_OPTION = "clubs";
-const RANKS_SELECTABLE_OPTION = "ranks";
-const BRANCH_CHIEFS_URL = Urls.WEBSERVICE_URL + "/branch_chiefs";
-const CLUBS_URL = Urls.WEBSERVICE_URL + "/clubs";
-const RANKS_URL = Urls.WEBSERVICE_URL + "/ranks";
 
 const BranchChiefTableColumnNames = Object.freeze ({
     ID: 0,
@@ -37,17 +33,7 @@ const ClubTableColumnNames = Object.freeze ({
 const RankTableColumnNames = Object.freeze ({
     ID: 0,
     RANK_NAME: 1,
-})
-
-const searchableHeaderFormatter = (column, colIndex, { sortElement, filterElement }) => {
-    return (
-        <div style={ { display: 'flex', flexDirection: 'column' } }>            
-            { column.text }            
-            { filterElement }
-            { sortElement }
-        </div>
-    );
-};
+});
 
 const branchChiefTableColumns = [
     {
@@ -103,50 +89,46 @@ class Settings extends Component
         this.state = {
             selectedBranchChiefsTableRowsIds: [],
             selectedClubsTableRowsIds: [],
-            selectedRanksTableRowsIds: [],
+            selectedRanksTableRowsIds: [],            
             showEditModal: false,
             showInformationModal: false,
-            showConfirmDeleteSelectableOptionModal: false,            
+            showConfirmDeleteSelectableOptionModal: false, 
+            errorMessage: "",
+            popupErrorMessage: "", 
         }
-        this.setSelectedTab = this.setSelectedTab.bind(this);
+       
         this.isOptionSelectedCorrectly = this.isOptionSelectedCorrectly.bind(this);
         this.getSelectedOptionId = this.getSelectedOptionId.bind(this);
         this.getSelectableOptionEndpointUrl = this.getSelectableOptionEndpointUrl.bind(this);
         this.selectOneSelectableOptionToRemoveMessage = this.selectOneSelectableOptionToRemoveMessage.bind(this);
         this.confirmDeleteSelectableUserOption = this.confirmDeleteSelectableUserOption.bind(this);
-        this.handleDeleteSelectableUserOption = this.handleDeleteSelectableUserOption.bind(this);
+        this.handleDeleteSelectableUserOption = this.handleDeleteSelectableUserOption.bind(this);        
         this.handleBranchChiefsTableRowClick = this.handleBranchChiefsTableRowClick.bind(this);
         this.handleBranchChiefsTableRowSelection = this.handleBranchChiefsTableRowSelection.bind(this);        
         this.handleClubsTableRowClick = this.handleClubsTableRowClick.bind(this);
         this.handleClubsTableRowSelection = this.handleClubsTableRowSelection.bind(this);        
         this.hanldeRanksTableRowClick = this.hanldeRanksTableRowClick.bind(this);
+        this.handleRanksTableRowSelection = this.handleRanksTableRowSelection.bind(this);    
         this.refreshTable = this.refreshTable.bind(this);
-        this.unselectTableRows = this.unselectTableRows.bind(this);
-        this.handleRanksTableRowSelection = this.handleRanksTableRowSelection.bind(this);      
-        
+        this.unselectTableRows = this.unselectTableRows.bind(this);         
+        this.handleManageAdminPrivileges = this.handleManageAdminPrivileges.bind(this); 
+
         this.branchChiefsTableRef = React.createRef();
         this.clubsTableRef = React.createRef();
-        this.ranksTableRef = React.createRef();
+        this.ranksTableRef = React.createRef();        
+        this.adminsRef = React.createRef();
     }
-
-    setSelectedTab(key)
-    {        
-        this.props.setSelectedTab(key);
-    }
-
+    
     isOptionSelectedCorrectly()
     {
         switch ( localStorage.getItem("settingsSelectedTab") )
         {
-            case BRANCH_CHIEFS_SELECTABLE_OPTION: 
-                if ( this.state.selectedBranchChiefsTableRowsIds != null && this.state.selectedBranchChiefsTableRowsIds.length == 1 )
-                    return true; else return false;            
-            case CLUBS_SELECTABLE_OPTION: 
-                if ( this.state.selectedClubsTableRowsIds != null && this.state.selectedClubsTableRowsIds.length == 1 )
-                    return true; else return false;
-            case RANKS_SELECTABLE_OPTION: 
-                if ( this.state.selectedRanksTableRowsIds != null && this.state.selectedRanksTableRowsIds.length == 1 )
-                    return true; else return false;
+            case SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION: 
+                if ( this.state.selectedBranchChiefsTableRowsIds.length == 1 ) return true; else return false;            
+            case SettingsConstants.CLUBS_SELECTABLE_OPTION: 
+                if ( this.state.selectedClubsTableRowsIds.length == 1 ) return true; else return false;
+            case SettingsConstants.RANKS_SELECTABLE_OPTION: 
+                if ( this.state.selectedRanksTableRowsIds.length == 1 ) return true; else return false;
             default: return false;
         }
     }
@@ -155,9 +137,9 @@ class Settings extends Component
     {
         switch ( localStorage.getItem("settingsSelectedTab") )
         {
-            case BRANCH_CHIEFS_SELECTABLE_OPTION: return this.state.selectedBranchChiefsTableRowsIds[0];                           
-            case CLUBS_SELECTABLE_OPTION: return this.state.selectedClubsTableRowsIds[0];                
-            case RANKS_SELECTABLE_OPTION: return this.state.selectedRanksTableRowsIds[0];  
+            case SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION: return this.state.selectedBranchChiefsTableRowsIds[0];                           
+            case SettingsConstants.CLUBS_SELECTABLE_OPTION: return this.state.selectedClubsTableRowsIds[0];                
+            case SettingsConstants.RANKS_SELECTABLE_OPTION: return this.state.selectedRanksTableRowsIds[0];  
         }
     }
 
@@ -165,9 +147,9 @@ class Settings extends Component
     {
         switch ( localStorage.getItem("settingsSelectedTab") )
         {
-            case BRANCH_CHIEFS_SELECTABLE_OPTION: return BRANCH_CHIEFS_URL;
-            case CLUBS_SELECTABLE_OPTION: return CLUBS_URL;
-            case RANKS_SELECTABLE_OPTION: return RANKS_URL;
+            case SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION: return SettingsConstants.BRANCH_CHIEFS_URL;
+            case SettingsConstants.CLUBS_SELECTABLE_OPTION: return SettingsConstants.CLUBS_URL;
+            case SettingsConstants.RANKS_SELECTABLE_OPTION: return SettingsConstants.RANKS_URL;
         }
     }
 
@@ -175,9 +157,9 @@ class Settings extends Component
     {
         switch ( localStorage.getItem("settingsSelectedTab") )
         {
-            case BRANCH_CHIEFS_SELECTABLE_OPTION: this.branchChiefsTableRef.current.fillTable(); break;
-            case CLUBS_SELECTABLE_OPTION: this.clubsTableRef.current.fillTable(); break;
-            case RANKS_SELECTABLE_OPTION: this.ranksTableRef.current.fillTable(); break;
+            case SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION: this.branchChiefsTableRef.current.fillTable(); break;
+            case SettingsConstants.CLUBS_SELECTABLE_OPTION: this.clubsTableRef.current.fillTable(); break;
+            case SettingsConstants.RANKS_SELECTABLE_OPTION: this.ranksTableRef.current.fillTable(); break;
         }
     }
 
@@ -185,17 +167,17 @@ class Settings extends Component
     {        
         switch ( localStorage.getItem("settingsSelectedTab") )
         {
-            case BRANCH_CHIEFS_SELECTABLE_OPTION: {
+            case SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION: {
                 this.setState({ selectedBranchChiefsTableRowsIds: [] });
                 this.branchChiefsTableRef.current.unselectAllRows(); 
                 break;
             }
-            case CLUBS_SELECTABLE_OPTION: {
+            case SettingsConstants.CLUBS_SELECTABLE_OPTION: {
                 this.setState({ selectedClubsTableRowsIds: [] });
                 this.clubsTableRef.current.unselectAllRows(); 
                 break;
             }
-            case RANKS_SELECTABLE_OPTION: {
+            case SettingsConstants.RANKS_SELECTABLE_OPTION: {
                 this.setState({ selectedRanksTableRowsIds: [] });
                 this.ranksTableRef.current.unselectAllRows(); 
                 break;
@@ -209,23 +191,23 @@ class Settings extends Component
 
         switch ( localStorage.getItem("settingsSelectedTab") )
         {
-            case BRANCH_CHIEFS_SELECTABLE_OPTION: {
+            case SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION: {
                 this.setState({ 
-                    errorMessage: t("select_one_branch_chief_to_remove"),
+                    popupErrorMessage: t("select_one_branch_chief_to_remove"),
                     showInformationModal: true
                 });
                  break; 
             }
-            case CLUBS_SELECTABLE_OPTION: {
+            case SettingsConstants.CLUBS_SELECTABLE_OPTION: {
                 this.setState({ 
-                    errorMessage: t("select_one_club_to_remove"),
+                    popupErrorMessage: t("select_one_club_to_remove"),
                     showInformationModal: true
                 }); 
                  break;
             }
-            case RANKS_SELECTABLE_OPTION: {
+            case SettingsConstants.RANKS_SELECTABLE_OPTION: {
                 this.setState({ 
-                    errorMessage: t("select_one_rank_to_remove"),
+                    popupErrorMessage: t("select_one_rank_to_remove"),
                     showInformationModal: true
                 }); 
                 break;
@@ -251,7 +233,7 @@ class Settings extends Component
         }                
         
         let selectableOptionEndpointUrl = this.getSelectableOptionEndpointUrl();
-
+        
         fetch(selectableOptionEndpointUrl + "/" + this.getSelectedOptionId(), {
             method: "DELETE",
             headers : {
@@ -269,7 +251,7 @@ class Settings extends Component
         },
         error => {                 
             this.setState({ 
-                errorMessage: error.message,
+                popupErrorMessage: error.message,
                 showInformationModal: true
                 });                     
             this.unselectTableRows();                
@@ -277,7 +259,7 @@ class Settings extends Component
         .then( result => {                 
             if ( result ) {
                 this.setState({ 
-                    errorMessage: result.message.replace("branch_chief", t("branch_chief"))
+                    popupErrorMessage: result.message.replace("branch_chief", t("branch_chief"))
                                                 .replace("club", t("club"))
                                                 .replace("rank", t("rank"))
                                                 .replace("branch_chief_cannot_be_removed_because", t("branch_chief_cannot_be_removed_because"))
@@ -328,12 +310,17 @@ class Settings extends Component
     {
         this.setState({ selectedRanksTableRowsIds: selectedRows });
     }
-    
+
+    handleManageAdminPrivileges(addAdminPrivileges)
+    {
+        this.adminsRef.current.handleManageAdminPrivileges(addAdminPrivileges);                           
+    }
+
     render()
     {
         const t = this.props.t;
-        const DEFAULT_SELECTED_TAB = localStorage.getItem("settingsSelectedTab") ? localStorage.getItem("settingsSelectedTab") : "branchChiefs";
-
+        const DEFAULT_SELECTED_TAB = localStorage.getItem("settingsSelectedTab") ? localStorage.getItem("settingsSelectedTab") : "generalSettings";
+        
         branchChiefTableColumns[BranchChiefTableColumnNames.BRANCH_CHIEF_NAME] = 
             {...branchChiefTableColumns[BranchChiefTableColumnNames.BRANCH_CHIEF_NAME], text: t("branch_chief"), filter: textFilter({ placeholder: t("enter_full_name")})};
         clubTableColumns[ClubTableColumnNames.CLUB_NAME] = 
@@ -346,7 +333,11 @@ class Settings extends Component
         return(
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
             (
-                <div>
+                <div>                    
+                    <ConfirmationDialogModal        show={this.state.showConfirmRemoveAdminPrivilegesModal}
+                                                    onHide={() => this.setState({ showConfirmRemoveAdminPrivilegesModal: false }) }
+                                                    confirmationResult={this.handleRemoveAdminPrivileges}                                                
+                    />
                     <EditSelectableUserOptionModal  show={this.state.showEditModal}
                                                     onHide={() => {
                                                         this.setState({ showEditModal: false });
@@ -355,23 +346,29 @@ class Settings extends Component
                                                     }}
                                                     itemId={this.getSelectedOptionId()}                                                                                                      
                     />
-                    <ConfirmationDialogModal    show={this.state.showConfirmDeleteSelectableOptionModal}
-                                                onHide={() => this.setState({ showConfirmDeleteSelectableOptionModal: false }) }
-                                                confirmationResult={this.handleDeleteSelectableUserOption}                                                
+                    <ConfirmationDialogModal        show={this.state.showConfirmDeleteSelectableOptionModal}
+                                                    onHide={() => this.setState({ showConfirmDeleteSelectableOptionModal: false }) }
+                                                    confirmationResult={this.handleDeleteSelectableUserOption}                                                
                     />
-                    <InformationDialogModal modalContent={this.state.errorMessage} 
-                                            show={this.state.showInformationModal}
-                                            onHide={() => this.setState({ 
-                                                errorMessage: "",
-                                                showInformationModal: false,
-                                            })} 
+                    <InformationDialogModal         modalContent={this.state.popupErrorMessage} 
+                                                    show={this.state.showInformationModal}
+                                                    onHide={() => this.setState({ 
+                                                        popupErrorMessage: "",
+                                                        showInformationModal: false,
+                                                    })} 
                     />
-                    <Tabs defaultActiveKey={DEFAULT_SELECTED_TAB} className="tabsHeader" onSelect={this.setSelectedTab}>  
+                    <Tabs defaultActiveKey={DEFAULT_SELECTED_TAB} className="tabsHeader" onSelect={this.props.setSelectedTab}>  
+                        <Tab eventKey="generalSettings" title={t("general_capital")}>                            
+                            <GeneralSettings />
+                        </Tab>
+                        <Tab eventKey="administratorsSettings" title={t("administrators_capital")}>
+                            <Administrators ref={this.adminsRef} />
+                        </Tab>
                         <Tab eventKey="branchChiefs" title={t("branch_chiefs_capital")}>
                             <Card>
                                 <Card.Body>
                                     <Card.Text>
-                                        <CrudTableComponent itemsUrl={BRANCH_CHIEFS_URL} 
+                                        <CrudTableComponent itemsUrl={SettingsConstants.BRANCH_CHIEFS_URL} 
                                                             tableColumns={branchChiefTableColumns} 
                                                             selectedItemId={this.handleBranchChiefsTableRowClick} 
                                                             selectedIds={this.handleBranchChiefsTableRowSelection}
@@ -385,7 +382,7 @@ class Settings extends Component
                             <Card>
                                 <Card.Body>
                                     <Card.Text>
-                                        <CrudTableComponent itemsUrl={CLUBS_URL} 
+                                        <CrudTableComponent itemsUrl={SettingsConstants.CLUBS_URL} 
                                                             tableColumns={clubTableColumns} 
                                                             selectedItemId={this.handleClubsTableRowClick} 
                                                             selectedIds={this.handleClubsTableRowSelection}
@@ -399,7 +396,7 @@ class Settings extends Component
                             <Card>
                                 <Card.Body>
                                     <Card.Text>
-                                        <CrudTableComponent itemsUrl={RANKS_URL} 
+                                        <CrudTableComponent itemsUrl={SettingsConstants.RANKS_URL} 
                                                             tableColumns={rankTableColumns} 
                                                             selectedItemId={this.hanldeRanksTableRowClick} 
                                                             selectedIds={this.handleRanksTableRowSelection}

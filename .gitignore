@@ -11,8 +11,12 @@
 # production
 /build
 
+# documents
+/public/club_documents/
+
 # images
-/public/images
+/public/images/
+
 
 # club documents
 /public/club_documents

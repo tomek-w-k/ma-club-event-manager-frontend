@@ -7,17 +7,11 @@ import {
 } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
-import * as Urls from "../../../servers-urls";
+import * as SettingsConstants from "./settingsConstants";
+import { fetchMetadataForGet } from "../../../utils/fetchMetadata";
 
 
 const currentUser = AuthService.getCurrentUser();
-
-const BRANCH_CHIEFS_SELECTABLE_OPTION = "branchChiefs";
-const CLUBS_SELECTABLE_OPTION = "clubs";
-const RANKS_SELECTABLE_OPTION = "ranks";
-const BRANCH_CHIEFS_URL = Urls.WEBSERVICE_URL + "/branch_chiefs";
-const CLUBS_URL = Urls.WEBSERVICE_URL + "/clubs";
-const RANKS_URL = Urls.WEBSERVICE_URL + "/ranks";
 var optionName = "";
 
 
@@ -49,9 +43,9 @@ class EditSelectableUserOptionModal extends Component
         
         switch(option)
         {
-            case BRANCH_CHIEFS_SELECTABLE_OPTION: return <Form.Label>{t("full_name")}</Form.Label>;
-            case CLUBS_SELECTABLE_OPTION: return <Form.Label>{t("club")}</Form.Label>;
-            case RANKS_SELECTABLE_OPTION: return <Form.Label>{t("rank")}</Form.Label>;
+            case SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION: return <Form.Label>{t("full_name")}</Form.Label>;
+            case SettingsConstants.CLUBS_SELECTABLE_OPTION: return <Form.Label>{t("club")}</Form.Label>;
+            case SettingsConstants.RANKS_SELECTABLE_OPTION: return <Form.Label>{t("rank")}</Form.Label>;
         }
     }
 
@@ -59,9 +53,9 @@ class EditSelectableUserOptionModal extends Component
     {
         switch ( localStorage.getItem("settingsSelectedTab") )
         {
-            case BRANCH_CHIEFS_SELECTABLE_OPTION: return BRANCH_CHIEFS_URL;
-            case CLUBS_SELECTABLE_OPTION: return CLUBS_URL;
-            case RANKS_SELECTABLE_OPTION: return RANKS_URL;
+            case SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION: return SettingsConstants.BRANCH_CHIEFS_URL;
+            case SettingsConstants.CLUBS_SELECTABLE_OPTION: return SettingsConstants.CLUBS_URL;
+            case SettingsConstants.RANKS_SELECTABLE_OPTION: return SettingsConstants.RANKS_URL;
         }
     }
 
@@ -69,17 +63,17 @@ class EditSelectableUserOptionModal extends Component
     {
         switch ( localStorage.getItem("settingsSelectedTab") )
         {
-            case BRANCH_CHIEFS_SELECTABLE_OPTION: {
+            case SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION: {
                 optionName = data.branchChiefName;
                 this.setState({ selectableOption: { id: data.id, optionName: data.branchChiefName } });
                 break;
             } 
-            case CLUBS_SELECTABLE_OPTION: {
+            case SettingsConstants.CLUBS_SELECTABLE_OPTION: {
                 optionName = data.clubName;
                 this.setState({ selectableOption: { id: data.id, optionName: data.clubName } });
                 break;
             }
-            case RANKS_SELECTABLE_OPTION: {
+            case SettingsConstants.RANKS_SELECTABLE_OPTION: {
                 optionName = data.rankName
                 this.setState({ selectableOption: { id: data.id, optionName: data.rankName } }); 
                 break;
@@ -91,15 +85,15 @@ class EditSelectableUserOptionModal extends Component
     {
         switch ( localStorage.getItem("settingsSelectedTab") )
         {
-            case BRANCH_CHIEFS_SELECTABLE_OPTION: return JSON.stringify( {
+            case SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION: return JSON.stringify( {
                                                                 id: this.state.selectableOption.id, 
                                                                 branchChiefName: this.state.selectableOption.optionName
                                                             } );
-            case CLUBS_SELECTABLE_OPTION: return JSON.stringify( {
+            case SettingsConstants.CLUBS_SELECTABLE_OPTION: return JSON.stringify( {
                                                                 id: this.state.selectableOption.id, 
                                                                 clubName: this.state.selectableOption.optionName
                                                             } );
-            case RANKS_SELECTABLE_OPTION: return JSON.stringify( {
+            case SettingsConstants.RANKS_SELECTABLE_OPTION: return JSON.stringify( {
                                                                 id: this.state.selectableOption.id, 
                                                                 rankName: this.state.selectableOption.optionName
                                                             } );
@@ -121,12 +115,7 @@ class EditSelectableUserOptionModal extends Component
         
         optionName = "";        
 
-        fetch(this.getSelectableOptionEndpointUrl() + "/" + this.props.itemId, {
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer " + currentUser.accessToken
-            }
-        })
+        fetch(this.getSelectableOptionEndpointUrl() + "/" + this.props.itemId, fetchMetadataForGet(currentUser))
         .then(response => response.json())
         .then(data => this.writeSelectableOptionDataToState(data), 
             error => this.setState({ errorMessage: t("error_item_cannot_be_loaded") }));        

@@ -171,8 +171,7 @@ app.post("/save_club_document", (req, res) => {
             if(fs.existsSync(targetPath))            
                 removeDir(targetPath);
 
-            clubDocument.mv(path.join(targetPath + "/" + clubDocument.name));
-            console.log(path.join(targetPath + "/" + clubDocument.name))   
+            clubDocument.mv(path.join(targetPath + "/" + clubDocument.name));           
             res.send({
                 status: true,                
                 clubDocumentName: clubDocument.name
@@ -187,6 +186,33 @@ app.get("/get_club_document/:documentId/:clubDocumentName", (req, res) => {
     {        
         const targetPath = path.join(process.cwd(), publicDir, "club_documents", req.params.documentId, req.params.clubDocumentName );                
         res.download(targetPath);
+    }
+    catch(e) { res.status(500).send(e) }
+});
+
+app.post("/save_club_logo", (req, res) => {
+    try
+    {
+        if ( !req.body || !req.files )
+            res.send({
+                status: false,
+                message: "No request content"
+            });
+        else
+        {            
+            const { logoImage } = req.files;
+            const { clubLogoTargetDir } = req.body;
+            const targetPath = path.join(process.cwd(), publicDir, clubLogoTargetDir);
+            
+            if ( fs.existsSync(targetPath) )
+                removeDir(targetPath);
+            
+            logoImage.mv( path.join(targetPath + "/" + logoImage.name) );
+            res.send({
+                status: true,
+                clubLogoName: logoImage
+            });
+        }
     }
     catch(e) { res.status(500).send(e) }
 });
