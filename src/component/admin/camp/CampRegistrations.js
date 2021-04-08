@@ -5,12 +5,14 @@ import {
     Alert
 } from "react-bootstrap";
 import { textFilter } from 'react-bootstrap-table2-filter';
-import {Check, SortUp, X} from "react-bootstrap-icons";
 import EditCampRegistrationModal from "./EditCampRegistrationModal";
 import AddParticipantToCampModal from "./AddParticipantToCampModal";
 import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
+import { searchableHeaderFormatter } from "../../../utils/searchableHeaderFormatter";
+import { booleanTableCellFormatter } from "../../../utils/booleanTableCellFormatter";
+import { booleanTableCellStyle } from "../../../utils/booleanTableCellStyle";
 
 
 const currentUser = AuthService.getCurrentUser();
@@ -28,16 +30,6 @@ const Columns = Object.freeze ({
     ACCOMMODATION: 7,
 });
 
-const headerFormatter = (column, colIndex, { sortElement, filterElement }) => {
-    return (
-        <div style={ { display: 'flex', flexDirection: 'column' } }>            
-            { column.text }            
-            { filterElement }
-            { sortElement }
-        </div>
-    );
-};
-
 const columns = [
     {
         dataField: "id",
@@ -49,40 +41,36 @@ const columns = [
         text: "Full name",
         sort: true, 
         filter: textFilter(),
-        headerFormatter: headerFormatter          
+        headerFormatter: searchableHeaderFormatter          
     },
     {
         dataField: "user.email",
         text: "Email",
         sort: true, 
         filter: textFilter(),
-        headerFormatter: headerFormatter           
+        headerFormatter: searchableHeaderFormatter           
     },
     {
         dataField: "user.club.clubName",
         text: "Club",
         sort: true, 
         filter: textFilter(),
-        headerFormatter: headerFormatter           
+        headerFormatter: searchableHeaderFormatter           
     },
     { 
         dataField: "feeReceived", 
         text: "Fee received",
         sort: false,
         type: "bool",
-        style: (colum, colIndex) => {
-            return { width: '10%', textAlign: 'center' };
-        },
+        style: booleanTableCellStyle,        
+        headerFormatter: booleanTableCellFormatter,
         headerStyle:  { "text-align": "center" },
-        formatter: (cell, row) => {
-            return cell ? ( <div><Check color="#008495" size={22}/><div style={{opacity: "0"}}>V</div></div> ) : 
-                          ( <div><X color="#CB2334" size={22}/><div style={{opacity: "0"}}>X</div></div> )            
-        },
+        formatter: booleanTableCellFormatter,        
         filter: textFilter({            
             disabled: "true",
             placeholder: "-"
         }),        
-        headerFormatter: headerFormatter          
+        headerFormatter: searchableHeaderFormatter          
     },
     { 
         dataField: "sayonaraMeetingParticipation", 
@@ -90,28 +78,21 @@ const columns = [
         hidden: true,
         sort: false,
         type: "bool",
-        style: (colum, colIndex) => {
-            return { width: '10%', textAlign: 'center' };
-        },
+        style: booleanTableCellStyle,        
         headerStyle:  { "text-align": "center" },
-        formatter: (cell, row) => {
-            return cell ? ( <div><Check color="#008495" size={22}/><div style={{opacity: "0"}}>V</div></div> ) : 
-                          ( <div><X color="#CB2334" size={22}/><div style={{opacity: "0"}}>X</div></div> )            
-        },
+        formatter: booleanTableCellFormatter,  
         filter: textFilter({            
             disabled: "true",
             placeholder: "-"
         }),        
-        headerFormatter: headerFormatter         
+        headerFormatter: searchableHeaderFormatter         
     },
     {
         dataField: "clothingSize.clothingSizeName",
         text: "Clothing size",
         sort: true, 
         filter: textFilter(),
-        style: (colum, colIndex) => {
-            return { width: '10%', textAlign: 'center' };
-        },
+        style: booleanTableCellStyle,        
         headerStyle:  { "text-align": "center" },
         formatter: (cell, row) => {
             if (typeof cell == "undefined" )
@@ -124,19 +105,14 @@ const columns = [
         text: "Accommodation",
         sort: false,
         type: "bool",
-        style: (colum, colIndex) => {
-            return { width: '10%', textAlign: 'center' };
-        },
+        style: booleanTableCellStyle,        
         headerStyle:  { "text-align": "center" },
-        formatter: (cell, row) => {
-            return cell ? ( <div><Check color="#008495" size={22}/><div style={{opacity: "0"}}>V</div></div> ) : 
-                          ( <div><X color="#CB2334" size={22}/><div style={{opacity: "0"}}>X</div></div> )           
-        },
+        formatter: booleanTableCellFormatter,        
         filter: textFilter({            
             disabled: "true",
             placeholder: "-"
         }),        
-        headerFormatter: headerFormatter         
+        headerFormatter: searchableHeaderFormatter         
     },             
 ];
 

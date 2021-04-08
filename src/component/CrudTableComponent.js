@@ -174,7 +174,7 @@ class CrudTable extends Component
                                     selectRow = { selectRow }
                                     filter = { filterFactory() }
                                     pagination = { pagination }  
-                                    noDataIndication={emptyTableMessage}                                                                   
+                                    noDataIndication={emptyTableMessage} 
                 >                    
                 </BootstrapTable>			
             </div>

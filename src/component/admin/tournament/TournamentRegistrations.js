@@ -11,6 +11,9 @@ import AddParticipantToTournamentModal from "./AddParticipantToTournamentModal";
 import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
+import { searchableHeaderFormatter } from "../../../utils/searchableHeaderFormatter";
+import { booleanTableCellFormatter } from "../../../utils/booleanTableCellFormatter";
+import { booleanTableCellStyle } from "../../../utils/booleanTableCellStyle";
 
 
 const currentUser = AuthService.getCurrentUser();
@@ -30,16 +33,6 @@ const ColumnNames = Object.freeze({
     CATEGORY_NAME: 9
 });
 
-const headerFormatter = (column, colIndex, { sortElement, filterElement }) => {
-    return (
-        <div style={ { display: 'flex', flexDirection: 'column' } }>            
-            { column.text }            
-            { filterElement }
-            { sortElement }
-        </div>
-    );
-};
-
 const columns = [
     {
         dataField: "id",
@@ -51,40 +44,35 @@ const columns = [
         text: "",
         sort: true, 
         filter: textFilter(),
-        headerFormatter: headerFormatter
+        headerFormatter: searchableHeaderFormatter
     }, 
     {
         dataField: "trainerFullName",
         text: "",
         sort: true, 
         filter: textFilter(),
-        headerFormatter: headerFormatter
+        headerFormatter: searchableHeaderFormatter
     },   
     {
         dataField: "user.club.clubName",
         text: "",
         sort: true, 
         filter: textFilter(),
-        headerFormatter: headerFormatter 
+        headerFormatter: searchableHeaderFormatter 
     },
     { 
         dataField: "feeReceived", 
         text: "",
         sort: false,
         type: "bool",
-        style: (colum, colIndex) => {
-            return { width: '5%', textAlign: 'center' };
-        },
+        style: booleanTableCellStyle,        
         headerStyle:  { "text-align": "center" },
-        formatter: (cell, row) => {
-            return cell ? ( <div><Check color="#008495" size={22}/><div style={{opacity: "0"}}>V</div></div> ) : 
-                          ( <div><X color="#CB2334" size={22}/><div style={{opacity: "0"}}>X</div></div> )            
-        },
+        formatter: booleanTableCellFormatter,        
         filter: textFilter({            
             disabled: "true",
             placeholder: "-"
         }),        
-        headerFormatter: headerFormatter         
+        headerFormatter: searchableHeaderFormatter         
     },
     { 
         dataField: "sayonaraMeetingParticipation", 
@@ -92,38 +80,28 @@ const columns = [
         hidden: true,
         sort: false,
         type: "bool",
-        style: (colum, colIndex) => {
-            return { width: '5%', textAlign: 'center' };
-        },
+        style: booleanTableCellStyle,        
         headerStyle:  { "text-align": "center" },
-        formatter: (cell, row) => {
-            return cell ? ( <div><Check color="#008495" size={22}/><div style={{opacity: "0"}}>V</div></div> ) : 
-                          ( <div><X color="#CB2334" size={22}/><div style={{opacity: "0"}}>X</div></div> )            
-        },
+        formatter: booleanTableCellFormatter,        
         filter: textFilter({            
             disabled: "true",
             placeholder: "-"
         }),        
-        headerFormatter: headerFormatter          
+        headerFormatter: searchableHeaderFormatter          
     },
     { 
         dataField: "asJudgeParticipation",
         text: "",
         sort: false,
         type: "bool",
-        style: (colum, colIndex) => {
-            return { width: '5%', textAlign: 'center' };
-        },
+        style: booleanTableCellStyle,        
         headerStyle:  { "text-align": "center" },
-        formatter: (cell, row) => {
-            return cell ? ( <div><Check color="#008495" size={22}/><div style={{opacity: "0"}}>V</div></div> ) : 
-                          ( <div><X color="#CB2334" size={22}/><div style={{opacity: "0"}}>X</div></div> )            
-        },
+        formatter: booleanTableCellFormatter,        
         filter: textFilter({            
             disabled: "true",
             placeholder: "-"
         }),        
-        headerFormatter: headerFormatter          
+        headerFormatter: searchableHeaderFormatter          
     },             
     {
         dataField: "roomType.roomTypeName",
@@ -136,7 +114,7 @@ const columns = [
                 return "-"
             else return cell;
         },
-        headerFormatter: headerFormatter
+        headerFormatter: searchableHeaderFormatter
     },
     {
         dataField: "stayPeriod.stayPeriodName",
@@ -149,7 +127,7 @@ const columns = [
                 return "-"
             else return cell;
         },
-        headerFormatter: headerFormatter 
+        headerFormatter: searchableHeaderFormatter 
     },
     {
         dataField: "weightAgeCategory.categoryName",
@@ -161,7 +139,7 @@ const columns = [
                 return "-"
             else return cell;
         },
-        headerFormatter: headerFormatter 
+        headerFormatter: searchableHeaderFormatter 
     },    
 ];
 

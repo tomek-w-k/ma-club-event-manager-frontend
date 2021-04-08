@@ -111,3 +111,12 @@
 .tabsHeader > a {  
   color: dimgray;
 }
+
+.table th {  
+  border-top: 0rem;
+  padding: .2rem; 
+}
+
+.table td {  
+  padding: .2rem;  
+}

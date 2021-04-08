@@ -1,20 +1,19 @@
 import React, {Component} from "react";
 import CrudTableComponent from "../../CrudTableComponent";
-import {
-    Card, 
-} from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import { textFilter } from 'react-bootstrap-table2-filter';
-import {Check, X} from "react-bootstrap-icons";
 import EditExamRegistrationModal from "./EditExamRegistrationModal";
 import AddParticipantToExamModal from "./AddParticipantToExamModal";
 import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
+import { searchableHeaderFormatter } from "../../../utils/searchableHeaderFormatter";
+import { booleanTableCellFormatter } from "../../../utils/booleanTableCellFormatter";
+import { booleanTableCellStyle } from "../../../utils/booleanTableCellStyle";
 
 
 const currentUser = AuthService.getCurrentUser();
 const EXAM_REGISTRATIONS = Urls.WEBSERVICE_URL + "/exam_registrations";
-const EXAM_EVENTS = Urls.WEBSERVICE_URL + "/exam_events";
 
 const Columns = Object.freeze ({
     ID: 0,
@@ -24,16 +23,6 @@ const Columns = Object.freeze ({
     FEE_RECEIVED: 4,
     PARTICIPATION_ACCEPTED: 5,
 });
-
-const headerFormatter = (column, colIndex, { sortElement, filterElement }) => {
-    return (
-        <div style={ { display: 'flex', flexDirection: 'column' } }>            
-            { column.text }            
-            { filterElement }
-            { sortElement }
-        </div>
-    );
-};
 
 const columns = [
     {
@@ -46,59 +35,49 @@ const columns = [
         text: "Full name",
         sort: true, 
         filter: textFilter(),
-        headerFormatter: headerFormatter          
+        headerFormatter: searchableHeaderFormatter          
     },
     {
         dataField: "user.email",
         text: "Email",
         sort: true, 
         filter: textFilter(),
-        headerFormatter: headerFormatter         
+        headerFormatter: searchableHeaderFormatter         
     },
     {
         dataField: "user.club.clubName",
         text: "Club",
         sort: true, 
         filter: textFilter(),
-        headerFormatter: headerFormatter          
+        headerFormatter: searchableHeaderFormatter          
     },
     { 
         dataField: "feeReceived", 
         text: "Fee received",
         sort: false,
         type: "bool",
-        style: (colum, colIndex) => {
-            return { width: '10%', textAlign: 'center' };
-        },
+        style: booleanTableCellStyle,        
         headerStyle:  { "text-align": "center" },
-        formatter: (cell, row) => {
-            return cell ? ( <div><Check color="#008495" size={22}/><div style={{opacity: "0"}}>V</div></div> ) : 
-                          ( <div><X color="#CB2334" size={22}/><div style={{opacity: "0"}}>X</div></div> )            
-        },                   
+        formatter: booleanTableCellFormatter,                         
         filter: textFilter({            
             disabled: "true",
             placeholder: "-"
         }),        
-        headerFormatter: headerFormatter  
+        headerFormatter: searchableHeaderFormatter  
     },
     { 
         dataField: "participationAccepted", 
         text: "Participation accepted",
         sort: false,
         type: "bool",
-        style: (colum, colIndex) => {
-            return { width: '10%', textAlign: 'center' };
-        },
+        style: booleanTableCellStyle,        
         headerStyle:  { "text-align": "center" },
-        formatter: (cell, row) => {
-            return cell ? ( <div><Check color="#008495" size={22}/><div style={{opacity: "0"}}>V</div></div> ) : 
-                          ( <div><X color="#CB2334" size={22}/><div style={{opacity: "0"}}>X</div></div> )            
-        },                   
+        formatter: booleanTableCellFormatter,                           
         filter: textFilter({            
             disabled: "true",
             placeholder: "-"
         }),
-        headerFormatter: headerFormatter          
+        headerFormatter: searchableHeaderFormatter          
     },             
 ];
 
