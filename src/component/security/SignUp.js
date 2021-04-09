@@ -281,7 +281,7 @@ class SignUp extends Component
                                                 </Form.Group>
                                             </Col>
                                         </Form.Row>
-                                        <Form.Group>                                        
+                                        {/* <Form.Group>                                        
                                             <OverlayTrigger trigger="hover" placement="top" overlay={(                            
                                                 <Popover>
                                                     <Popover.Content>{t("select_or_enter_your_own")}</Popover.Content>
@@ -297,7 +297,7 @@ class SignUp extends Component
                                                     />
                                                 </div>                                                                     
                                             </OverlayTrigger> 
-                                        </Form.Group>
+                                        </Form.Group> */}
                                         <Form.Group>                                            
                                             <Form.Check 
                                                 label={t("want_to_be_trainer")}
