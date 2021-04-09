@@ -1,17 +1,13 @@
-import React, {Component} from "react";
-import {BrowserRouter as Router, Switch, Route, Link, withRouter } from "react-router-dom";
+import React, { Component } from "react";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import {
 	Navbar,
-	Nav,
-	Form,
-	Col,
-	Button,
-	OverlayTrigger,
-	Tooltip,
+	Nav,	
+	Button,	
 	Image
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {MDBIcon} from "mdbreact";
+import { MDBIcon } from "mdbreact";
 
 import Login from "./component/security/Login";
 import SignUp from "./component/security/SignUp";
@@ -56,24 +52,25 @@ import AddSelectableUserOption from "./component/admin/settings/AddSelectableUse
 import * as SettingsConstants from "./component/admin/settings/settingsConstants";
 import { getGeneralSettings } from "./component/admin/settings/getGeneralSettings";
 
-import {AiOutlineUsergroupAdd} from "react-icons/ai";
-import {AiOutlineUsergroupDelete} from "react-icons/ai";
-import {AiOutlineUserAdd} from "react-icons/ai";
-import {AiOutlineUserDelete} from "react-icons/ai";
-import {AiOutlineClear} from "react-icons/ai";
-import {AiOutlineFileAdd} from "react-icons/ai";
-import {AiOutlineSearch} from "react-icons/ai";
-import {RiUserFollowLine} from "react-icons/ri";
-import {HiOutlineViewGridAdd} from "react-icons/hi";
-import {IoTrashBinOutline} from "react-icons/io5";
+import { 	
+	peopleBottomToolbarIconDefs,	
+	examsBottomToolbarIconDefs,
+	examBottomToolbarIconDefs,	
+	campsBottomToolbarIconDefs,
+	campBottomToolbarIconDefs,	
+	tournamentsBottomToolbarIconDefs,
+	tournamentBottomToolbarIconDefs,	
+	teamsBottomToolbarIconDefs,
+	teamBottomToolbarIconDefs,
+	clubDocumentsToolbarIconDefs,	
+	profileToolbarIconDefs,
+	eventWallToolbarIconDefs,
+	clearForm,
+	showToolbarIconsForSettingsTab,
+} from "./utils/bottomToolbarIconDefs";
 
 
 const user = AuthService.getCurrentUser();
-
-const toggleLanguageRadios = [
-	{ name: 'PL', value: '1' },
-	{ name: 'EN', value: '2' },
-];
 
 
 class App extends Component
@@ -96,9 +93,6 @@ class App extends Component
 		};
 		this.logout = this.logout.bind(this);
 		this.deselectAllComponents = this.deselectAllComponents.bind(this);
-		this.renderOptionNameTooltip = this.renderOptionNameTooltip.bind(this);
-		this.renderRemoveOptionNameTooltip = this.renderRemoveOptionNameTooltip.bind(this);
-		this.showToolbarIconsForSettingsTab = this.showToolbarIconsForSettingsTab.bind(this);
 
 		this.peopleRef = React.createRef();
 		this.personRef = React.createRef();
@@ -136,7 +130,7 @@ class App extends Component
 		}
 
 		getGeneralSettings(user)
-		.then(data => { console.log(data)
+		.then(data => { 
 			this.setState({
 				clubLogoPath: data[SettingsConstants.PropertyNames.CLUB_LOGO_PATH] ? data[SettingsConstants.PropertyNames.CLUB_LOGO_PATH].value : "",
 				clubName: data[SettingsConstants.PropertyNames.CLUB_NAME] ? data[SettingsConstants.PropertyNames.CLUB_NAME].value : "",					
@@ -144,7 +138,7 @@ class App extends Component
 				youtubeUrl: data[SettingsConstants.PropertyNames.YOUTUBE_URL] ? data[SettingsConstants.PropertyNames.YOUTUBE_URL].value : "",
 				instagramUrl: data[SettingsConstants.PropertyNames.INSTAGRAM_URL] ? data[SettingsConstants.PropertyNames.INSTAGRAM_URL].value : ""
 			}, 
-			() => { document.title = this.state.clubName ? this.state.clubName : "ClubEventManager"; console.log(this.state.clubLogoPath) });
+			() => { document.title = this.state.clubName ? this.state.clubName : "ClubEventManager" });
 		})
 		.catch(error => this.setState({ errorMessage: t("failed_to_fetch") }));
 	}
@@ -188,88 +182,7 @@ class App extends Component
 
 			settingsComponentSelected: false,
 			addSelectableUserOptionComponentSelected: false,
-		})
-	}
-
-	renderOptionNameTooltip(option)
-    {
-        const t = this.props.t;
-        
-        switch(option)
-        {
-            case SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION: return <Tooltip>{t("add_branch_chief")}</Tooltip>;
-            case SettingsConstants.CLUBS_SELECTABLE_OPTION: return <Tooltip>{t("add_club")}</Tooltip>;
-			case SettingsConstants.RANKS_SELECTABLE_OPTION: return <Tooltip>{t("add_rank")}</Tooltip>;
-			default: return <div></div>;
-        }
-	}
-	
-	renderRemoveOptionNameTooltip(option)
-    {
-        const t = this.props.t;
-        
-        switch(option)
-        {
-            case SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION: return <Tooltip>{t("remove_branch_chief")}</Tooltip>;
-            case SettingsConstants.CLUBS_SELECTABLE_OPTION: return <Tooltip>{t("remove_club")}</Tooltip>;
-			case SettingsConstants.RANKS_SELECTABLE_OPTION: return <Tooltip>{t("remove_rank")}</Tooltip>;
-			default: return <div></div>;
-        }
-	}
-	
-	showToolbarIconsForSettingsTab(option)
-	{
-		const t = this.props.t;
-		
-		let generalSettingsIcons = (
-			<div>
-				<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("restore_saved_settings")}</Tooltip>} >
-					<Link onClick={() => window.location.reload()} >									
-						<AiOutlineClear color="gray" size={30} style={{marginLeft: "10px"}} />
-					</Link>
-				</OverlayTrigger>
-			</div>
-		);
-
-		let administratorsSettingsIcons = (
-			<div>
-				<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("add_admin")}</Tooltip>} >
-					<Link onClick={() => { this.settingsRef.current.handleManageAdminPrivileges(true) }} >									
-						<AiOutlineUserAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-					</Link>
-				</OverlayTrigger>
-				<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("remove_admin")}</Tooltip>} >
-					<Link onClick={() => { this.settingsRef.current.handleManageAdminPrivileges(false) }} >									
-						<AiOutlineUserDelete color="#CB2334" size={30} style={{marginLeft: "15px"}} />
-					</Link>
-				</OverlayTrigger>
-			</div>
-		);
-
-		let selectableUserOptionIcons = (
-			<div>
-				<OverlayTrigger placement="bottom" overlay={this.renderOptionNameTooltip(localStorage.getItem("settingsSelectedTab"))} >
-					<Link to="/add_selectable_user_option_component" >									
-						<HiOutlineViewGridAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-					</Link>
-				</OverlayTrigger>
-				<OverlayTrigger placement="bottom" overlay={this.renderRemoveOptionNameTooltip(localStorage.getItem("settingsSelectedTab"))} >
-					<Link onClick={() => { this.settingsRef.current.confirmDeleteSelectableUserOption() }} >									
-						<IoTrashBinOutline color="#CB2334" size={30} style={{marginLeft: "10px"}} />
-					</Link>
-				</OverlayTrigger>								
-			</div>
-		);
-
-		switch(option)
-        {            
-			case SettingsConstants.GENERAL_SETTINGS: return generalSettingsIcons;
-			case SettingsConstants.ADMINISTRATORS_SETTINGS: return administratorsSettingsIcons;
-			case SettingsConstants.BRANCH_CHIEFS_SELECTABLE_OPTION: return selectableUserOptionIcons;
-            case SettingsConstants.CLUBS_SELECTABLE_OPTION: return selectableUserOptionIcons;
-			case SettingsConstants.RANKS_SELECTABLE_OPTION: return selectableUserOptionIcons;
-			default: return <div></div>;
-        }
+		});
 	}
 
 	render()
@@ -383,280 +296,33 @@ class App extends Component
 					</Navbar>	
 					<Navbar bg="white" variant="light">
 						<Nav  style={{backgroundColor: "white", width: "100%"}}>				
-						{this.state.peopleComponentSelected && (
-							<div>
-								{/* <Button href="#" variant="info">{t("new_person")}</Button>{' '}
-								<Button href="#" variant="danger">{t("remove_person")}</Button> */}
-
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("new_person")}</Tooltip>} >
-									<Link to="/add_person_component" >									
-										<AiOutlineUserAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("remove_person")}</Tooltip>} >
-									<Link onClick={() => { this.peopleRef.current.askForProfileRemoving() }} >									
-										<AiOutlineUserDelete color="#CB2334" size={30} style={{marginLeft: "15px"}} />
-									</Link>
-								</OverlayTrigger>
-							</div>							
-						)}
-						{this.state.personComponentSelected && (
-							<div>								
-							</div>
-						)}
-						{this.state.addPersonComponentSelected && (
-							<div>
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("clear_form")}</Tooltip>} >
-									<Link onClick={() => window.location.reload()} >									
-										<AiOutlineClear color="gray" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-							</div>
-						)}
-						{this.state.examsComponentSelected && (
-							<div>								
-								{/* <Link to="/add_exam_component" className="btn btn-info">{t("new_exam")}</Link>{' '}
-								<Button variant="danger" onClick={() => { this.examsRef.current.handleDeleteExam() }}>{t("remove_exam")}</Button> */}
-
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("new_exam")}</Tooltip>} >
-									<Link to="/add_exam_component" >									
-										<HiOutlineViewGridAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("remove_exam")}</Tooltip>} >
-									<Link onClick={() => { this.examsRef.current.handleDeleteExam() }} >									
-										<IoTrashBinOutline color="#CB2334" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-							</div>							
-						)}
-						{this.state.examComponentSelected && (
-							<div>								
-								{/* <Button onClick={() => { this.examRef.current.handleAddRegistration() }} variant="info">{t("add_participant")}</Button>{' '}
-								<Button onClick={() => { this.examRef.current.handleDeleteRegistration() }} variant="danger">{t("remove_participant")}</Button>								 */}
-
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("add_participant")}</Tooltip>} >
-									<Link onClick={() => { this.examRef.current.handleAddRegistration() }} >									
-										<AiOutlineUserAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("remove_participant")}</Tooltip>} >
-									<Link onClick={() => { this.examRef.current.handleDeleteRegistration() }} >									
-										<AiOutlineUserDelete color="#CB2334" size={30} style={{marginLeft: "15px"}} />
-									</Link>
-								</OverlayTrigger>
-							</div>							
-						)}
-						{this.state.addExamComponentSelected && (
-							<div>
-								{/* <Button href="/add_exam_component" variant="secondary">{t("clear_form")}</Button>							 */}
-
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("clear_form")}</Tooltip>} >
-									<Link onClick={() => window.location.reload()} >									
-										<AiOutlineClear color="gray" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-							</div>							
-						)}
-						{this.state.campsComponentSelected && (
-							<div>								
-								{/* <Link to="/add_camp_component" className="btn btn-info">{t("new_camp")}</Link>{' '}
-								<Button variant="danger" onClick={() => { this.campsRef.current.handleDeleteCamp() }}>{t("remove_camp")}</Button> */}
-
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("new_camp")}</Tooltip>} >
-									<Link to="/add_camp_component" >									
-										<HiOutlineViewGridAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("remove_camp")}</Tooltip>} >
-									<Link onClick={() => { this.campsRef.current.handleDeleteCamp() }} >									
-										<IoTrashBinOutline color="#CB2334" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-							</div>							
-						)}
-						{this.state.campComponentSelected && (
-							<div>								
-								{/* <Button onClick={() => { this.campRef.current.handleAddRegistration() }} variant="info">{t("add_participant")}</Button>{' '}
-								<Button onClick={() => { this.campRef.current.handleDeleteRegistration() }} variant="danger">{t("remove_participant")}</Button> */}
-
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("add_participant")}</Tooltip>} >
-									<Link onClick={() => { this.campRef.current.handleAddRegistration() }} >									
-										<AiOutlineUserAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("remove_participant")}</Tooltip>} >
-									<Link onClick={() => { this.campRef.current.handleDeleteRegistration() }} >									
-										<AiOutlineUserDelete color="#CB2334" size={30} style={{marginLeft: "15px"}} />
-									</Link>
-								</OverlayTrigger>
-							</div>							
-						)}
-						{this.state.addCampComponentSelected && (
-							<div>
-								{/* <Button href="/add_camp_component" variant="secondary">{t("clear_form")}</Button> */}
-
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("clear_form")}</Tooltip>} >
-									<Link onClick={() => window.location.reload()} >									
-										<AiOutlineClear color="gray" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-							</div>	
-						)}
-						{this.state.tournamentsComponentSelected && (
-							<div>								
-								{/* <Link to="/add_tournament_component" className="btn btn-info">{t("new_tournament")}</Link>{' '}
-								<Button variant="danger" onClick={() => { this.tournamentsRef.current.handleDeleteTournament() }}>{t("remove_tournament")}</Button> */}
-
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("new_tournament")}</Tooltip>} >
-									<Link to="/add_tournament_component" >									
-										<HiOutlineViewGridAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("remove_tournament")}</Tooltip>} >
-									<Link onClick={() => { this.tournamentsRef.current.handleDeleteTournament() }} >									
-										<IoTrashBinOutline color="#CB2334" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-							</div>							
-						)}
-						{this.state.tournamentComponentSelected && (
-							<div>
-								{/* <Button onClick={() => { this.tournamentRef.current.handleAddTeam() }} variant="info">{t("add_team")}</Button>{' '}
-								<Button onClick={() => { this.tournamentRef.current.handleDeleteRegistration() }} variant="danger">{t("remove_participant")}</Button>{' '}
-								<Button onClick={() => { this.tournamentRef.current.handleDeleteTeam() }} variant="danger">{t("remove_team")}</Button> */}
-
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("add_team")}</Tooltip>} >
-									<Link onClick={() => { this.tournamentRef.current.handleAddTeam() }} >									
-										<AiOutlineUsergroupAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("remove_team")}</Tooltip>} >
-									<Link onClick={() => { this.tournamentRef.current.handleDeleteTeam() }} >									
-										<AiOutlineUsergroupDelete color="#CB2334" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("remove_participant")}</Tooltip>} >
-									<Link onClick={() => {  this.tournamentRef.current.handleDeleteRegistration() }} >									
-										<AiOutlineUserDelete color="#CB2334" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-							</div>							
-						)}
-						{this.state.addTournamentComponentSelected && (
-							<div>
-								{/* <Button href="/add_tournament_component" variant="secondary">{t("clear_form")}</Button> */}
-
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("clear_form")}</Tooltip>} >
-									<Link onClick={() => window.location.reload()} >									
-										<AiOutlineClear color="gray" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-							</div>	
-						)}
-						{this.state.teamsComponentSelected && (
-							<div>
-								{/* <Button onClick={() => { this.teamsRef.current.handleDeleteTeam() }} variant="danger">{t("remove_team")}</Button> */}
-
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("remove_team")}</Tooltip>} >
-									<Link onClick={() => { this.teamsRef.current.handleDeleteTeam() }} >									
-										<AiOutlineUsergroupDelete color="#CB2334" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-							</div>
-						)}
-						{this.state.teamComponentSelected && (
-							<div>
-								{/* <Button onClick={() => { this.teamRef.current.handleShowAddParticipantToTeamModal(false) }} variant="info">{t("sign_up_participant")}</Button>{' '}
-								<Button onClick={() => { this.teamRef.current.handleShowAddParticipantToTeamModal(true) }} variant="info">{t("sign_up_me")}</Button>{' '}
-								<Button onClick={() => { this.teamRef.current.handleDeleteRegistration() }} variant="danger">{t("remove_participant")}</Button> */}
-								
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("sign_up_participant")}</Tooltip>} >
-									<Link onClick={() => { this.teamRef.current.handleShowAddParticipantToTeamModal(false) }} >									
-										<AiOutlineUserAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>								
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("sign_up_me")}</Tooltip>} >
-									<Link onClick={() => { this.teamRef.current.handleShowAddParticipantToTeamModal(true) }} >									
-										<RiUserFollowLine color="#008495" size={27} style={{marginLeft: "15px"}} />
-									</Link>
-								</OverlayTrigger>
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("remove_participant")}</Tooltip>} >
-									<Link onClick={() => { this.teamRef.current.handleDeleteRegistration() }} >									
-										<AiOutlineUserDelete color="#CB2334" size={30} style={{marginLeft: "15px"}} />
-									</Link>
-								</OverlayTrigger>								
-							</div>
-						)}
-						{this.state.clubDocumentsComponentSelected && (
-							<div>								
-								{/* <Link to="/add_club_document_component" className="btn btn-info">{t("new_document")}</Link>{' '}
-								<Button variant="danger" onClick={() => { this.clubDocumentsRef.current.handleDeleteClubDocument() }}>{t("remove_document")}</Button> */}
-
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("new_document")}</Tooltip>} >
-									<Link to="/add_club_document_component" >									
-										<AiOutlineFileAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>								
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("remove_document")}</Tooltip>} >
-									<Link onClick={() => { this.clubDocumentsRef.current.handleDeleteClubDocument() }} >									
-										<IoTrashBinOutline color="#CB2334" size={27} style={{marginLeft: "15px"}} />
-									</Link>
-								</OverlayTrigger>
-							</div>							
-						)}
+						{this.state.peopleComponentSelected && (peopleBottomToolbarIconDefs(t("new_person"), t("remove_person"), this.peopleRef))}
+						{this.state.personComponentSelected && (<div></div>)}
+						{this.state.addPersonComponentSelected && (clearForm(t("clear_form")))}
+						{this.state.examsComponentSelected && (examsBottomToolbarIconDefs(t("new_exam"), t("remove_exam"), this.examsRef))}
+						{this.state.examComponentSelected && (examBottomToolbarIconDefs(t("add_participant"), t("remove_participant"), this.examRef))}
+						{this.state.addExamComponentSelected && (clearForm(t("clear_form")))}
+						{this.state.campsComponentSelected && (campsBottomToolbarIconDefs(t("new_camp"), t("remove_camp"), this.campsRef))}
+						{this.state.campComponentSelected && (campBottomToolbarIconDefs(t("add_participant"), t("remove_participant"), this.campRef))}
+						{this.state.addCampComponentSelected && (clearForm(t("clear_form")))}
+						{this.state.tournamentsComponentSelected && (tournamentsBottomToolbarIconDefs(t("new_tournament"), t("remove_tournament"), this.tournamentsRef))}
+						{this.state.tournamentComponentSelected && (tournamentBottomToolbarIconDefs(t("add_team"), t("remove_team"), t("remove_participant"), this.tournamentRef))}
+						{this.state.addTournamentComponentSelected && (clearForm(t("clear_form")))}
+						{this.state.teamsComponentSelected && (teamsBottomToolbarIconDefs(t("remove_team"), this.teamsRef))}
+						{this.state.teamComponentSelected && (teamBottomToolbarIconDefs(t("sign_up_participant"), t("sign_up_me"), t("remove_participant"), this.teamRef))}
+						{this.state.clubDocumentsComponentSelected && (clubDocumentsToolbarIconDefs(t("new_document"), t("remove_document"), this.clubDocumentsRef))}
 						{this.state.clubDocumentComponentSelected && (<div></div>)}
-						{this.state.settingsComponentSelected && this.showToolbarIconsForSettingsTab(localStorage.getItem("settingsSelectedTab"))}
-						{this.state.addSelectableUserOptionComponentSelected && (
-							<div>
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("clear_form")}</Tooltip>} >
-									<Link onClick={() => window.location.reload()} >									
-										<AiOutlineClear color="gray" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-							</div>
+						{this.state.addClubDocumentComponentSelected && (clearForm(t("clear_form")))}
+						{this.state.settingsComponentSelected && showToolbarIconsForSettingsTab(
+							localStorage.getItem("settingsSelectedTab"), 
+							t("restore_saved_settings"), t("add_admin"), t("remove_admin"), this.settingsRef,
+							t("add_branch_chief"), t("add_club"), t("add_rank"),
+							t("remove_branch_chief"), t("remove_club"), t("remove_rank") 
 						)}
-						{this.state.addClubDocumentComponentSelected && (
-							<div>
-								{/* <Button href="/add_club_document_component" variant="secondary">{t("clear_form")}</Button> */}
-
-								 <OverlayTrigger placement="bottom" overlay={<Tooltip>{t("clear_form")}</Tooltip>} >
-									<Link onClick={() => window.location.reload()} >									
-										<AiOutlineClear color="gray" size={30} style={{marginLeft: "10px"}} />
-									</Link>
-								</OverlayTrigger>
-							</div>	
-						)}
-						{this.state.profileComponentSelected && (
-							<div>
-								{/* <Button onClick={() => this.profileRef.current.askForProfileRemoving()} variant="danger">{t("remove_my_account")}</Button> */}
-
-								<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("remove_my_account")}</Tooltip>} >
-									<Link onClick={() => { this.profileRef.current.askForProfileRemoving() }} >									
-										<IoTrashBinOutline color="#CB2334" size={27} style={{marginLeft: "15px"}} />
-									</Link>
-								</OverlayTrigger>
-							</div>
-						)}
-						{this.state.eventWallComponentSelected && (
-							<Form >
-								<Form.Row>
-									<Col><Form.Control type="text" placeholder={t("search")}  /></Col>
-									{/* <Col><Button type="submit" variant="info">{t("search")}</Button></Col> */}
-									<Col style={{padding: "5px 0"}}>
-										<OverlayTrigger placement="bottom" overlay={<Tooltip>{t("search")}</Tooltip>} >
-											<Link onClick={() => window.location.reload()} >									
-												<AiOutlineSearch color="gray" size={30} style={{marginLeft: "10px"}} />
-											</Link>
-										</OverlayTrigger>
-									</Col>																		
-								</Form.Row>								
-							</Form>							
-						)}
-						{this.state.downloadsComponentSelected && (
-							<div>								
-							</div>
-						)}
+						{this.state.addSelectableUserOptionComponentSelected && (clearForm(t("clear_form")))}						
+						{this.state.profileComponentSelected && (profileToolbarIconDefs(t("remove_my_account"), this.profileRef))}
+						{this.state.eventWallComponentSelected && (eventWallToolbarIconDefs(t("search")))}
+						{this.state.downloadsComponentSelected && (<div></div>)}
 						</Nav>
 						<Nav className="ml-auto">
 							<a href={this.state.facebookUrl} target="_blank" className="nav-link"><MDBIcon fab icon="facebook-f" /></a>
