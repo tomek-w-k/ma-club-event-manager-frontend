@@ -18,7 +18,7 @@ import { addTeamTableColumnDefs as columns } from "./addTeamTableColumnDefs";
 
 
 const currentUser = AuthService.getCurrentUser();
-const TRAINERS = Urls.WEBSERVICE_URL + "/roles/ROLE_TRAINER/users"; 
+const TRAINERS = Urls.WEBSERVICE_URL + "/roles/ROLE_TRAINER/users?hasRole=yes"; 
 
 
 const sizePerPageList = {
