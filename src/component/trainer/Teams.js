@@ -8,39 +8,11 @@ import {textFilter} from 'react-bootstrap-table2-filter';
 import { withTranslation } from "react-i18next";
 import AuthService from "../../service/auth-service";
 import * as Urls from "../../servers-urls";
+import { ColumnNames } from "./teamsTableColumnDefs";
+import { teamsTableColumnDefs as columns } from "./teamsTableColumnDefs";
 
 
 const currentUser = AuthService.getCurrentUser();
-
-const Columns = Object.freeze ({
-    ID: 0,
-    TEAM_FOR_TOURNAMENT: 1,    
-});
-
-const headerFormatter = (column, colIndex, { sortElement, filterElement }) => {
-    return (
-        <div style={ { display: 'flex', flexDirection: 'column' } }>            
-            { column.text }            
-            { filterElement }
-            { sortElement }
-        </div>
-    );
-}; 
-
-const columns = [
-    {
-        dataField: "id",        
-        sort: false,
-        hidden: true,        
-    },
-    {
-        dataField: "eventName",
-        text: "",
-        sort: true, 
-        filter: textFilter(),
-        headerFormatter: headerFormatter
-    }             
-];
 
 
 class Teams extends Component
@@ -109,7 +81,7 @@ class Teams extends Component
         const TEAMS_FOR_TRAINER_URL = Urls.WEBSERVICE_URL + "/user/" + this.props.match.params.userId + "/teams";
         const t = this.props.t;
 
-        columns[Columns.TEAM_FOR_TOURNAMENT] = {...columns[Columns.TEAM_FOR_TOURNAMENT], text: t("team_for_tournament"), filter: textFilter({ placeholder: t("enter_tournament_name")})};
+        columns[ColumnNames.TEAM_FOR_TOURNAMENT] = {...columns[ColumnNames.TEAM_FOR_TOURNAMENT], text: t("team_for_tournament"), filter: textFilter({ placeholder: t("enter_tournament_name")})};
 
         this.props.navbarControlsHandler();
 

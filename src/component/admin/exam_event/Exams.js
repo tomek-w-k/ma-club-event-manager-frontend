@@ -8,72 +8,13 @@ import {textFilter} from 'react-bootstrap-table2-filter';
 import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
+import { ColumnNames } from "./examsTableColumnDefs";
+import { examsTableColumnDefs as columns} from "./examsTableColumnDefs";
 
 
 const currentUser = AuthService.getCurrentUser();        
 const EXAM_EVENTS_URL = Urls.WEBSERVICE_URL + "/exam_events";
 const EVENTS_API_URL = Urls.WEBSERVICE_URL + "/events";
-
-const Columns = Object.freeze ({
-    ID: 0,
-    EXAM_NAME: 1,
-    START_DATE: 2,
-    PERSONS_SIGNED_IN: 3,    
-});
-
-const headerFormatter = (column, colIndex, { sortElement, filterElement }) => {
-    return (
-        <div style={ { display: 'flex', flexDirection: 'column' } }>            
-            { column.text }            
-            { filterElement }
-            { sortElement }
-        </div>
-    );
-}; 
-
-const columns = [
-    {
-        dataField: "id",
-        sort: false,
-        hidden: true
-    },
-    {
-        dataField: "eventName",
-        text: "",
-        sort: true,         
-        filter: textFilter(),
-        headerFormatter: headerFormatter,
-        style: (colum, colIndex) => {
-            return { width: '60%', textAlign: 'left' };
-        },
-    },
-    {
-        dataField: "startDate", 
-        text: "",
-        sort: true,
-        type: "date",
-        style: (colum, colIndex) => {
-            return { width: '20%', textAlign: 'center' };
-        }, 
-        headerStyle:  { "text-align": "center" },
-        filter: textFilter(),
-        headerFormatter: headerFormatter,
-    },
-    {            
-        dataField: "examRegistrations.length",
-        text: "",
-        sort: false,
-        style: (colum, colIndex) => {
-            return { width: '20%', textAlign: 'center' };
-        },
-        headerStyle:  { "text-align": "center" },
-        filter: textFilter({            
-            disabled: "true",
-            placeholder: "-"
-        }),
-        headerFormatter: headerFormatter            
-    }          
-];
 
 
 class Exams extends Component
@@ -141,9 +82,9 @@ class Exams extends Component
     {
         const t = this.props.t;
 
-        columns[Columns.EXAM_NAME] = {...columns[Columns.EXAM_NAME], text: t("exam"), filter: textFilter({ placeholder: t("enter_exam_name")})};
-        columns[Columns.START_DATE] = {...columns[Columns.START_DATE], text: t("start_date"), filter: textFilter({ placeholder: t("enter_start_date")})};
-        columns[Columns.PERSONS_SIGNED_IN] = {...columns[Columns.PERSONS_SIGNED_IN], text: t("persons_registered")};
+        columns[ColumnNames.EXAM_NAME] = {...columns[ColumnNames.EXAM_NAME], text: t("exam"), filter: textFilter({ placeholder: t("enter_exam_name")})};
+        columns[ColumnNames.START_DATE] = {...columns[ColumnNames.START_DATE], text: t("start_date"), filter: textFilter({ placeholder: t("enter_start_date")})};
+        columns[ColumnNames.PERSONS_SIGNED_IN] = {...columns[ColumnNames.PERSONS_SIGNED_IN], text: t("persons_registered")};
 
         this.props.navbarControlsHandler();
         

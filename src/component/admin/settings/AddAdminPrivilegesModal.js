@@ -13,55 +13,11 @@ import { textFilter } from 'react-bootstrap-table2-filter';
 import AuthService from "../../../service/auth-service";
 import * as SettingsConstants from "./settingsConstants";
 import { fetchMetadataForGet } from "../../../utils/fetchMetadata";
+import { ColumnNames } from "./addAdminPrivilegesTableColumnDefs";
+import { addAdminPrivilegesTableColumnDefs as columns } from "./addAdminPrivilegesTableColumnDefs";
 
 
 const currentUser = AuthService.getCurrentUser();
-
-const Columns = Object.freeze ({
-    ID: 0,
-    FULL_NAME: 1,
-    EMAIL: 2,
-    CLUB: 3,    
-});
-
-const headerFormatter = (column, colIndex, { sortElement, filterElement }) => {
-    return (
-        <div style={ { display: 'flex', flexDirection: 'column' } }>            
-            { column.text }            
-            { filterElement }
-            { sortElement }
-        </div>
-    );
-};
-
-const columns = [
-    {
-        dataField: "id",
-        sort: false,
-        hidden: true
-    },
-    {
-        dataField: "fullName",
-        text: "Full name",
-        sort: true, 
-        filter: textFilter(),
-        headerFormatter: headerFormatter          
-    },    
-    {
-        dataField: "email", 
-        text: "",
-        sort: false,        
-        filter: textFilter(),
-        headerFormatter: headerFormatter,                     
-    },
-    {            
-        dataField: "club.clubName",
-        text: "Club",
-        sort: true,
-        filter: textFilter(),
-        headerFormatter: headerFormatter
-    }
-];
 
 
 class AddAdminPrivilegesModal extends Component
@@ -144,6 +100,9 @@ class AddAdminPrivilegesModal extends Component
     render()
     {
         const t = this.props.t;
+
+        columns[ColumnNames.FULL_NAME] = 
+            {...columns[ColumnNames.FULL_NAME], text: t("full_name"), filter: textFilter({ placeholder: t("enter_full_name")})};
 
         return (
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?

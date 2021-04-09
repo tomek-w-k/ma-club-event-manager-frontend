@@ -8,49 +8,12 @@ import {textFilter} from 'react-bootstrap-table2-filter';
 import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
+import { ColumnNames } from "./clubDocumentsTableColumnDefs";
+import { clubDocumentsTableColumnDefs as columns } from "./clubDocumentsTableColumnDefs";
 
 
 const currentUser = AuthService.getCurrentUser();
 const CLUB_DOCUMENTS_URL = Urls.WEBSERVICE_URL + "/club_documents";
-
-const Columns = Object.freeze ({
-    ID: 0,
-    DESCRIPTION: 1,
-    FILE_NAME: 2,    
-});
-
-const headerFormatter = (column, colIndex, { sortElement, filterElement }) => {
-    return (
-        <div style={ { display: 'flex', flexDirection: 'column' } }>            
-            { column.text }            
-            { filterElement }
-            { sortElement }
-        </div>
-    );
-}; 
-
-const columns = [
-    {
-        dataField: "id",
-        sort: false,
-        hidden: true
-    },
-    {
-        dataField: "clubDocumentDescription",
-        text: "Description",
-        sort: true, 
-        filter: textFilter(),
-        headerFormatter: headerFormatter
-    },
-    {
-        dataField: "clubDocumentPath", 
-        text: "File name",
-        sort: false,        
-        filter: textFilter(),
-        formatter: (cell, row) => { return cell.split('\\').pop().split('/').pop() },
-        headerFormatter: headerFormatter
-    }          
-];
 
 
 class ClubDocuments extends Component
@@ -129,8 +92,8 @@ class ClubDocuments extends Component
     {
         const t = this.props.t;
 
-        columns[Columns.DESCRIPTION] = {...columns[Columns.DESCRIPTION], text: t("description"), filter: textFilter({ placeholder: t("enter_description")})};
-        columns[Columns.FILE_NAME] = {...columns[Columns.FILE_NAME], text: t("file_name"), filter: textFilter({ placeholder: t("enter_file_name")})};
+        columns[ColumnNames.DESCRIPTION] = {...columns[ColumnNames.DESCRIPTION], text: t("description"), filter: textFilter({ placeholder: t("enter_description")})};
+        columns[ColumnNames.FILE_NAME] = {...columns[ColumnNames.FILE_NAME], text: t("file_name"), filter: textFilter({ placeholder: t("enter_file_name")})};
         
         this.props.navbarControlsHandler();
 

@@ -200,7 +200,7 @@ class GeneralSettings extends Component
         })
         .then(response => {
             if ( response.ok ) {
-                this.handleUpdateProperty("club_logo_path", "default_club_logo/default-ma-club-event-manager-logo.jpg");
+                this.handleUpdateProperty("club_logo_path", "/default_club_logo/default-ma-club-event-manager-logo.jpg");
                 window.location.reload();
             }
                 

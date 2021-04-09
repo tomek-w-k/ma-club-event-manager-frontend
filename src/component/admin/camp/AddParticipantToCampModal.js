@@ -13,59 +13,14 @@ import { textFilter } from 'react-bootstrap-table2-filter';
 import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
+import { ColumnNames } from "./addParticipantToCampTableColumnDefs";
+import { addParticipantToCampTableColumnDefs as columns } from "./addParticipantToCampTableColumnDefs";
 
 
 const currentUser = AuthService.getCurrentUser();
-const CAMP_REGISTRATION_API_URL = Urls.WEBSERVICE_URL + "/camp_registrations";
 const USERS_API_URL = Urls.WEBSERVICE_URL + "/users";
 const CAMP_EVENTS = Urls.WEBSERVICE_URL + "/camp_events"; 
 const CAMP_REGISTRATIONS = Urls.WEBSERVICE_URL + "/camp_registrations"; 
-
-const Columns = Object.freeze ({
-    ID: 0,
-    FULL_NAME: 1,
-    COUNTRY: 2,
-    CLUB: 3,    
-});
-
-const headerFormatter = (column, colIndex, { sortElement, filterElement }) => {
-    return (
-        <div style={ { display: 'flex', flexDirection: 'column' } }>            
-            { column.text }            
-            { filterElement }
-            { sortElement }
-        </div>
-    );
-};
-
-const columns = [
-    {
-        dataField: "id",
-        sort: false,
-        hidden: true
-    },
-    {
-        dataField: "fullName",
-        text: "Full name",
-        sort: true, 
-        filter: textFilter(),
-        headerFormatter: headerFormatter            
-    },    
-    {            
-        dataField: "country",
-        text: "Country",
-        sort: true,
-        filter: textFilter(),
-        headerFormatter: headerFormatter 
-    },
-    {            
-        dataField: "club.clubName",
-        text: "Club",
-        sort: true,
-        filter: textFilter(),
-        headerFormatter: headerFormatter 
-    }
-];
 
 
 class AddParticipantToCampModal extends Component
@@ -211,9 +166,9 @@ class AddParticipantToCampModal extends Component
 
         const t = this.props.t;
 
-        columns[Columns.FULL_NAME] = {...columns[Columns.FULL_NAME], text: t("full_name"), filter: textFilter({ placeholder: t("enter_full_name")})};
-        columns[Columns.COUNTRY] = {...columns[Columns.COUNTRY], text: t("country"), filter: textFilter({ placeholder: t("enter_country")})};
-        columns[Columns.CLUB] = {...columns[Columns.CLUB], text: t("club"), filter: textFilter({ placeholder: t("enter_club")})};
+        columns[ColumnNames.FULL_NAME] = {...columns[ColumnNames.FULL_NAME], text: t("full_name"), filter: textFilter({ placeholder: t("enter_full_name")})};
+        columns[ColumnNames.COUNTRY] = {...columns[ColumnNames.COUNTRY], text: t("country"), filter: textFilter({ placeholder: t("enter_country")})};
+        columns[ColumnNames.CLUB] = {...columns[ColumnNames.CLUB], text: t("club"), filter: textFilter({ placeholder: t("enter_club")})};
 
         return (
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?

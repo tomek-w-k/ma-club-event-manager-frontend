@@ -13,72 +13,19 @@ import ConfirmationDialogModal from "../../ConfirmationDialogModal";
 import EditSelectableUserOptionModal from "./EditSelectableUserOptionModal";
 import GeneralSettings from "./GeneralSettings";
 import Administrators from "./Administrators";
-import { searchableHeaderFormatter } from "../../../utils/searchableHeaderFormatter";
 import AuthService from "../../../service/auth-service";
 import * as SettingsConstants from "./settingsConstants";
+import { 
+    BranchChiefTableColumnNames,
+    ClubTableColumnNames,
+    RankTableColumnNames,
+    branchChiefTableColumns,
+    clubTableColumns,
+    rankTableColumns
+} from "./settingsTableColumnDefs";
 
 
 const currentUser = AuthService.getCurrentUser();
-
-const BranchChiefTableColumnNames = Object.freeze ({
-    ID: 0,
-    BRANCH_CHIEF_NAME: 1,    
-});
-
-const ClubTableColumnNames = Object.freeze ({
-    ID: 0,
-    CLUB_NAME: 1,
-});
-
-const RankTableColumnNames = Object.freeze ({
-    ID: 0,
-    RANK_NAME: 1,
-});
-
-const branchChiefTableColumns = [
-    {
-        dataField: "id",
-        sort: false,
-        hidden: true
-    },
-    {
-        dataField: "branchChiefName",
-        text: "",
-        sort: true, 
-        filter: textFilter(),
-        headerFormatter: searchableHeaderFormatter,
-    }    
-];
-
-const clubTableColumns = [
-    {
-        dataField: "id",
-        sort: false,
-        hidden: true
-    },
-    {
-        dataField: "clubName",
-        text: "",
-        sort: true, 
-        filter: textFilter(),
-        headerFormatter: searchableHeaderFormatter,
-    }    
-];
-
-const rankTableColumns = [
-    {
-        dataField: "id",
-        sort: false,
-        hidden: true
-    },
-    {
-        dataField: "rankName",
-        text: "",
-        sort: true, 
-        filter: textFilter(),
-        headerFormatter: searchableHeaderFormatter,
-    }    
-];
 
 
 class Settings extends Component

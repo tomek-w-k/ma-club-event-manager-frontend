@@ -7,7 +7,8 @@ import {
 	Col,
 	Button,
 	OverlayTrigger,
-	Tooltip
+	Tooltip,
+	Image
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {MDBIcon} from "mdbreact";
@@ -135,7 +136,7 @@ class App extends Component
 		}
 
 		getGeneralSettings(user)
-		.then(data => {
+		.then(data => { console.log(data)
 			this.setState({
 				clubLogoPath: data[SettingsConstants.PropertyNames.CLUB_LOGO_PATH] ? data[SettingsConstants.PropertyNames.CLUB_LOGO_PATH].value : "",
 				clubName: data[SettingsConstants.PropertyNames.CLUB_NAME] ? data[SettingsConstants.PropertyNames.CLUB_NAME].value : "",					
@@ -143,7 +144,7 @@ class App extends Component
 				youtubeUrl: data[SettingsConstants.PropertyNames.YOUTUBE_URL] ? data[SettingsConstants.PropertyNames.YOUTUBE_URL].value : "",
 				instagramUrl: data[SettingsConstants.PropertyNames.INSTAGRAM_URL] ? data[SettingsConstants.PropertyNames.INSTAGRAM_URL].value : ""
 			}, 
-			() =>{ document.title = this.state.clubName ? this.state.clubName : "ClubEventManager" });
+			() => { document.title = this.state.clubName ? this.state.clubName : "ClubEventManager"; console.log(this.state.clubLogoPath) });
 		})
 		.catch(error => this.setState({ errorMessage: t("failed_to_fetch") }));
 	}
@@ -279,8 +280,10 @@ class App extends Component
 		return(			
 			<div>
 				<div className="sidenav">
-					<div className="club-logo">
-						<img src={this.state.clubLogoPath} style={{width: "100%", height: "100%", objectFit: "contain", padding: "4px"}} />							
+					<div className="club-logo">						
+						<Image 	src={this.state.clubLogoPath}
+								style={{width: "100%", height: "100%", objectFit: "contain", padding: "4px"}}
+						/>						
 					</div>						
 					<Nav className="flex-column" >
 						{this.state.showAdministrativeTools && (

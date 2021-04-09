@@ -13,65 +13,13 @@ import {withRouter} from "react-router-dom";
 import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
+import { ColumnNames } from "./addTeamTableColumnDefs";
+import { addTeamTableColumnDefs as columns } from "./addTeamTableColumnDefs";
 
 
 const currentUser = AuthService.getCurrentUser();
 const TRAINERS = Urls.WEBSERVICE_URL + "/roles/ROLE_TRAINER/users"; 
 
-const ColumnNames = Object.freeze({
-    ID: 0,    
-    FULL_NAME: 1,
-    EMAIL: 2,
-    CLUB: 3,
-    COUNTRY: 4
-});
-
-const headerFormatter = (column, colIndex, { sortElement, filterElement }) => {
-    return (
-        <div style={ { display: 'flex', flexDirection: 'column' } }>            
-            { column.text }            
-            { filterElement }
-            { sortElement }
-        </div>
-    );
-};
-
-const columns = [
-    {
-        dataField: "id",
-        sort: false,
-        hidden: true
-    },
-    {
-        dataField: "fullName",
-        text: "Full name",
-        sort: true, 
-        filter: textFilter(),
-        headerFormatter: headerFormatter          
-    },
-    {
-        dataField: "email", 
-        text: "Email",
-        sort: false,        
-        filter: textFilter(), 
-        headerFormatter: headerFormatter                      
-    },
-    {            
-        dataField: "club.clubName",
-        text: "Club",
-        sort: true,
-        filter: textFilter(),
-        headerFormatter: headerFormatter
-    },
-    {            
-        dataField: "country",
-        text: "Country",
-        sort: true,
-        filter: textFilter(),
-        headerFormatter: headerFormatter
-    },
-    
-];
 
 const sizePerPageList = {
     sizePerPageList: [ 

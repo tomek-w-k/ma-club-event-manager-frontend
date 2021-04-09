@@ -9,47 +9,11 @@ import {withRouter} from "react-router-dom";
 import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
+import { ColumnNames } from "./tournamentTeamsTableColumnDefs";
+import { tournamentTeamsTableColumnDefs as columns } from "./tournamentTeamsTableColumnDefs";
 
 
 const currentUser = AuthService.getCurrentUser();
-
-const ColumnNames = Object.freeze({
-    ID: 0,    
-    TRAINER: 1,
-    CLUB: 2,    
-});
-
-const headerFormatter = (column, colIndex, { sortElement, filterElement }) => {
-    return (
-        <div style={ { display: 'flex', flexDirection: 'column' } }>            
-            { column.text }            
-            { filterElement }
-            { sortElement }
-        </div>
-    );
-};
-
-const columns = [
-    {
-        dataField: "id",        
-        sort: false,
-        hidden: true,        
-    },
-    {
-        dataField: "trainer.fullName",
-        text: "Trainer",
-        sort: true, 
-        filter: textFilter(),
-        headerFormatter: headerFormatter
-    },
-    {
-        dataField: "trainer.club.clubName",
-        text: "Club",
-        sort: true, 
-        filter: textFilter(),
-        headerFormatter: headerFormatter
-    }             
-];
 
 
 class TournamentTeams extends Component

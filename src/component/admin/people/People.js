@@ -1,75 +1,18 @@
 import React, {Component} from "react";
 import CrudTableComponent from "../../CrudTableComponent";
-import {
-    Card,
-    Form,    
-    Col,    
-    Button
-} from "react-bootstrap";
-import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
+import { Card } from "react-bootstrap";
+import { textFilter } from 'react-bootstrap-table2-filter';
 import { withTranslation } from "react-i18next";
 import InformationDialogModal from "../../InformationDialogModal";
 import ConfirmationDialogModal from "../../ConfirmationDialogModal";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
+import { ColumnNames } from "./peopleTableColumnDefs";
+import { peopleTableColumnDefs as columns } from "./peopleTableColumnDefs";
 
 
 const currentUser = AuthService.getCurrentUser();
 const USERS_URL = Urls.WEBSERVICE_URL + "/users";
-
-const Columns = Object.freeze ({
-    ID: 0,
-    FULL_NAME: 1,
-    EMAIL: 2,
-    COUNTRY: 3,
-    CLUB: 4,
-});
-
-const searchableHeaderFormatter = (column, colIndex, { sortElement, filterElement }) => {
-    return (
-        <div style={ { display: 'flex', flexDirection: 'column' } }>            
-            { column.text }            
-            { filterElement }
-            { sortElement }
-        </div>
-    );
-};
-
-const columns = [
-    {
-        dataField: "id",
-        sort: false,
-        hidden: true
-    },
-    {
-        dataField: "fullName",
-        text: "",
-        sort: true, 
-        filter: textFilter(),
-        headerFormatter: searchableHeaderFormatter,
-    },
-    {
-        dataField: "email", 
-        text: "",
-        sort: false,        
-        filter: textFilter(),
-        headerFormatter: searchableHeaderFormatter,                     
-    },
-    {            
-        dataField: "country",
-        text: "",
-        sort: true,
-        filter: textFilter(),
-        headerFormatter: searchableHeaderFormatter,
-    },
-    {            
-        dataField: "club.clubName",
-        text: "",
-        sort: true,
-        filter: textFilter(),
-        headerFormatter: searchableHeaderFormatter,
-    }
-];
 
 
 class People extends Component
@@ -182,10 +125,10 @@ class People extends Component
     {
         const t = this.props.t;
 
-        columns[Columns.FULL_NAME] = {...columns[Columns.FULL_NAME], text: t("full_name"), filter: textFilter({ placeholder: t("enter_full_name")})};
-        columns[Columns.EMAIL] = {...columns[Columns.EMAIL], text: t("email"), filter: textFilter({ placeholder: t("enter_email")})};
-        columns[Columns.COUNTRY] = {...columns[Columns.COUNTRY], text: t("country"), filter: textFilter({ placeholder: t("enter_country")})};
-        columns[Columns.CLUB] = {...columns[Columns.CLUB], text: t("club"), filter: textFilter({ placeholder: t("enter_club")})};
+        columns[ColumnNames.FULL_NAME] = {...columns[ColumnNames.FULL_NAME], text: t("full_name"), filter: textFilter({ placeholder: t("enter_full_name")})};
+        columns[ColumnNames.EMAIL] = {...columns[ColumnNames.EMAIL], text: t("email"), filter: textFilter({ placeholder: t("enter_email")})};
+        columns[ColumnNames.COUNTRY] = {...columns[ColumnNames.COUNTRY], text: t("country"), filter: textFilter({ placeholder: t("enter_country")})};
+        columns[ColumnNames.CLUB] = {...columns[ColumnNames.CLUB], text: t("club"), filter: textFilter({ placeholder: t("enter_club")})};
         
         this.props.navbarControlsHandler();        
 
@@ -199,10 +142,7 @@ class People extends Component
                     />
                     <InformationDialogModal modalContent={t("cannot_remove_person")} 
                                             show={this.state.showInformationModal}
-                                            onHide={() => {
-                                                this.setState({ showInformationModal: false });
-                                                //window.location.reload();   
-                                            }} 
+                                            onHide={() => this.setState({ showInformationModal: false }) } 
                     />
                     <Card>
                         <Card.Body>

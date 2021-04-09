@@ -7,79 +7,12 @@ import AddParticipantToExamModal from "./AddParticipantToExamModal";
 import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
-import { searchableHeaderFormatter } from "../../../utils/searchableHeaderFormatter";
-import { booleanTableCellFormatter } from "../../../utils/booleanTableCellFormatter";
-import { booleanTableCellStyle } from "../../../utils/booleanTableCellStyle";
+import { ColumnNames } from "./examRegistrationsTableColumnDefs";
+import { examRegistrationsTableColumnDefs as columns } from "./examRegistrationsTableColumnDefs";
 
 
 const currentUser = AuthService.getCurrentUser();
 const EXAM_REGISTRATIONS = Urls.WEBSERVICE_URL + "/exam_registrations";
-
-const Columns = Object.freeze ({
-    ID: 0,
-    FULL_NAME: 1,
-    EMAIL: 2,    
-    CLUB: 3,
-    FEE_RECEIVED: 4,
-    PARTICIPATION_ACCEPTED: 5,
-});
-
-const columns = [
-    {
-        dataField: "id",
-        sort: false,
-        hidden: true
-    },
-    {
-        dataField: "user.fullName",
-        text: "Full name",
-        sort: true, 
-        filter: textFilter(),
-        headerFormatter: searchableHeaderFormatter          
-    },
-    {
-        dataField: "user.email",
-        text: "Email",
-        sort: true, 
-        filter: textFilter(),
-        headerFormatter: searchableHeaderFormatter         
-    },
-    {
-        dataField: "user.club.clubName",
-        text: "Club",
-        sort: true, 
-        filter: textFilter(),
-        headerFormatter: searchableHeaderFormatter          
-    },
-    { 
-        dataField: "feeReceived", 
-        text: "Fee received",
-        sort: false,
-        type: "bool",
-        style: booleanTableCellStyle,        
-        headerStyle:  { "text-align": "center" },
-        formatter: booleanTableCellFormatter,                         
-        filter: textFilter({            
-            disabled: "true",
-            placeholder: "-"
-        }),        
-        headerFormatter: searchableHeaderFormatter  
-    },
-    { 
-        dataField: "participationAccepted", 
-        text: "Participation accepted",
-        sort: false,
-        type: "bool",
-        style: booleanTableCellStyle,        
-        headerStyle:  { "text-align": "center" },
-        formatter: booleanTableCellFormatter,                           
-        filter: textFilter({            
-            disabled: "true",
-            placeholder: "-"
-        }),
-        headerFormatter: searchableHeaderFormatter          
-    },             
-];
 
 
 class ExamRegistrations extends Component
@@ -153,11 +86,11 @@ class ExamRegistrations extends Component
     {
         const t = this.props.t;
 
-        columns[Columns.FULL_NAME] = {...columns[Columns.FULL_NAME], text: t("full_name"), filter: textFilter({ placeholder: t("enter_full_name")})};
-        columns[Columns.EMAIL] = {...columns[Columns.EMAIL], text: t("email"), filter: textFilter({ placeholder: t("enter_email")})};
-        columns[Columns.CLUB] = {...columns[Columns.CLUB], text: t("club"), filter: textFilter({ placeholder: t("enter_club")})};
-        columns[Columns.FEE_RECEIVED] = {...columns[Columns.FEE_RECEIVED], text: t("fee_received")};
-        columns[Columns.PARTICIPATION_ACCEPTED] = {...columns[Columns.PARTICIPATION_ACCEPTED], text: t("participation_accepted")};
+        columns[ColumnNames.FULL_NAME] = {...columns[ColumnNames.FULL_NAME], text: t("full_name"), filter: textFilter({ placeholder: t("enter_full_name")})};
+        columns[ColumnNames.EMAIL] = {...columns[ColumnNames.EMAIL], text: t("email"), filter: textFilter({ placeholder: t("enter_email")})};
+        columns[ColumnNames.CLUB] = {...columns[ColumnNames.CLUB], text: t("club"), filter: textFilter({ placeholder: t("enter_club")})};
+        columns[ColumnNames.FEE_RECEIVED] = {...columns[ColumnNames.FEE_RECEIVED], text: t("fee_received")};
+        columns[ColumnNames.PARTICIPATION_ACCEPTED] = {...columns[ColumnNames.PARTICIPATION_ACCEPTED], text: t("participation_accepted")};
 
         const EXAM_REGISTRATIONS_FOR_EXAM = Urls.WEBSERVICE_URL + "/exam_events/" + this.props.id + "/exam_registrations";
 

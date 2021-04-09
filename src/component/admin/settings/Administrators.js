@@ -12,40 +12,12 @@ import AddAdminPrivilegesModal from "./AddAdminPrivilegesModal";
 import AuthService from "../../../service/auth-service";
 import * as SettingsConstants from "./settingsConstants";
 import { handleFetchErrors } from "../../../utils/handleFetchErrors";
-import { searchableHeaderFormatter } from "../../../utils/searchableHeaderFormatter";
 import { fetchMetadataForGet } from "../../../utils/fetchMetadata";
+import { ColumnNames } from "./administratorsTableColumnDefs";
+import { administratorsTableColumnDefs as columns } from "./administratorsTableColumnDefs";
 
 
 const currentUser = AuthService.getCurrentUser();
-
-
-const AdministratorsTableColumnNames = Object.freeze ({
-    ID: 0,
-    FULL_NAME: 1,
-    EMAIL: 2
-});
-
-const administratorsTableColumns = [
-    {
-        dataField: "id",
-        sort: false,
-        hidden: true
-    },
-    {
-        dataField: "fullName",
-        text: "",
-        sort: true, 
-        filter: textFilter(),
-        headerFormatter: searchableHeaderFormatter,
-    },
-    {
-        dataField: "email", 
-        text: "",
-        sort: false,        
-        filter: textFilter(),
-        headerFormatter: searchableHeaderFormatter,                     
-    }
-];
 
 
 class Administrators extends Component
@@ -155,10 +127,10 @@ class Administrators extends Component
     {
         const t = this.props.t;
 
-        administratorsTableColumns[AdministratorsTableColumnNames.FULL_NAME] = 
-            {...administratorsTableColumns[AdministratorsTableColumnNames.FULL_NAME], text: t("full_name"), filter: textFilter({ placeholder: t("enter_full_name")})};
-        administratorsTableColumns[AdministratorsTableColumnNames.EMAIL] = 
-            {...administratorsTableColumns[AdministratorsTableColumnNames.EMAIL], text: t("email"), filter: textFilter({ placeholder: t("enter_email")})};
+        columns[ColumnNames.FULL_NAME] = 
+            {...columns[ColumnNames.FULL_NAME], text: t("full_name"), filter: textFilter({ placeholder: t("enter_full_name")})};
+        columns[ColumnNames.EMAIL] = 
+            {...columns[ColumnNames.EMAIL], text: t("email"), filter: textFilter({ placeholder: t("enter_email")})};
 
         return (
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
@@ -185,7 +157,7 @@ class Administrators extends Component
                         <Card.Body>
                             <Card.Text>
                                 <CrudTableComponent itemsUrl={SettingsConstants.ADMINISTRATOR_USERS_URL} 
-                                                    tableColumns={administratorsTableColumns} 
+                                                    tableColumns={columns} 
                                                     selectedItemId={this.handleAdminsTableRowClick} 
                                                     selectedIds={this.handleAdminsTableRowSelection}
                                                     ref={this.adminsTableRef}

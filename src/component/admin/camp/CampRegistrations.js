@@ -10,111 +10,13 @@ import AddParticipantToCampModal from "./AddParticipantToCampModal";
 import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
-import { searchableHeaderFormatter } from "../../../utils/searchableHeaderFormatter";
-import { booleanTableCellFormatter } from "../../../utils/booleanTableCellFormatter";
-import { booleanTableCellStyle } from "../../../utils/booleanTableCellStyle";
+import { ColumnNames } from "./campRegistrationsTableColumnDefs";
+import { campRegistrationsTableColumnDefs as columns } from "./campRegistrationsTableColumnDefs";
 
 
 const currentUser = AuthService.getCurrentUser();
 const CAMP_REGISTRATIONS = Urls.WEBSERVICE_URL + "/camp_registrations";
 const CAMP_EVENTS = Urls.WEBSERVICE_URL + "/camp_events";
-
-const Columns = Object.freeze ({
-    ID: 0,
-    FULL_NAME: 1,
-    EMAIL: 2,    
-    CLUB: 3,
-    FEE_RECEIVED: 4,
-    SAYONARA: 5,
-    CLOTHING_SIZE: 6,
-    ACCOMMODATION: 7,
-});
-
-const columns = [
-    {
-        dataField: "id",
-        sort: false,
-        hidden: true
-    },
-    {
-        dataField: "user.fullName",
-        text: "Full name",
-        sort: true, 
-        filter: textFilter(),
-        headerFormatter: searchableHeaderFormatter          
-    },
-    {
-        dataField: "user.email",
-        text: "Email",
-        sort: true, 
-        filter: textFilter(),
-        headerFormatter: searchableHeaderFormatter           
-    },
-    {
-        dataField: "user.club.clubName",
-        text: "Club",
-        sort: true, 
-        filter: textFilter(),
-        headerFormatter: searchableHeaderFormatter           
-    },
-    { 
-        dataField: "feeReceived", 
-        text: "Fee received",
-        sort: false,
-        type: "bool",
-        style: booleanTableCellStyle,        
-        headerFormatter: booleanTableCellFormatter,
-        headerStyle:  { "text-align": "center" },
-        formatter: booleanTableCellFormatter,        
-        filter: textFilter({            
-            disabled: "true",
-            placeholder: "-"
-        }),        
-        headerFormatter: searchableHeaderFormatter          
-    },
-    { 
-        dataField: "sayonaraMeetingParticipation", 
-        text: "Sayonara",
-        hidden: true,
-        sort: false,
-        type: "bool",
-        style: booleanTableCellStyle,        
-        headerStyle:  { "text-align": "center" },
-        formatter: booleanTableCellFormatter,  
-        filter: textFilter({            
-            disabled: "true",
-            placeholder: "-"
-        }),        
-        headerFormatter: searchableHeaderFormatter         
-    },
-    {
-        dataField: "clothingSize.clothingSizeName",
-        text: "Clothing size",
-        sort: true, 
-        filter: textFilter(),
-        style: booleanTableCellStyle,        
-        headerStyle:  { "text-align": "center" },
-        formatter: (cell, row) => {
-            if (typeof cell == "undefined" )
-                return "-"
-            else return cell;
-        }
-    },
-    { 
-        dataField: "accommodation",
-        text: "Accommodation",
-        sort: false,
-        type: "bool",
-        style: booleanTableCellStyle,        
-        headerStyle:  { "text-align": "center" },
-        formatter: booleanTableCellFormatter,        
-        filter: textFilter({            
-            disabled: "true",
-            placeholder: "-"
-        }),        
-        headerFormatter: searchableHeaderFormatter         
-    },             
-];
 
 
 class CampRegistrations extends Component
@@ -207,13 +109,13 @@ class CampRegistrations extends Component
         const CAMP_REGISTRATIONS_FOR_CAMP = Urls.WEBSERVICE_URL + "/camp_events/" + this.props.id + "/camp_registrations";
         const t = this.props.t;
 
-        columns[Columns.FULL_NAME] = {...columns[Columns.FULL_NAME], text: t("full_name"), filter: textFilter({ placeholder: t("enter_full_name")})};
-        columns[Columns.EMAIL] = {...columns[Columns.EMAIL], text: t("email"), filter: textFilter({ placeholder: t("enter_email")})};
-        columns[Columns.CLUB] = {...columns[Columns.CLUB], text: t("club"), filter: textFilter({ placeholder: t("enter_club")})};
-        columns[Columns.FEE_RECEIVED] = {...columns[Columns.FEE_RECEIVED], text: t("fee_received")};
-        columns[Columns.SAYONARA] = {...columns[Columns.SAYONARA], text: t("sayonara")};
-        columns[Columns.CLOTHING_SIZE] = {...columns[Columns.CLOTHING_SIZE], text: t("clothing_size"), filter: textFilter({ placeholder: t("enter_clothing_type")})};
-        columns[Columns.ACCOMMODATION] = {...columns[Columns.ACCOMMODATION], text: t("accommodation")};
+        columns[ColumnNames.FULL_NAME] = {...columns[ColumnNames.FULL_NAME], text: t("full_name"), filter: textFilter({ placeholder: t("enter_full_name")})};
+        columns[ColumnNames.EMAIL] = {...columns[ColumnNames.EMAIL], text: t("email"), filter: textFilter({ placeholder: t("enter_email")})};
+        columns[ColumnNames.CLUB] = {...columns[ColumnNames.CLUB], text: t("club"), filter: textFilter({ placeholder: t("enter_club")})};
+        columns[ColumnNames.FEE_RECEIVED] = {...columns[ColumnNames.FEE_RECEIVED], text: t("fee_received")};
+        columns[ColumnNames.SAYONARA] = {...columns[ColumnNames.SAYONARA], text: t("sayonara")};
+        columns[ColumnNames.CLOTHING_SIZE] = {...columns[ColumnNames.CLOTHING_SIZE], text: t("clothing_size"), filter: textFilter({ placeholder: t("enter_clothing_type")})};
+        columns[ColumnNames.ACCOMMODATION] = {...columns[ColumnNames.ACCOMMODATION], text: t("accommodation")};
 
         
         return(            
