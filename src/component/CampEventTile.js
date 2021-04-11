@@ -5,12 +5,16 @@ import {
 } from "react-bootstrap";
 import CampRegistrationOptionChooserModal from "./CampRegistrationOptionChooserModal";
 import { withTranslation } from "react-i18next";
+import { Check } from "react-bootstrap-icons";
 import AuthService from "../service/auth-service";
 import * as Urls from "../servers-urls";
+import moment from "moment";
 
 
 const currentUser = AuthService.getCurrentUser();
 const CAMP_REGISTRATION_API_URL = Urls.WEBSERVICE_URL + "/camp_registrations";
+const EVENT_DATE_FORMAT = 'DD-MM-YYYY hh:mm:ss';
+
 
 
 class CampEventTile extends Component
@@ -20,6 +24,7 @@ class CampEventTile extends Component
         super(props);
         this.state = {            
             eventContainsCurrentUser: false,
+            isUpcoming: false,
             campRegistrationId: undefined,
             showChooserModal: false,
         }
@@ -44,6 +49,10 @@ class CampEventTile extends Component
                 campRegistrationId: undefined
             });
         });
+
+        // - - - Check if the event is not expired - - -                
+        let eventStartDate = moment(this.props.event.startDate, EVENT_DATE_FORMAT).toDate();
+        this.setState({ isUpcoming: eventStartDate > Date.now() }); 
     }
 
     handleSignUp(e)
@@ -112,13 +121,17 @@ class CampEventTile extends Component
                             )}
                             <br />                                              
                             <div className="d-flex flex-row-reverse">                                                        
-                                {!eventContainsCurrentUser && (
+                                {!eventContainsCurrentUser && this.state.isUpcoming && (
                                     <Button variant="info" onClick={this.handleSignUp} >{t("sign_up_event")}</Button>
                                 )}
                                 {eventContainsCurrentUser && (
-                                    <div className="d-flex flex-row">
-                                        <div style={{display: "flex", alignItems: "center", marginRight: "10px"}}>{t("signed_up_event")}</div>    
-                                        <Button variant="danger" onClick={this.handleSignOut}>{t("sign_out_event")}</Button> 
+                                    <div className="d-flex flex-row-reverse">
+                                        <div>
+                                            <Button variant="outline-success" disabled><Check color="#13A84D" size={22}/>{t("signed_up_event")}</Button>{' '}                                        
+                                            {this.state.isUpcoming && (
+                                                <Button variant="danger" onClick={this.handleSignOut}>{t("sign_out_event")}</Button> 
+                                            )}
+                                        </div>                                            
                                     </div>                                        
                                 )}
                             </div>
