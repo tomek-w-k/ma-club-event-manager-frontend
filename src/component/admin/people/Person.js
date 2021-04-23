@@ -41,11 +41,12 @@ class Person extends Component
                 fullName: "",
                 email: "",
                 password: "",
+                roles: [],
                 club: null,
                 country: "",
                 rank: null,
                 branchChief: null,  
-                isTrainer: false,              
+                isTrainer: false, 
             },
             repeatPassword: "",
             formValidated: false,
@@ -67,7 +68,8 @@ class Person extends Component
 
         this.loadUserToUpdate = this.loadUserToUpdate.bind(this);
         this.handleUpdateUser = this.handleUpdateUser.bind(this);
-        this.askForProfileRemoving = this.askForProfileRemoving.bind(this);        
+        this.askForProfileRemoving = this.askForProfileRemoving.bind(this); 
+        this.disableTrainerCheckbox = this.disableTrainerCheckbox.bind(this);
     }
 
     componentDidMount()
@@ -188,8 +190,9 @@ class Person extends Component
                     value: data.branchChief.id,
                     label: data.branchChief.branchChiefName
                 }
-
-            this.setState({ user: {...data, club: club, rank: rank, branchChief: branchChief} } );
+                        
+            this.setState({ user: data });
+            this.setState({ user: {...data, club: club, rank: rank, branchChief: branchChief} });
         })
     }
 
@@ -267,6 +270,14 @@ class Person extends Component
         this.setState({ showConfirmationModal: true });
     }
 
+    disableTrainerCheckbox()
+    {
+        if ( this.state.user.roles.some(role => role.roleName == "ROLE_ADMIN") ) 
+            return true;
+            
+        return this.state.teamsOfPerson ? this.state.teamsOfPerson.length != 0 : true;
+    }
+
     render()
     {        
         const selectStyles = {
@@ -342,7 +353,7 @@ class Person extends Component
                                                             name="isTrainer"
                                                             style={{display: "flex", alignItems: "center"}}
                                                             checked={this.state.user.roles ? this.state.user.roles.some(role => role.roleName == "ROLE_TRAINER") : false }
-                                                            disabled={this.state.teamsOfPerson ? this.state.teamsOfPerson.length != 0 : true}
+                                                            disabled={this.disableTrainerCheckbox()}
                                                             onChange={(e) => { 
                                                                 let roles = this.state.user.roles;
                                                                 if ( e.target.checked )                                                                                                                                    

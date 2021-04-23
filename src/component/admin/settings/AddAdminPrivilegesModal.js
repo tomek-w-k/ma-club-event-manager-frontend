@@ -68,27 +68,37 @@ class AddAdminPrivilegesModal extends Component
         fetch(SettingsConstants.USERS_URL + this.state.selectedRowsIds[0], fetchMetadataForGet(currentUser))
         .then(response => response.json())
         .then(user => {
-            fetch(SettingsConstants.ROLES_URL + "ROLE_ADMIN")
-            .then(response => response.json())
-            .then(roleAdmin => {
-                user.roles = [...user.roles, roleAdmin];
+            let requests = [];
+            requests.push(fetch(SettingsConstants.ROLES_URL + "ROLE_ADMIN"));
+            requests.push(fetch(SettingsConstants.ROLES_URL + "ROLE_TRAINER"));
 
-                fetch(SettingsConstants.ADMINISTRATORS, {
-                    method: "PUT",
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + currentUser.accessToken
-                    },
-                    body: JSON.stringify( user )
+            Promise.all(requests)
+            .then(responses => responses.map(response => response.json()))
+            .then(jsonResponses => {
+                Promise.all(jsonResponses)
+                .then(data => {                    
+                    if ( user.roles.some(role => role.roleName == "ROLE_TRAINER") )
+                        data = data.filter(role => role.roleName != "ROLE_TRAINER" );                    
+                    
+                    user.roles = [...user.roles, ...data];
+
+                    fetch(SettingsConstants.ADMINISTRATORS, {
+                        method: "PUT",
+                        headers: {
+                            "Accept": "application/json",
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + currentUser.accessToken
+                        },
+                        body: JSON.stringify( user )
+                    })
+                    .then(result => {
+                        if (result.ok) {
+                            this.setState({ selectedRowsIds: [] });
+                            this.props.onHide();
+                        } else return result.json();
+                    }, 
+                    error => this.state({ errorMessage: error.message }))                    
                 })
-                .then(result => {
-                    if (result.ok) {
-                        this.setState({ selectedRowsIds: [] });
-                        this.props.onHide();
-                    } else return result.json();
-                }, 
-                error => this.state({ errorMessage: error.message }))                
             })
         })
         .catch(result => {
