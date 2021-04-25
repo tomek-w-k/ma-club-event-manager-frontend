@@ -102,9 +102,13 @@ class People extends Component
                                     "Authorization": "Bearer " + currentUser.accessToken
                                 }                
                             })
-                            .then(result => {
-                                if(result.ok) 
-                                    this.crudTableRef.current.fillTable() 
+                            .then(result => { 
+                                if(result.ok)
+                                {
+                                    this.setState({ selectedRowsIds: [] });
+                                    this.crudTableRef.current.unselectAllRows();
+                                    this.crudTableRef.current.fillTable();
+                                }   
                                 else return result.json();                            
                             },
                             error => {this.setState({ errorMessage: error.message })})
