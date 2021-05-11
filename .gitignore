@@ -34,5 +34,5 @@ yarn-error.log*
 
 .eslintcache
 servers-urls.js
-domain-name.js
+domain-name.json
 

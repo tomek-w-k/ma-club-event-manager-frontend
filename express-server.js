@@ -5,7 +5,7 @@ const morgan = require("morgan");
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
-const DOMAIN_NAME = require("./domain-name");
+const { DOMAIN_NAME } = require("./domain-name");
 
 
 const privateKey =  fs.readFileSync('/etc/letsencrypt/live/' + DOMAIN_NAME + '/privkey.pem', 'utf8');
