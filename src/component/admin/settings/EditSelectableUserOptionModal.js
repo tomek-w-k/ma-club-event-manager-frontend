@@ -193,7 +193,7 @@ class EditSelectableUserOptionModal extends Component
                         </Modal.Body>
                         <Modal.Footer>
                             <div>
-                                <Button variant="info" type="submit">{t("save")}</Button>{' '}                            
+                                <Button variant="info" type="submit" disabled>{t("save")}</Button>{' '}                            
                                 <Button variant="secondary" onClick={this.props.onHide}>{t("cancel")}</Button>
                             </div>
                         </Modal.Footer>
