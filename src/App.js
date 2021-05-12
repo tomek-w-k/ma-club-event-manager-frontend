@@ -279,7 +279,7 @@ class App extends Component
 								<div className="navbar-nav ml-auto">
 									<li className="nav-item"><Link to={"/login/@"} className="btn btn-secondary btn-sm" >{t("login")}</Link></li>
 									<div style={{width: "10px"}}></div>
-									<li className="nav-item"><Link to={"/signup"} className="btn btn-secondary btn-sm">{t("sign_up")}</Link></li>
+									<li className="nav-item"><Link to={"/signup"} className="btn btn-secondary btn-sm disabled">{t("sign_up")}</Link></li>
 								</div>
 							)}								
 						</Nav>
@@ -334,7 +334,7 @@ class App extends Component
 					<div className="content">
 						<Switch>
 							<Route path="/login/:email" component={Login} />							
-							<Route path="/signup" component={SignUp} />
+							{/* <Route path="/signup" component={SignUp} /> */}
 							<Route path="/password_reset/:token" render={(props) => (<PasswordReset {...props} /> )} />
 
 							{/* It was necessary to make conditions below nested. Place them on the same level doesn't work - when all three state variables 
@@ -395,12 +395,12 @@ class App extends Component
 															this.setState({ personComponentSelected:  true });
 														}
 													}} /> )} />
-													<Route path="/add_person_component/" render={(props) => (<AddPerson {...props} ref={this.addPersonRef} navbarControlsHandler={() => {
+													{/* <Route path="/add_person_component/" render={(props) => (<AddPerson {...props} ref={this.addPersonRef} navbarControlsHandler={() => {
 														if ( !this.state.addPersonComponentSelected ) {
 															this.deselectAllComponents();
 															this.setState({ addPersonComponentSelected:  true });
 														}
-													}} /> )} />
+													}} /> )} /> */}
 													<Route path="/exams_component" render={(props) => (<Exams {...props} ref={this.examsRef} navbarControlsHandler={() => {
 														if ( !this.state.examsComponentSelected )
 														{
@@ -414,13 +414,13 @@ class App extends Component
 															this.setState({ examComponentSelected:  true });
 														}
 													}} /> )} />
-													<Route path="/add_exam_component" render={(props) => (<AddExam {...props} navbarControlsHandler={() => {
+													{/* <Route path="/add_exam_component" render={(props) => (<AddExam {...props} navbarControlsHandler={() => {
 														if ( !this.state.addExamComponentSelected )
 														{
 															this.deselectAllComponents();
 															this.setState({ addExamComponentSelected: true });
 														}
-													}} />)} />
+													}} />)} /> */}
 													<Route path="/camps_component" render={(props) => (<Camps {...props} ref={this.campsRef} navbarControlsHandler={() => {
 														if ( !this.state.campsComponentSelected )
 														{
@@ -435,13 +435,13 @@ class App extends Component
 															this.setState({ campComponentSelected: true });											
 														}
 													}} />)} />
-													<Route path="/add_camp_component" render={(props) => (<AddCamp {...props} navbarControlsHandler={() => {
+													{/* <Route path="/add_camp_component" render={(props) => (<AddCamp {...props} navbarControlsHandler={() => {
 														if ( !this.state.addCampComponentSelected )
 														{
 															this.deselectAllComponents();
 															this.setState({ addCampComponentSelected: true });
 														}
-													}} />)} />
+													}} />)} /> */}
 													<Route path="/tournaments_component" render={(props) => (<Tournaments {...props} ref={this.tournamentsRef} navbarControlsHandler={() => {
 														if ( !this.state.tournamentsComponentSelected )
 														{
@@ -456,13 +456,13 @@ class App extends Component
 															this.setState({ tournamentComponentSelected: true });											
 														}
 													}} />)} />
-													<Route path="/add_tournament_component" render={(props) => (<AddTournament {...props} navbarControlsHandler={() => {
+													{/* <Route path="/add_tournament_component" render={(props) => (<AddTournament {...props} navbarControlsHandler={() => {
 														if ( !this.state.addTournamentComponentSelected )
 														{
 															this.deselectAllComponents();
 															this.setState({ addTournamentComponentSelected: true });
 														}
-													}} />)} />
+													}} />)} /> */}
 
 													<Route path="/club_documents_component" render={(props) => (<ClubDocuments {...props} ref={this.clubDocumentsRef} navbarControlsHandler={() => {
 														if ( !this.state.clubDocumentsComponentSelected )
@@ -478,13 +478,13 @@ class App extends Component
 															this.setState({ clubDocumentComponentSelected: true });											
 														}
 													}} />)} />
-													<Route path="/add_club_document_component" render={(props) => (<AddClubDocument {...props} navbarControlsHandler={() => {
+													{/* <Route path="/add_club_document_component" render={(props) => (<AddClubDocument {...props} navbarControlsHandler={() => {
 														if ( !this.state.addClubDocumentComponentSelected )
 														{
 															this.deselectAllComponents();
 															this.setState({ addClubDocumentComponentSelected: true });
 														}
-													}} />)} />
+													}} />)} /> */}
 													<Route path="/settings_component" render={(props) => (<Settings {...props} ref={this.settingsRef} 
 														navbarControlsHandler={() => {
 															if ( !this.state.settingsComponentSelected )
@@ -498,7 +498,7 @@ class App extends Component
 															localStorage.setItem("settingsSelectedTab", tabIndex);
 														}}
 													 />)} />
-													<Route path="/add_selectable_user_option_component" render={(props) => (<AddSelectableUserOption {...props} ref={this.addSelectableUserOptionRef}
+													{/* <Route path="/add_selectable_user_option_component" render={(props) => (<AddSelectableUserOption {...props} ref={this.addSelectableUserOptionRef}
 														navbarControlsHandler={() => {
 															if ( !this.state.addSelectableUserOptionComponentSelected )
 															{
@@ -506,7 +506,7 @@ class App extends Component
 																this.setState({ addSelectableUserOptionComponentSelected: true });															
 															}
 														}}														
-													/>)} />
+													/>)} /> */}
 												</div>
 											)}									
 										</div>									

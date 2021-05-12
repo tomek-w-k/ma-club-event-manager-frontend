@@ -5,9 +5,10 @@ import {
     Row,
     Col,    
     Button,    
-    Alert,    
+    Alert,   
+    Nav
 } from "react-bootstrap";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { withTranslation } from "react-i18next";
 import InformationDialogModal from "../InformationDialogModal";
 import AuthService from "../../service/auth-service";
@@ -129,7 +130,7 @@ class Login extends Component
                                                 <Form.Control.Feedback>{t("looks_good")}</Form.Control.Feedback>
                                                 <Form.Control.Feedback type="invalid">{t("provide_password")}</Form.Control.Feedback>                                        
                                             </Form.Group>
-                                            <Link onClick={() => this.handleSendEmailToPasswordReset()}>{t("i_forgot_password")}</Link> 
+                                            <Nav.Link onClick={() => this.handleSendEmailToPasswordReset()} eventKey="disabled" disabled>{t("i_forgot_password")}</Nav.Link> 
                                         </Card.Body>
                                     </Card> <br />               
                                     <Button variant="info" style={{width: "100%"}} type="submit">{t("login")}</Button>

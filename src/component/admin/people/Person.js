@@ -436,7 +436,7 @@ class Person extends Component
                                         </Card> <br />
                                         <Card.Footer style={{paddingRight: "0px", paddingBottom: "0px", paddingTop: "1.25rem"}}>
                                             <div className="d-flex flex-row-reverse"> 
-                                                <Button variant="info" type="submit">{t("save")}</Button>                            
+                                                <Button variant="info" type="submit" disabled>{t("save")}</Button>                            
                                             </div>
                                         </Card.Footer>
                                     </Form>

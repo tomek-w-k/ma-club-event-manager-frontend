@@ -21,18 +21,22 @@ import {HiOutlineViewGridAdd} from "react-icons/hi";
 import {IoTrashBinOutline} from "react-icons/io5";
 import * as SettingsConstants from "../component/admin/settings/settingsConstants";
 
+
+const DISABLED_IN_DEMO_MODE = " (Disabled in demo mode)";
+const DISABLED_TOOLBARL_ICON_COLOR = "gray";
+
 export const peopleBottomToolbarIconDefs = (newPerson, removePerson, peopleRef) => {
     return (
         <div>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{newPerson}</Tooltip>} >
-                <Link to="/add_person_component" >									
-                    <AiOutlineUserAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{newPerson + DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link to="/add_person_component" >									 */}
+                    <AiOutlineUserAdd color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "10px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removePerson}</Tooltip>} >
-                <Link onClick={() => { peopleRef.current.askForProfileRemoving() }} >									
-                    <AiOutlineUserDelete color="#CB2334" size={30} style={{marginLeft: "15px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removePerson + DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link onClick={() => { peopleRef.current.askForProfileRemoving() }} >									 */}
+                    <AiOutlineUserDelete color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "15px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
         </div>
     );
@@ -41,15 +45,15 @@ export const peopleBottomToolbarIconDefs = (newPerson, removePerson, peopleRef) 
 export const examsBottomToolbarIconDefs = (newExam, removeExam, examsRef) => {
     return (
         <div>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{newExam}</Tooltip>} >
-                <Link to="/add_exam_component" >									
-                    <HiOutlineViewGridAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{newExam + DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link to="/add_exam_component" >									 */}
+                    <HiOutlineViewGridAdd color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "10px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeExam}</Tooltip>} >
-                <Link onClick={() => { examsRef.current.handleDeleteExam() }} >									
-                    <IoTrashBinOutline color="#CB2334" size={30} style={{marginLeft: "10px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeExam + DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link onClick={() => { examsRef.current.handleDeleteExam() }} >									 */}
+                    <IoTrashBinOutline color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "10px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
         </div>
     );
@@ -58,15 +62,15 @@ export const examsBottomToolbarIconDefs = (newExam, removeExam, examsRef) => {
 export const examBottomToolbarIconDefs = (addParticipant, removeParticipant, examRef) => {
     return (
         <div>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{addParticipant}</Tooltip>} >
-                <Link onClick={() => { examRef.current.handleAddRegistration() }} >									
-                    <AiOutlineUserAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{addParticipant+ DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link onClick={() => { examRef.current.handleAddRegistration() }} >									 */}
+                    <AiOutlineUserAdd color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "10px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeParticipant}</Tooltip>} >
-                <Link onClick={() => { examRef.current.handleDeleteRegistration() }} >									
-                    <AiOutlineUserDelete color="#CB2334" size={30} style={{marginLeft: "15px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeParticipant+ DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link onClick={() => { examRef.current.handleDeleteRegistration() }} >									 */}
+                    <AiOutlineUserDelete color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "15px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
         </div>
     );
@@ -75,15 +79,15 @@ export const examBottomToolbarIconDefs = (addParticipant, removeParticipant, exa
 export const campsBottomToolbarIconDefs = (newCamp, removeCamp, campsRef) => {
     return (
         <div>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{newCamp}</Tooltip>} >
-                <Link to="/add_camp_component" >									
-                    <HiOutlineViewGridAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{newCamp+ DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link to="/add_camp_component" >									 */}
+                    <HiOutlineViewGridAdd color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "10px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeCamp}</Tooltip>} >
-                <Link onClick={() => { campsRef.current.handleDeleteCamp() }} >									
-                    <IoTrashBinOutline color="#CB2334" size={30} style={{marginLeft: "10px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeCamp+ DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link onClick={() => { campsRef.current.handleDeleteCamp() }} >									 */}
+                    <IoTrashBinOutline color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "10px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
         </div>	
     );
@@ -92,15 +96,15 @@ export const campsBottomToolbarIconDefs = (newCamp, removeCamp, campsRef) => {
 export const campBottomToolbarIconDefs = (addParticipant, removeParticipant, campRef) => {
     return (
         <div>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{addParticipant}</Tooltip>} >
-                <Link onClick={() => { campRef.current.handleAddRegistration() }} >									
-                    <AiOutlineUserAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{addParticipant+ DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link onClick={() => { campRef.current.handleAddRegistration() }} >									 */}
+                    <AiOutlineUserAdd color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "10px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeParticipant}</Tooltip>} >
-                <Link onClick={() => { campRef.current.handleDeleteRegistration() }} >									
-                    <AiOutlineUserDelete color="#CB2334" size={30} style={{marginLeft: "15px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeParticipant+ DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link onClick={() => { campRef.current.handleDeleteRegistration() }} >									 */}
+                    <AiOutlineUserDelete color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "15px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
         </div> 
     );
@@ -109,15 +113,15 @@ export const campBottomToolbarIconDefs = (addParticipant, removeParticipant, cam
 export const tournamentsBottomToolbarIconDefs = (newTournament, removeTournament, tournamentsRef) => {
     return (
         <div>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{newTournament}</Tooltip>} >
-                <Link to="/add_tournament_component" >									
-                    <HiOutlineViewGridAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{newTournament+ DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link to="/add_tournament_component" >									 */}
+                    <HiOutlineViewGridAdd color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "10px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeTournament}</Tooltip>} >
-                <Link onClick={() => { tournamentsRef.current.handleDeleteTournament() }} >									
-                    <IoTrashBinOutline color="#CB2334" size={30} style={{marginLeft: "10px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeTournament+ DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link onClick={() => { tournamentsRef.current.handleDeleteTournament() }} >									 */}
+                    <IoTrashBinOutline color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "10px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
         </div>
     );
@@ -126,20 +130,20 @@ export const tournamentsBottomToolbarIconDefs = (newTournament, removeTournament
 export const tournamentBottomToolbarIconDefs = (addTeam, removeTeam, removeParticipant, tournamentRef) => {
     return (
         <div>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{addTeam}</Tooltip>} >
-                <Link onClick={() => { tournamentRef.current.handleAddTeam() }} >									
-                    <AiOutlineUsergroupAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{addTeam+ DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link onClick={() => { tournamentRef.current.handleAddTeam() }} >									 */}
+                    <AiOutlineUsergroupAdd color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "10px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeTeam}</Tooltip>} >
-                <Link onClick={() => { tournamentRef.current.handleDeleteTeam() }} >									
-                    <AiOutlineUsergroupDelete color="#CB2334" size={30} style={{marginLeft: "10px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeTeam+ DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link onClick={() => { tournamentRef.current.handleDeleteTeam() }} >									 */}
+                    <AiOutlineUsergroupDelete color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "10px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeParticipant}</Tooltip>} >
-                <Link onClick={() => {  tournamentRef.current.handleDeleteRegistration() }} >									
-                    <AiOutlineUserDelete color="#CB2334" size={30} style={{marginLeft: "10px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeParticipant+ DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link onClick={() => {  tournamentRef.current.handleDeleteRegistration() }} >									 */}
+                    <AiOutlineUserDelete color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "10px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
         </div>
     );
@@ -148,10 +152,10 @@ export const tournamentBottomToolbarIconDefs = (addTeam, removeTeam, removeParti
 export const teamsBottomToolbarIconDefs = (removeTeam, teamsRef) => {
     return (
         <div>            
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeTeam}</Tooltip>} >
-                <Link onClick={() => { teamsRef.current.handleDeleteTeam() }} >									
-                    <AiOutlineUsergroupDelete color="#CB2334" size={30} style={{marginLeft: "10px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeTeam + DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link onClick={() => { teamsRef.current.handleDeleteTeam() }} >									 */}
+                    <AiOutlineUsergroupDelete color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "10px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
         </div>
     );
@@ -160,20 +164,20 @@ export const teamsBottomToolbarIconDefs = (removeTeam, teamsRef) => {
 export const teamBottomToolbarIconDefs = (signUpParticipant, signUpMe, removeParticipant, teamRef) => {
     return (
         <div>            
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{signUpParticipant}</Tooltip>} >
-                <Link onClick={() => { teamRef.current.handleShowAddParticipantToTeamModal(false) }} >									
-                    <AiOutlineUserAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{signUpParticipant + DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link onClick={() => { teamRef.current.handleShowAddParticipantToTeamModal(false) }} >									 */}
+                    <AiOutlineUserAdd color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "10px"}} />
+                {/* </Link> */}
             </OverlayTrigger>								
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{signUpMe}</Tooltip>} >
-                <Link onClick={() => { teamRef.current.handleShowAddParticipantToTeamModal(true) }} >									
-                    <RiUserFollowLine color="#008495" size={27} style={{marginLeft: "15px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{signUpMe + DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link onClick={() => { teamRef.current.handleShowAddParticipantToTeamModal(true) }} >									 */}
+                    <RiUserFollowLine color={DISABLED_TOOLBARL_ICON_COLOR} size={27} style={{marginLeft: "15px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeParticipant}</Tooltip>} >
-                <Link onClick={() => { teamRef.current.handleDeleteRegistration() }} >									
-                    <AiOutlineUserDelete color="#CB2334" size={30} style={{marginLeft: "15px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeParticipant + DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link onClick={() => { teamRef.current.handleDeleteRegistration() }} >									 */}
+                    <AiOutlineUserDelete color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "15px"}} />
+                {/* </Link> */}
             </OverlayTrigger>								
         </div>
     );
@@ -182,15 +186,15 @@ export const teamBottomToolbarIconDefs = (signUpParticipant, signUpMe, removePar
 export const clubDocumentsToolbarIconDefs = (newDocument, removeDocument, clubDocumentsRef) => {
     return (
         <div>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{newDocument}</Tooltip>} >
-                <Link to="/add_club_document_component" >									
-                    <AiOutlineFileAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{newDocument + DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link to="/add_club_document_component" >									 */}
+                    <AiOutlineFileAdd color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "10px"}} />
+                {/* </Link> */}
             </OverlayTrigger>								
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeDocument}</Tooltip>} >
-                <Link onClick={() => { clubDocumentsRef.current.handleDeleteClubDocument() }} >									
-                    <IoTrashBinOutline color="#CB2334" size={27} style={{marginLeft: "15px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeDocument + DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link onClick={() => { clubDocumentsRef.current.handleDeleteClubDocument() }} >									 */}
+                    <IoTrashBinOutline color={DISABLED_TOOLBARL_ICON_COLOR} size={27} style={{marginLeft: "15px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
         </div>		
     );
@@ -199,10 +203,10 @@ export const clubDocumentsToolbarIconDefs = (newDocument, removeDocument, clubDo
 export const profileToolbarIconDefs = (removeMyAccount, profileRef) => {
     return (
         <div>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeMyAccount}</Tooltip>} >
-                <Link onClick={() => { profileRef.current.askForProfileRemoving() }} >									
-                    <IoTrashBinOutline color="#CB2334" size={27} style={{marginLeft: "15px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeMyAccount + DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link onClick={() => { profileRef.current.askForProfileRemoving() }} >									 */}
+                    <IoTrashBinOutline color={DISABLED_TOOLBARL_ICON_COLOR} size={27} style={{marginLeft: "15px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
         </div>	
     );
@@ -281,15 +285,15 @@ export const showToolbarIconsForSettingsTab = ( option,
 
     let administratorsSettingsIcons = (
         <div>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{addAdmin}</Tooltip>} >
-                <Link onClick={() => { settingsRef.current.handleManageAdminPrivileges(true) }} >									
-                    <AiOutlineUserAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{addAdmin + DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link onClick={() => { settingsRef.current.handleManageAdminPrivileges(true) }} >									 */}
+                    <AiOutlineUserAdd color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "10px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
-            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeAdmin}</Tooltip>} >
-                <Link onClick={() => { settingsRef.current.handleManageAdminPrivileges(false) }} >									
-                    <AiOutlineUserDelete color="#CB2334" size={30} style={{marginLeft: "15px"}} />
-                </Link>
+            <OverlayTrigger placement="bottom" overlay={<Tooltip>{removeAdmin + DISABLED_IN_DEMO_MODE}</Tooltip>} >
+                {/* <Link onClick={() => { settingsRef.current.handleManageAdminPrivileges(false) }} >									 */}
+                    <AiOutlineUserDelete color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "15px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
         </div>
     );
@@ -297,22 +301,22 @@ export const showToolbarIconsForSettingsTab = ( option,
     let selectableUserOptionIcons = (
         <div>
             <OverlayTrigger placement="bottom" overlay={renderOptionNameTooltip(localStorage.getItem("settingsSelectedTab"), 
-                                                                                addBranchChief, 
-                                                                                addClub, 
-                                                                                addRank)
+                                                                                addBranchChief + DISABLED_IN_DEMO_MODE, 
+                                                                                addClub + DISABLED_IN_DEMO_MODE, 
+                                                                                addRank + DISABLED_IN_DEMO_MODE)
             }>
-                <Link to="/add_selectable_user_option_component" >									
-                    <HiOutlineViewGridAdd color="#008495" size={30} style={{marginLeft: "10px"}} />
-                </Link>
+                {/* <Link to="/add_selectable_user_option_component" >									 */}
+                    <HiOutlineViewGridAdd color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "10px"}} />
+                {/* </Link> */}
             </OverlayTrigger>
             <OverlayTrigger placement="bottom" overlay={renderRemoveOptionNameTooltip(  localStorage.getItem("settingsSelectedTab"), 
-                                                                                        removeBranchChief, 
-                                                                                        removeClub, 
-                                                                                        removeRank)
+                                                                                        removeBranchChief + DISABLED_IN_DEMO_MODE, 
+                                                                                        removeClub + DISABLED_IN_DEMO_MODE, 
+                                                                                        removeRank + DISABLED_IN_DEMO_MODE)
             }>
-                <Link onClick={() => { settingsRef.current.confirmDeleteSelectableUserOption() }} >									
-                    <IoTrashBinOutline color="#CB2334" size={30} style={{marginLeft: "10px"}} />
-                </Link>
+                {/* <Link onClick={() => { settingsRef.current.confirmDeleteSelectableUserOption() }} >									 */}
+                    <IoTrashBinOutline color={DISABLED_TOOLBARL_ICON_COLOR} size={30} style={{marginLeft: "10px"}} />
+                {/* </Link> */}
             </OverlayTrigger>								
         </div>
     );

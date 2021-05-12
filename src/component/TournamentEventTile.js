@@ -177,7 +177,7 @@ class TournamentEventTile extends Component
                             {!eventContainsCurrentUser && this.state.isUpcoming && currentUser.roles.includes("ROLE_TRAINER") && (
                                 <div>
                                     <div className="d-flex flex-row-reverse">
-                                        <Button variant="info" onClick={this.handleSignUp} >{t("sign_up_team_event")}</Button>
+                                        <Button variant="info" onClick={this.handleSignUp} disabled>{t("sign_up_team_event")}</Button>
                                     </div> <br />
                                     <small><i>{t("sign_up_hint")}</i></small>
                                 </div>
@@ -187,7 +187,7 @@ class TournamentEventTile extends Component
                                     <div>
                                         <Button variant="outline-success" disabled><Check color="#13A84D" size={22}/>{t("signed_up_event")}</Button>{' '}
                                         {this.state.isUpcoming && (
-                                            <Button variant="danger" onClick={() => this.setState({ confirmSignOutTeamModalShow: true })}>{t("sign_out_my_team")}</Button> 
+                                            <Button variant="danger" onClick={() => this.setState({ confirmSignOutTeamModalShow: true })} disabled>{t("sign_out_my_team")}</Button> 
                                         )}
                                     </div>
                                 </div>                                        

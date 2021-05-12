@@ -369,7 +369,7 @@ class CampDetailsComponent extends Component
                                 <br />
                                 <Card.Footer style={{paddingRight: "0px", paddingBottom: "0px", paddingTop: "1.25rem"}}>
                                     <div className="d-flex flex-row-reverse">  
-                                        <Button variant="info" type="submit">{t("post")}</Button>                            
+                                        <Button variant="info" type="submit" disabled>{t("post")}</Button>                            
                                     </div>
                                 </Card.Footer>
                             </Form>

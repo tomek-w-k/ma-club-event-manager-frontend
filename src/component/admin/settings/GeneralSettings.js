@@ -273,7 +273,7 @@ class GeneralSettings extends Component
                                                     <Form.Control.Feedback type="invalid">{t("provide_valid_value")}</Form.Control.Feedback>                                                           
                                                 </Form.Row> 
                                                 <Form.Row className="d-flex flex-row-reverse" style={{paddingTop: "0.625rem"}}>                                                            
-                                                    <Button variant="info" type="submit">{t("post")}</Button>
+                                                    <Button variant="info" type="submit" disabled>{t("post")}</Button>
                                                 </Form.Row>
                                             </Form>
                                         </Card.Body>
@@ -296,7 +296,7 @@ class GeneralSettings extends Component
                                                         <Form.Control.Feedback type="invalid">{t("provide_valid_value")}</Form.Control.Feedback>                                                           
                                                     </Form.Group>                                                            
                                                     <Form.Group style={{paddingLeft: "0.625rem"}}>
-                                                        <Button variant="info" type="submit">{t("post")}</Button>
+                                                        <Button variant="info" type="submit" disabled>{t("post")}</Button>
                                                     </Form.Group>
                                                 </Form.Row>                                                         
                                             </Form>
@@ -323,7 +323,7 @@ class GeneralSettings extends Component
                                                         <Form.Control.Feedback type="invalid">{t("provide_valid_value")}</Form.Control.Feedback>                                                           
                                                     </Form.Group>                                                            
                                                     <Form.Group style={{paddingLeft: "0.625rem"}}>
-                                                        <Button variant="info" type="submit">{t("post")}</Button>
+                                                        <Button variant="info" type="submit" disabled>{t("post")}</Button>
                                                     </Form.Group>
                                                 </Form.Row>                                                         
                                             </Form>
@@ -342,7 +342,7 @@ class GeneralSettings extends Component
                                                         <Form.Control.Feedback type="invalid">{t("provide_valid_value")}</Form.Control.Feedback>                                                           
                                                     </Form.Group>                                                            
                                                     <Form.Group style={{paddingLeft: "0.625rem"}}>
-                                                        <Button variant="info" type="submit">{t("post")}</Button>
+                                                        <Button variant="info" type="submit" disabled>{t("post")}</Button>
                                                     </Form.Group>
                                                 </Form.Row>                                                         
                                             </Form>
@@ -361,7 +361,7 @@ class GeneralSettings extends Component
                                                         <Form.Control.Feedback type="invalid">{t("provide_valid_value")}</Form.Control.Feedback>                                                           
                                                     </Form.Group>                                                            
                                                     <Form.Group style={{paddingLeft: "0.625rem"}}>
-                                                        <Button variant="info" type="submit">{t("post")}</Button>
+                                                        <Button variant="info" type="submit" disabled>{t("post")}</Button>
                                                     </Form.Group>
                                                 </Form.Row>                                                         
                                             </Form>

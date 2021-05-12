@@ -607,7 +607,7 @@ class TournamentDetails extends Component
                                         </Card>
                                     </Form.Group>
                                     <Form.Group>
-                                        <Form.Control                                             
+                                        <Form.Control     hidden                                        
                                             type="text"
                                             name="eventPicturePath"
                                             value={this.state.event.eventPicturePath}
@@ -665,7 +665,7 @@ class TournamentDetails extends Component
                                             {
                                                 roomTypes.map( (roomTypeInputField, index) => (
                                                     <div key={index}>
-                                                        <Form.Row>
+                                                        <Form.Row style={{"paddingBottom": "10px"}}>
                                                             <Col className="col-md-auto col">
                                                                 <Form.Group >
                                                                     <Card >
@@ -690,7 +690,7 @@ class TournamentDetails extends Component
                                                                     onChange={event => this.handleChangeRoomTypeFields(index, event)}
                                                                     style={{marginBottom: "10px"}}
                                                                 />
-                                                                <Form.Control                                             
+                                                                <Form.Control    hidden                                         
                                                                     type="text"
                                                                     name="roomTypePicturePath"
                                                                     value={roomTypeInputField.roomTypePicturePath}
@@ -788,7 +788,7 @@ class TournamentDetails extends Component
                                 <br />
                                 <Card.Footer style={{paddingRight: "0px", paddingBottom: "0px", paddingTop: "1.25rem"}}>
                                     <div className="d-flex flex-row-reverse">  
-                                        <Button variant="info" type="submit">{t("post")}</Button>                            
+                                        <Button variant="info" type="submit" disabled>{t("post")}</Button>                            
                                     </div>
                                 </Card.Footer>
                             </Form>
