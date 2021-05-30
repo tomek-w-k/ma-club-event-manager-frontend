@@ -1,7 +1,7 @@
 export function handleFetchErrors(response)
 {    
     if ( !response.ok )
-        throw Error(response.statusText);
+        throw new Error(response.statusText)    
     
     return response;
 }
@@ -9,7 +9,7 @@ export function handleFetchErrors(response)
 export function handleMultipleFetchErrors(responses)
 {
     if ( responses.some(response => !response.ok) )
-        throw Error;
+        throw new Error;
 
     return responses;
 }

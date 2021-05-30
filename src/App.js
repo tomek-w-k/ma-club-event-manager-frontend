@@ -51,6 +51,7 @@ import Settings from "./component/admin/settings/Settings";
 import AddSelectableUserOption from "./component/admin/settings/AddSelectableUserOption";
 import * as SettingsConstants from "./component/admin/settings/settingsConstants";
 import { getGeneralSettings } from "./component/admin/settings/getGeneralSettings";
+import FormalRules from "./component/FormalRules";
 
 import { 	
 	peopleBottomToolbarIconDefs,	
@@ -182,6 +183,8 @@ class App extends Component
 
 			settingsComponentSelected: false,
 			addSelectableUserOptionComponentSelected: false,
+
+			formalRulesComponentSelected: false
 		});
 	}
 
@@ -224,8 +227,9 @@ class App extends Component
 								<Link to="/profile_component" className=" nav-link sidenav-text" style={{color:"black"}} >{t("profile")}</Link>
 								<Link to="/event_wall_component" className="nav-link sidenav-text" style={{color:"black"}} >{t("events")}</Link>
 								<Link to="/downloads_component" className="nav-link sidenav-text" style={{color:"black"}} >{t("downloads")}</Link>
+								<Link to="/formal_rules" className="nav-link sidenav-text" style={{color:"black"}} >{t("formal_rules")}</Link>
 							</div>
-						)}						
+						)}												
 					</Nav>
 				</div>
 				<div className="main">
@@ -265,7 +269,9 @@ class App extends Component
 							{this.state.addSelectableUserOptionComponentSelected && 
 								(localStorage.getItem("settingsSelectedTab") == SettingsConstants.CLUBS_SELECTABLE_OPTION) && (<div>{t("add_club")}</div>)}
 							{this.state.addSelectableUserOptionComponentSelected && 
-								(localStorage.getItem("settingsSelectedTab") == SettingsConstants.RANKS_SELECTABLE_OPTION) && (<div>{t("add_rank")}</div>)}							
+								(localStorage.getItem("settingsSelectedTab") == SettingsConstants.RANKS_SELECTABLE_OPTION) && (<div>{t("add_rank")}</div>)}	
+							
+							{this.state.formalRulesComponentSelected && (<div>{t("formal_rules")}</div>)}
 						</Navbar.Brand>
 						<Nav className="mr-auto" ></Nav>
 						<Nav>
@@ -335,7 +341,13 @@ class App extends Component
 						<Switch>
 							<Route path="/login/:email" component={Login} />							
 							<Route path="/signup" component={SignUp} />
-							<Route path="/password_reset/:token" render={(props) => (<PasswordReset {...props} /> )} />
+							<Route path="/password_reset/:token" render={(props) => (<PasswordReset {...props} /> )} />							
+							<Route path="/formal_rules" render={(props) => (<FormalRules {...props} navbarControlsHandler={() => {
+								if ( !this.state.formalRulesComponentSelected ) {
+									this.deselectAllComponents();
+									this.setState({ formalRulesComponentSelected: true });
+								}									
+							}} />)} />
 
 							{/* It was necessary to make conditions below nested. Place them on the same level doesn't work - when all three state variables 
 							(showUsersTools, showTrainersTools and showAdministrativeTools) were set to "true", then it's expected that all routes below will be

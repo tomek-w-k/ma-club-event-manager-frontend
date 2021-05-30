@@ -129,7 +129,7 @@ class Login extends Component
                                                 <Form.Control.Feedback>{t("looks_good")}</Form.Control.Feedback>
                                                 <Form.Control.Feedback type="invalid">{t("provide_password")}</Form.Control.Feedback>                                        
                                             </Form.Group>
-                                            <Link onClick={() => this.handleSendEmailToPasswordReset()}>{t("i_forgot_password")}</Link> 
+                                            <Link onClick={() => this.handleSendEmailToPasswordReset()} className="simple-link">{t("i_forgot_password")}</Link> 
                                         </Card.Body>
                                     </Card> <br />               
                                     <Button variant="info" style={{width: "100%"}} type="submit">{t("login")}</Button>

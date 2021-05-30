@@ -23,6 +23,7 @@ import {
     clubTableColumns,
     rankTableColumns
 } from "./settingsTableColumnDefs";
+import FormalRulesSettings from "./FormalRulesSettings";
 
 
 const currentUser = AuthService.getCurrentUser();
@@ -352,6 +353,9 @@ class Settings extends Component
                                     </Card.Text>
                                 </Card.Body>
                             </Card>
+                        </Tab> 
+                        <Tab eventKey="formal_rules_settings" title={t("formal_rules_capital")}>
+                            <FormalRulesSettings />
                         </Tab>                        
                     </Tabs>
                 </div>

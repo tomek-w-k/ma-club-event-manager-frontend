@@ -120,3 +120,29 @@
 .table td {  
   padding: .2rem;  
 }
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+  color: #fff;
+  background-color: #6c757d;
+}
+
+.formal-rules a:hover {
+  color: #495057;  
+}
+
+.formal-rules a {
+  color: #6c757d;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.simple-link {
+  color:  #17a2b8;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.simple-link:hover {
+  color: #117a8b;                                                        
+  background-color: transparent;
+}
