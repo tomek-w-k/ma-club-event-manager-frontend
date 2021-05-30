@@ -78,6 +78,8 @@ class GeneralSettings extends Component
 
     handleUpdateProperty(key, value)
     {
+        const t = this.props.t;
+        
         fetch(SettingsConstants.PROPERTY_URL, {
             method: "PUT",
             headers: {
@@ -89,12 +91,12 @@ class GeneralSettings extends Component
         })
         .then(handleFetchErrors)
         .then(() => this.setState({ 
-                            popupErrorMessage: "Data has been saved successfully.",
+                            popupErrorMessage: "data_saved_succesfully",
                             showInformationModal: true,
                             clubNameFormValidated: false,
                             contactEmailFormValidated: false
          }) )
-        .catch(() => this.setState({ errorMessage: "Error: Data cannot be saved." })  )
+        .catch(() => this.setState({ errorMessage: t("failed_to_save") })  )
     }
 
     handleUpdateClubName(e)

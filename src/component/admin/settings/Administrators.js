@@ -115,7 +115,7 @@ class Administrators extends Component
                     },
                     body: JSON.stringify( user )
                 })
-                .then(handleFetchErrors)
+                //.then(handleFetchErrors)
                 .then(() => this.refreshTable())
                 .catch(error => this.setState({ popupErrorMessage: t("failed_to_remove_admin"), showInformationModal: true })  );            
             })

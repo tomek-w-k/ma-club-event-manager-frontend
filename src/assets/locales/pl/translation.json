@@ -220,11 +220,31 @@
     "contact_email_capital": "EMAIL DO KONTAKTU",
     "administrators_capital": "ADMINISTRATORZY",
     "failed_to_fetch": "Błąd: Nie udało się pobrać danych.",
+    "failed_to_save": "Błąd: Dane nie mogły zostać zapisane.",
+    "data_saved_succesfully": "Dane zostały zapisane pomyślnie.",
     "failed_to_remove_admin": "Błąd: Nie udało się usunąć uprawnień administratora dla wybranej osoby.",
     "restore_saved_settings": "Przywróć zachowane ustawienia",
     "cannot_remove_currently_logged_in_admin": "Nie można odebrać uprawnień administratora tej osobie ponieważ jest ona w tej chwili zalogowana.",
     "social_media_capital": "MEDIA SPOŁECZNOŚCIOWE",
-    "restore_default": "Przywróć domyślne"
+    "restore_default": "Przywróć domyślne",
+    "formal_rules": "Zasady formalne",
+    "formal_rules_capital": "ZASADY FORMALNE",
+    "privacy_policy": "Polityka prywatności",
+    "polish_capital": "POLSKI",
+    "english_capital": "ANGIELSKI",
+    "termsAndConditionsPl": "Regulamin (Polski)",
+    "termsAndConditionsEn": "Regulamin (Angielski)",
+    "privacyPolicyContentPl": "Polityka Prywatności (Polski)",
+    "privacyPolicyContentEn": "Polityka Prywatności (Angielski)",
+    "gdprClausePl": "Klauzula RODO (Polski)",
+    "gdprClauseEn": "Klauzula RODO (Angielski)",
+    "declarations_capital": "OŚWIADCZENIA",
+    "i_declare_that_i_accept": "Oświadczam że zapoznałem się i akceptuję",
+    "formal_rules_all": "Regulamin, Politykę Prywatności oraz klauzulę RODO",    
+    "please_accept_all_formal_rules": "Proszę zaakceptować Regulamin, Politykę Prywatności oraz klauzulę RODO",
+    "im_over_13": "Oświadczam że mam ukończone 13 lat",
+    "you_have_to_be_over_13": "Aby założyć konto trzeba mieć ukończone 13 lat.",    
+    "in_case_of_under_13": "W przyadku osób poniżej 13 roku życia konto może być prowadzone jedynie przez rodzica lub prawnego opiekuna."
 
 
 

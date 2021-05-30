@@ -12,6 +12,7 @@ import {
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import { withTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import AuthService from "../../service/auth-service";
 import * as Urls from "../../servers-urls";
 
@@ -281,7 +282,7 @@ class SignUp extends Component
                                                 </Form.Group>
                                             </Col>
                                         </Form.Row>
-                                        {/* <Form.Group>                                        
+                                        <Form.Group>                                        
                                             <OverlayTrigger trigger="hover" placement="top" overlay={(                            
                                                 <Popover>
                                                     <Popover.Content>{t("select_or_enter_your_own")}</Popover.Content>
@@ -297,7 +298,7 @@ class SignUp extends Component
                                                     />
                                                 </div>                                                                     
                                             </OverlayTrigger> 
-                                        </Form.Group> */}
+                                        </Form.Group>
                                         <Form.Group>                                            
                                             <Form.Check 
                                                 label={t("want_to_be_trainer")}
@@ -306,9 +307,27 @@ class SignUp extends Component
                                                 checked={this.state.user.asTrainer}
                                                 onChange={e => this.setState(state => ({ user: {...state.user, asTrainer: e.target.checked} }))}
                                             />
-                                        </Form.Group> 
+                                        </Form.Group>                                                                                 
                                     </Card.Body>
-                                </Card> <br />                            
+                                </Card> <br />
+                                <Card>
+                                    <Card.Header>{t("declarations_capital")}</Card.Header>
+                                    <Card.Body>
+                                        <Form.Check>
+                                            <Form.Check.Input required />
+                                            <Form.Check.Label>{t("i_declare_that_i_accept")}                                                 
+                                                <Link to={"/formal_rules"} target="_blank" className="simple-link"> {t("formal_rules_all")}</Link>
+                                            </Form.Check.Label>
+                                            <Form.Control.Feedback type="invalid">{t("please_accept_all_formal_rules")}</Form.Control.Feedback>
+                                        </Form.Check>
+                                        <Form.Check>
+                                            <Form.Check.Input required />
+                                            <Form.Check.Label>{t("im_over_13")} *.</Form.Check.Label>
+                                            <Form.Control.Feedback type="invalid">{t("you_have_to_be_over_13")}</Form.Control.Feedback>
+                                        </Form.Check>
+                                        <small><i>* {t("in_case_of_under_13")}</i></small>
+                                    </Card.Body>
+                                </Card> <br />                           
                                 <Button variant="info" style={{width: "100%"}} type="submit">{t("sign_up")}</Button>
                             </Form>
                         </Card.Body> 
