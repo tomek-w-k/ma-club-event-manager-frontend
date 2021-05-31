@@ -7,6 +7,7 @@ import {
     Alert
 } from "react-bootstrap";
 import Datetime from "react-datetime";
+import Dropzone from "../Dropzone";
 import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
@@ -33,7 +34,8 @@ class ExamDetails extends Component
                 examRegistrations: []
             },
             errorMessage: null,
-            formValidated: false            
+            formValidated: false,
+            eventTempPicture: ""            
         }
 
         this.handleEditEvent = this.handleEditEvent.bind(this);
@@ -42,6 +44,8 @@ class ExamDetails extends Component
         this.handleRemoveFeeField = this.handleRemoveFeeField.bind(this);
         this.handleChangeFromDateTime = this.handleChangeFromDateTime.bind(this);
         this.handleChangeToDateTime = this.handleChangeToDateTime.bind(this);
+
+        this.onDropEventPicture = this.onDropEventPicture.bind(this);
     }
 
     componentDidMount()
@@ -53,7 +57,24 @@ class ExamDetails extends Component
             }
         })
         .then(response => response.json())
-        .then(data => { this.setState({ event: data }) });
+        .then(data => { 
+            fetch(data.eventPicturePath)
+            .then(result => result.blob())
+            .then(blob => {
+                let fileName = data.eventPicturePath ? data.eventPicturePath.split('\\').pop().split('/').pop() : "";
+                let file = new File([blob], fileName, {type:"image/jpeg", lastModified:new Date()});                    
+                return {
+                    file: file,
+                    name: fileName
+                };
+            })
+            .then(fileWithNameObject => {
+                this.setState({ 
+                    event: data,                    
+                    eventTempPicture: fileWithNameObject 
+                });
+            }); 
+        });
     }
 
     /*
@@ -79,31 +100,43 @@ class ExamDetails extends Component
                     event: {...state.event, examRegistrations: data}
                 }),
                 () => {
-                    fetch(EXAM_EVENTS_API_URL, {
-                        method: "PUT",
+                    let imageTargetDir = "/images/exams/" + this.state.event.id + "/event_picture/";
+                    let formData = new FormData();
+                    formData.append("picture", this.state.eventTempPicture.file);
+                    formData.append("imageTargetDir", imageTargetDir);
+
+                    fetch(Urls.EXPRESS_JS_URL + "/save_event_picture", {
+                        method: "POST",
                         headers: {
-                            "Accept": "application/json",
-                            "Content-Type": "application/json",
                             "Authorization": "Bearer " + currentUser.accessToken
                         },
-                        body: JSON.stringify( {...this.state.event, startDate: e.target.startDate.value, endDate: e.target.endDate.value} )            
-                    })                    
-                    .then(result => {
-                        return new Promise((resolve, reject) => {
-                            if(result.ok)
-                                resolve();                            
-                            else reject(result);
-                        })
-                    },
-                    error => { this.setState({ errorMessage: "Error: Event not updated." }) })
-                    .then( msg => {
-                        this.props.onExamUpdate();
-                    },
-                    error => {
-                        error.json()
-                        .then(text => {                            
-                            this.setState({ errorMessage: text.message })
-                        })
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(response => {
+                        let examEvent = {...this.state.event,   startDate: e.target.startDate.value, 
+                                                                endDate: e.target.endDate.value,
+                                                                eventPicturePath: this.state.eventTempPicture.name ? imageTargetDir + this.state.eventTempPicture.name : "" };
+
+                        fetch(EXAM_EVENTS_API_URL, {
+                            method: "PUT",
+                            headers: {
+                                "Accept": "application/json",
+                                "Content-Type": "application/json",
+                                "Authorization": "Bearer " + currentUser.accessToken
+                            },
+                            body: JSON.stringify( examEvent )            
+                        })                    
+                        .then(result => {
+                            return new Promise((resolve, reject) => {
+                                if(result.ok)
+                                    resolve();                            
+                                else reject(result);
+                            })
+                        },
+                        error => this.setState({ errorMessage: "Error: Event not updated." }) )
+                        .then( msg => this.props.onExamUpdate(),
+                        error => error.json().then(text => this.setState({ errorMessage: text.message }) ) );
                     });
                 }); 
             });
@@ -146,6 +179,16 @@ class ExamDetails extends Component
             feeFields.splice(index, 1);
             this.setState({ event: {...this.state.event, fees: feeFields} });            
         }
+    }
+
+    onDropEventPicture(acceptedFiles)
+    {
+        this.setState({
+            eventTempPicture: {
+                file: acceptedFiles[0],
+                name: acceptedFiles[0].name
+            }
+        });
     }
 
     render()
@@ -207,7 +250,28 @@ class ExamDetails extends Component
                                             value={this.state.event.eventDescription}
                                             onChange={(e) => { this.setState({ event: {...this.state.event, eventDescription: e.target.value} }) }}
                                         />
-                                    </Form.Group>                                    
+                                    </Form.Group>
+                                    <Form.Group>
+                                        <Card>
+                                            <Dropzone   onDrop={this.onDropEventPicture} 
+                                                        accept={"image/*"} 
+                                                        imagePath={
+                                                            this.state.eventTempPicture ? 
+                                                            URL.createObjectURL(this.state.eventTempPicture.file) : ""
+                                                        }
+                                                        mw="640px"
+                                                        mh="480px"
+                                            />                                            
+                                        </Card>
+                                    </Form.Group>
+                                    <Form.Group>
+                                        <Form.Control                                             
+                                            type="text"
+                                            name="eventPicturePath"
+                                            value={this.state.event.eventPicturePath}
+                                            onChange={(e) => { this.setState({ event: {...this.state.event, eventPicturePath: e.target.value} }) }}
+                                        />
+                                    </Form.Group>                                   
                                     <Form.Row>
                                         <Col><Form.Label>{t("fees")}</Form.Label></Col>
                                     </Form.Row>

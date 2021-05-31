@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import {
     Card,    
-    Button,    
+    Button,
+    Image  
 } from "react-bootstrap";
 import CampRegistrationOptionChooserModal from "./CampRegistrationOptionChooserModal";
 import { withTranslation } from "react-i18next";
@@ -90,10 +91,19 @@ class CampEventTile extends Component
     render()
     {   
         const event = this.props.event;
-        const {
-            eventContainsCurrentUser
-        } = this.state;
+        const { eventContainsCurrentUser } = this.state;
         const t = this.props.t;
+
+        const imageContainerStyle = {
+            textAlign: "center", 
+            backgroundColor: "gainsboro"		
+        };
+
+        const imageStyle = {
+            color: "black",
+            maxWidth: "640px",
+            maxHeight: "480px"
+        };
         
         return(
             currentUser != null && currentUser.roles.includes("ROLE_USER") ? 
@@ -118,7 +128,10 @@ class CampEventTile extends Component
                                 <Card.Text style={{whiteSpace: "pre-wrap"}}>                            
                                     { event.eventDescription }                                                        
                                 </Card.Text>
-                            )}
+                            )}                            
+                            <div style={imageContainerStyle}>
+                                <Image style={imageStyle} src={this.props.event.eventPicturePath ? this.props.event.eventPicturePath : ""} />
+                            </div>
                             <br />                                              
                             <div className="d-flex flex-row-reverse">                                                        
                                 {!eventContainsCurrentUser && this.state.isUpcoming && (

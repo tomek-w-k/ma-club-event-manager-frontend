@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import {
     Card,    
-    Button,    
+    Button,
+    Image    
 } from "react-bootstrap";
 import { withTranslation } from "react-i18next";
 import { Check } from "react-bootstrap-icons";
@@ -121,10 +122,19 @@ class ExamEventTile extends Component
     render()
     {   
         const event = this.props.event;
-        const {
-            eventContainsCurrentUser
-        } = this.state;
+        const { eventContainsCurrentUser } = this.state;
         const t = this.props.t;
+
+        const imageContainerStyle = {
+            textAlign: "center", 
+            backgroundColor: "gainsboro"		
+        };
+
+        const imageStyle = {
+            color: "black",
+            maxWidth: "640px",
+            maxHeight: "480px"
+        };
 
         return(
             currentUser != null ? 
@@ -139,6 +149,9 @@ class ExamEventTile extends Component
                                 { event.eventDescription }                                                        
                             </Card.Text>
                         )}
+                        <div style={imageContainerStyle}>
+                            <Image style={imageStyle} src={this.props.event.eventPicturePath ? this.props.event.eventPicturePath : ""} />
+                        </div>
                         <br />                                                
                         <div className="d-flex flex-row-reverse">                                                        
                             {!eventContainsCurrentUser && this.state.isUpcoming && (
