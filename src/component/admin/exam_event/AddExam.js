@@ -8,6 +8,7 @@ import {
 } from "react-bootstrap";
 import "react-datetime/css/react-datetime.css";
 import Datetime from "react-datetime";
+import Dropzone from "../Dropzone";
 import { withTranslation } from "react-i18next";
 import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
@@ -39,13 +40,16 @@ class AddExam extends Component
                 examRegistrations: []
             },
             errorMessage: null,
-            formValidated: false           
+            formValidated: false,
+            eventTempPicture: ""          
         }
 
         this.handleAddEvent = this.handleAddEvent.bind(this);
         this.handleChangeFeeFields = this.handleChangeFeeFields.bind(this);
         this.handleAddFeeField = this.handleAddFeeField.bind(this);
-        this.handleRemoveFeeField = this.handleRemoveFeeField.bind(this);        
+        this.handleRemoveFeeField = this.handleRemoveFeeField.bind(this); 
+        
+        this.onDropEventPicture = this.onDropEventPicture.bind(this);
     }
 
     handleAddEvent(e)
@@ -55,6 +59,8 @@ class AddExam extends Component
         { 
             this.setState({ formValidated: true });
 
+            let examEvent = {...this.state.event, startDate: e.target.startDate.value, endDate: e.target.endDate.value};
+
             fetch(EXAM_EVENTS_API_URL,{
                 method: "POST",
                 headers: {
@@ -62,17 +68,49 @@ class AddExam extends Component
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + currentUser.accessToken
                 },
-                body: JSON.stringify( {...this.state.event, startDate: e.target.startDate.value, endDate: e.target.endDate.value} )                
+                body: JSON.stringify( examEvent )                
             })
-            .then(result => {
-                if ( result.ok ) {
-                    this.props.history.push("/event_wall_component");
-                    window.location.reload();
-                } 
-                else return result.json();            
+            .then(response => response.json())
+            .then(data => {
+                // - - - save main event picture - - - 
+                let imageTargetDir = "/images/exams/" + data.id + "/event_picture/";
+                let formData = new FormData();
+                formData.append("picture", this.state.eventTempPicture.file);
+                formData.append("imageTargetDir", imageTargetDir);
+
+                fetch(Urls.EXPRESS_JS_URL + "/save_event_picture", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": "Bearer " + currentUser.accessToken
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(response => {
+                    examEvent = {...data, eventPicturePath: this.state.eventTempPicture.name ? imageTargetDir + this.state.eventTempPicture.name : ""}
+                    
+                    fetch(EXAM_EVENTS_API_URL,{
+                        method: "PUT",
+                        headers: {
+                            "Accept": "application/json",
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + currentUser.accessToken
+                        },
+                        body: JSON.stringify( examEvent )            
+                    })
+                    .then(response => {
+                        if ( response.ok )
+                        {
+                            this.props.history.push("/event_wall_component");
+                            window.location.reload();    
+                        }
+                        
+                        return response.json();
+                    })
+                    .then( result => this.setState({ errorMessage: result.message }) );        
+                });        
             },
-            error => { this.setState({ errorMessage: error.message }) })
-            .then( result => { this.setState({ errorMessage: result.message }); });
+            error => { this.setState({ errorMessage: error.message }) });            
         }
         else this.setState({ 
             formValidated: true,
@@ -102,6 +140,16 @@ class AddExam extends Component
             feeFields.splice(index, 1);
             this.setState({ event: {...this.state.event, fees: feeFields} });
         }
+    }
+
+    onDropEventPicture(acceptedFiles)
+    {
+        this.setState({
+            eventTempPicture: {
+                file: acceptedFiles[0],
+                name: acceptedFiles[0].name
+            }
+        });
     }
 
     render()
@@ -162,7 +210,20 @@ class AddExam extends Component
                                             value={this.state.event.eventDescription}
                                             onChange={(e) => { this.setState({ event: {...this.state.event, eventDescription: e.target.value} }) }}
                                         />
-                                    </Form.Group>                                    
+                                    </Form.Group>
+                                    <Form.Group>
+                                        <Card>
+                                            <Dropzone   onDrop={this.onDropEventPicture} 
+                                                        accept={"image/*"} 
+                                                        imagePath={
+                                                            this.state.eventTempPicture ? 
+                                                            URL.createObjectURL(this.state.eventTempPicture.file) : ""
+                                                        }
+                                                        mw="640px"
+                                                        mh="480px"
+                                            />                                            
+                                        </Card>
+                                    </Form.Group>                                     
                                     <Form.Row>
                                         <Col><Form.Label>{t("fees")}</Form.Label></Col>
                                     </Form.Row>
