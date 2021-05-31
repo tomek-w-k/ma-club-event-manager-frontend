@@ -63,9 +63,21 @@ class CampsComponent extends Component
                 }
             })
             .then(result => {
-                this.setState({ selectedRowsIds: [] });
-                this.crudTableRef.current.unselectAllRows();
-                this.crudTableRef.current.fillTable();
+                let formData = new FormData();
+                formData.append("dir", "/images/camps/" + this.state.selectedRowsIds[0]);
+
+                fetch(Urls.EXPRESS_JS_URL + "/clear_dir", {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": "Bearer " + currentUser.accessToken
+                    },
+                    body: formData
+                })
+                .then(() => { 
+                    this.setState({ selectedRowsIds: [] });
+                    this.crudTableRef.current.unselectAllRows();
+                    this.crudTableRef.current.fillTable();    
+                });
             },
             error => {
                 console.log("Item not deleted");
