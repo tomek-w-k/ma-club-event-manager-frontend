@@ -122,9 +122,10 @@ You can switch between languages (Polish/English) with **PL/EN**button in the up
 
 ## Compilation & Launch
 The following deployment procedure was tested on **Ubuntu 19.10**.
-1. Deploy the <a href="">**ma-club-event-manager-webservice**</a> and run it. It's a back-end part of the project.
-2. In console, go to the main project directory and run `node ./express-server.js` command. It will start an ExpressJS server which manages the storage of pictures in the application.
-3. Run a new terminal instance and go to the main project directory. Copy all the content of `servers-urls-template.js` file. In `src` directory create a file `servers-urls.js` and paste the copied data. Enter the address of the back-end part (`WEBSERVICE_URL`) and for the ExpressJS server (`EXPRESS_JS_URL`). If you deploy the app on a `localhost`, it may look like this:
+1. Deploy the <a href="https://github.com/tomek-w-k/ma-club-event-manager-webservice">**ma-club-event-manager-webservice**</a> app and run it. It's a back-end part of the project.
+2. In console, go to the main project directory and run `npm install` command to install all dependencies used by the project.
+3. Run `node ./express-server.js` command. It will start an ExpressJS server which manages the storage of pictures in the application.
+4. Run a new terminal instance and go to the main project directory. Copy all the content of `servers-urls-template.js` file. In `src` directory create a file `servers-urls.js` and paste the copied data. Enter the address of the back-end part (`WEBSERVICE_URL`) and for the ExpressJS server (`EXPRESS_JS_URL`). If you deploy the app on a `localhost`, it may look like this:
    ```
    export const WEBSERVICE_URL = "http://localhost:8081";
    export const EXPRESS_JS_URL = "http://localhost:4000";
