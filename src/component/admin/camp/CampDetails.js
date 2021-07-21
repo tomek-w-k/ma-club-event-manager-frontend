@@ -328,31 +328,26 @@ class CampDetailsComponent extends Component
                                         <Form.Control                                             
                                             type="text"
                                             name="eventPicturePath"
+                                            hidden="true"
                                             value={this.state.event.eventPicturePath}
                                             onChange={(e) => { this.setState({ event: {...this.state.event, eventPicturePath: e.target.value} }) }}
                                         />
                                     </Form.Group>
-                                    <Form.Group>
-                                        <Row>
-                                            <Form.Label column sm="3">{t("sayonara_meeting")}</Form.Label>
-                                            <Form.Check 
-                                                type="checkbox"
-                                                name="sayonaraMeeting"
-                                                style={{display: "flex", alignItems: "center"}}
-                                                checked={this.state.event.sayonaraMeeting}
-                                                onChange={(e) => { this.setState({ event: {...this.state.event, sayonaraMeeting: e.target.checked} }) }}
-                                            />
-                                        </Row>
-                                        <Row>
-                                            <Form.Label column sm="3">{t("accommodation")}</Form.Label>
-                                            <Form.Check 
-                                                type="checkbox"
-                                                name="accommodation"
-                                                style={{display: "flex", alignItems: "center"}}
-                                                checked={this.state.event.accommodation}
-                                                onChange={(e) => { this.setState({ event: {...this.state.event, accommodation: e.target.checked} }) }}
-                                            />
-                                        </Row>
+                                    <Form.Group >
+                                        <Form.Check 
+                                            type="checkbox"
+                                            name="sayonaraMeeting"
+                                            label={t("sayonara_meeting")}                                                
+                                            checked={this.state.event.sayonaraMeeting}
+                                            onChange={(e) => { this.setState({ event: {...this.state.event, sayonaraMeeting: e.target.checked} }) }}
+                                        />                                            
+                                        <Form.Check 
+                                            type="checkbox"
+                                            name="accommodation"
+                                            label={t("accommodation")}                                                
+                                            checked={this.state.event.accommodation}
+                                            onChange={(e) => { this.setState({ event: {...this.state.event, accommodation: e.target.checked} }) }}
+                                        />                                        
                                     </Form.Group>
                                     <Form.Group>
                                         <Form.Label>{t("clothing_type")}</Form.Label>
