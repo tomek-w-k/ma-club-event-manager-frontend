@@ -34,6 +34,7 @@ class CampDetailsComponent extends Component
                 endDate: "",
                 sayonaraMeeting: false,
                 accommodation: false,
+                showAccommodationOnRegistrationForm: false,
                 clothingType: "",
                 clothingSizes: [],
                 fees: [],
@@ -340,14 +341,26 @@ class CampDetailsComponent extends Component
                                             label={t("sayonara_meeting")}                                                
                                             checked={this.state.event.sayonaraMeeting}
                                             onChange={(e) => { this.setState({ event: {...this.state.event, sayonaraMeeting: e.target.checked} }) }}
-                                        />                                            
+                                        />
                                         <Form.Check 
                                             type="checkbox"
                                             name="accommodation"
                                             label={t("accommodation")}                                                
                                             checked={this.state.event.accommodation}
-                                            onChange={(e) => { this.setState({ event: {...this.state.event, accommodation: e.target.checked} }) }}
-                                        />                                        
+                                            onChange={(e) => { this.setState({ 
+                                                event: {...this.state.event, 
+                                                    accommodation: e.target.checked,
+                                                    showAccommodationOnRegistrationForm: false
+                                            } }) }}
+                                        />
+                                        <Form.Check 
+                                            type="checkbox"
+                                            name="showAccommodationOnRegistrationForm"
+                                            label={t("show_accommodation_on_registration_form")}                                                
+                                            checked={this.state.event.showAccommodationOnRegistrationForm}
+                                            disabled={!this.state.event.accommodation}
+                                            onChange={(e) => { this.setState({ event: {...this.state.event, showAccommodationOnRegistrationForm: e.target.checked} }) }}
+                                        />
                                     </Form.Group>
                                     <Form.Group>
                                         <Form.Label>{t("clothing_type")}</Form.Label>

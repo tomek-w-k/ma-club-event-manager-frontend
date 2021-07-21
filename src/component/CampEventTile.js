@@ -119,6 +119,7 @@ class CampEventTile extends Component
                                                             eventId={event.id}
                                                             sayonaraMeeting={this.props.event.sayonaraMeeting}
                                                             accommodation={this.props.event.accommodation}
+                                                            showAccommodationOnRegistrationForm={this.props.event.showAccommodationOnRegistrationForm}
                     />
                     <Card style={{marginBottom: "20px"}}>
                         <Card.Body>

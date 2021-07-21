@@ -169,7 +169,7 @@ class CampRegistrationOptionChooserModal extends Component
                                         />
                                     </Row>
                                 )}
-                                {this.props.accommodation && (
+                                {this.props.accommodation && this.props.showAccommodationOnRegistrationForm && (
                                     <Row>
                                         <Form.Label column sm="4">{t("accommodation")}</Form.Label>
                                         <Form.Check column sm="4"
