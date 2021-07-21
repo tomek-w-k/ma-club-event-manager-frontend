@@ -28,7 +28,8 @@ class CampRegistrations extends Component
             editModalShow: false,
             addModalShow: false,            
             selectedRowsIds: [],            
-            sayonaraMeeting: false
+            sayonaraMeeting: false,
+            accommodation: false
         };
                
         this.handleRowClick = this.handleRowClick.bind(this);
@@ -48,9 +49,16 @@ class CampRegistrations extends Component
         })
         .then(response => response.json())        
         .then(data => {
-            let sayonaraColumnDef = Object.assign(columns[5], { hidden: !data.sayonaraMeeting });            
-            columns[5] = sayonaraColumnDef;
-            this.setState({ sayonaraMeeting: data.sayonaraMeeting });
+            let sayonaraColumnDef = Object.assign(columns[ColumnNames.SAYONARA], { hidden: !data.sayonaraMeeting });
+            let accommodationColumnDef = Object.assign(columns[ColumnNames.ACCOMMODATION], { hidden: !data.accommodation});
+
+            columns[ColumnNames.SAYONARA] = sayonaraColumnDef;
+            columns[ColumnNames.ACCOMMODATION] = accommodationColumnDef;
+            
+            this.setState({ 
+                sayonaraMeeting: data.sayonaraMeeting,
+                accommodation: data.accommodation
+            });
             this.forceUpdate();
         });
     }

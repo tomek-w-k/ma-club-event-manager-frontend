@@ -33,6 +33,7 @@ class CampDetailsComponent extends Component
                 startDate: "",
                 endDate: "",
                 sayonaraMeeting: false,
+                accommodation: false,
                 clothingType: "",
                 clothingSizes: [],
                 fees: [],
@@ -340,6 +341,16 @@ class CampDetailsComponent extends Component
                                                 style={{display: "flex", alignItems: "center"}}
                                                 checked={this.state.event.sayonaraMeeting}
                                                 onChange={(e) => { this.setState({ event: {...this.state.event, sayonaraMeeting: e.target.checked} }) }}
+                                            />
+                                        </Row>
+                                        <Row>
+                                            <Form.Label column sm="3">{t("accommodation")}</Form.Label>
+                                            <Form.Check 
+                                                type="checkbox"
+                                                name="accommodation"
+                                                style={{display: "flex", alignItems: "center"}}
+                                                checked={this.state.event.accommodation}
+                                                onChange={(e) => { this.setState({ event: {...this.state.event, accommodation: e.target.checked} }) }}
                                             />
                                         </Row>
                                     </Form.Group>

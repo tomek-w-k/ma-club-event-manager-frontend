@@ -88,7 +88,7 @@ export const campRegistrationsTableColumnDefs = [
     { 
         dataField: "accommodation",
         text: "Accommodation",
-        sort: false,
+        sort: true,
         type: "bool",
         style: booleanTableCellStyle,        
         headerStyle:  { "text-align": "center" },
