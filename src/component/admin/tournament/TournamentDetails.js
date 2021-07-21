@@ -624,9 +624,7 @@ class TournamentDetails extends Component
                                                 checked={this.state.event.sayonaraMeeting}
                                                 onChange={(e) => { this.setState({ event: {...this.state.event, sayonaraMeeting: e.target.checked} }) }}
                                             />
-                                        </Row>
-                                    </Form.Group>
-                                    <Form.Group >
+                                        </Row>                                    
                                         <Row>
                                             <Form.Label column sm="3">{t("accommodation")}</Form.Label>
                                             <Form.Check 

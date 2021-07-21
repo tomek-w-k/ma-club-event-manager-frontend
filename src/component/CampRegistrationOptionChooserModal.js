@@ -152,43 +152,48 @@ class CampRegistrationOptionChooserModal extends Component
                     <Modal.Header>{t("add_participant_capital")}</Modal.Header>
                     <Modal.Body>
                         <Container>                            
-                            {this.props.sayonaraMeeting && (
-                                <Form.Group as={Row}>
-                                    <Form.Label column sm="4">{t("sayonara")}</Form.Label>
-                                    <Form.Check column sm="4"
-                                        type="checkbox"
-                                        name="sayonaraMeetingParticipation" 
-                                        style={{display: "flex", alignItems: "center"}}
-                                        checked={this.state.campRegistration.sayonaraMeetingParticipation}
-                                        onChange={e => { 
-                                            this.setState({ 
-                                                campRegistration: {...this.state.campRegistration, sayonaraMeetingParticipation: e.target.checked} 
-                                            }) 
+                            <Form.Group>
+                                {this.props.sayonaraMeeting && (
+                                    <Row>
+                                        <Form.Label column sm="4">{t("sayonara")}</Form.Label>
+                                        <Form.Check column sm="4"
+                                            type="checkbox"
+                                            name="sayonaraMeetingParticipation" 
+                                            style={{display: "flex", alignItems: "center"}}
+                                            checked={this.state.campRegistration.sayonaraMeetingParticipation}
+                                            onChange={e => { 
+                                                this.setState({ 
+                                                    campRegistration: {...this.state.campRegistration, sayonaraMeetingParticipation: e.target.checked} 
+                                                }) 
+                                            }}
+                                        />
+                                    </Row>
+                                )}
+                                {this.props.accommodation && this.props.showAccommodationOnRegistrationForm && (
+                                    <Row>
+                                        <Form.Label column sm="4">{t("accommodation")}</Form.Label>
+                                        <Form.Check column sm="4"
+                                            type="checkbox"
+                                            name="accommodation" 
+                                            style={{display: "flex", alignItems: "center"}}
+                                            checked={this.state.campRegistration.accommodation}
+                                            onChange={e => { this.setState({ campRegistration: {...this.state.campRegistration, accommodation: e.target.checked} }) }}
+                                        />
+                                    </Row>
+                                )}
+                                <br />
+                                <Row>
+                                    <Form.Label column sm="4">{t("clothing_size")}</Form.Label>
+                                    <Select
+                                        styles={clothingSizesSelectStyles}
+                                        options={this.state.clothingSizes}                                    
+                                        value={this.state.campRegistration.clothingSize}
+                                        onChange={clothingSize => {                                        
+                                            this.setState({ campRegistration: {...this.state.campRegistration, clothingSize: clothingSize} })                                        
                                         }}
                                     />
-                                </Form.Group>
-                            )}
-                            <Form.Group as={Row}>
-                                <Form.Label column sm="4">{t("accommodation")}</Form.Label>
-                                <Form.Check column sm="4"
-                                    type="checkbox"
-                                    name="accommodation" 
-                                    style={{display: "flex", alignItems: "center"}}
-                                    checked={this.state.campRegistration.accommodation}
-                                    onChange={e => { this.setState({ campRegistration: {...this.state.campRegistration, accommodation: e.target.checked} }) }}
-                                />
-                            </Form.Group>                            
-                            <Form.Group as={Row}>
-                                <Form.Label column sm="4">{t("clothing_size")}</Form.Label>
-                                <Select
-                                    styles={clothingSizesSelectStyles}
-                                    options={this.state.clothingSizes}                                    
-                                    value={this.state.campRegistration.clothingSize}
-                                    onChange={clothingSize => {                                        
-                                        this.setState({ campRegistration: {...this.state.campRegistration, clothingSize: clothingSize} })                                        
-                                    }}
-                                />
-                            </Form.Group> 
+                                </Row>
+                            </Form.Group>
                         </Container>                                               
                     </Modal.Body>
                     <Modal.Footer>
