@@ -146,3 +146,12 @@
   color: #117a8b;                                                        
   background-color: transparent;
 }
+
+.form-group {
+  margin-bottom: 0.5rem;
+}
+
+.col-form-label {
+  padding-top: 0rem;
+  padding-bottom: 0rem;
+}

@@ -32,13 +32,14 @@ class AddParticipantToCampModal extends Component
             campRegistration: {
                 id: null,
                 user: null,
+                advancePaymentReceived: false,
                 feeReceived: false,
                 sayonaraMeetingParticipation: false,
+                accommodation: false,
                 clothingSize: {
                     value: null,
                     label: ""
-                },
-                accommodation: false,
+                },                
                 campEvent: {
                     id: this.props.eventId                    
                 }
@@ -91,13 +92,14 @@ class AddParticipantToCampModal extends Component
             campRegistration: {
                 id: null,
                 user: null,
+                advancePaymentReceived: false,
                 feeReceived: false,
                 sayonaraMeetingParticipation: false,
+                accommodation: false,
                 clothingSize: {
                     value: null,
                     label: ""
-                },
-                accommodation: false,
+                },                
                 campEvent: {
                     id: this.props.eventId                    
                 }
@@ -200,7 +202,17 @@ class AddParticipantToCampModal extends Component
                                         }}
                                     />
                                 </Form.Group>
-                            )}                            
+                            )}                                                        
+                            <Form.Group as={Row}>
+                                <Form.Label column sm="4">{t("accommodation")}</Form.Label>
+                                <Form.Check column sm="4"
+                                    type="checkbox"
+                                    name="accommodation" 
+                                    style={{display: "flex", alignItems: "center"}}
+                                    checked={this.state.campRegistration.accommodation}
+                                    onChange={e => { this.setState({ campRegistration: {...this.state.campRegistration, accommodation: e.target.checked} }) }}
+                                />
+                            </Form.Group>
                             <Form.Group as={Row}>
                                 <Form.Label column sm="4">{t("clothing_size")}</Form.Label>
                                 <Select
@@ -212,16 +224,6 @@ class AddParticipantToCampModal extends Component
                                     }}
                                 />
                             </Form.Group>                        
-                            <Form.Group as={Row}>
-                                <Form.Label column sm="4">{t("accommodation")}</Form.Label>
-                                <Form.Check column sm="4"
-                                    type="checkbox"
-                                    name="accommodation" 
-                                    style={{display: "flex", alignItems: "center"}}
-                                    checked={this.state.campRegistration.accommodation}
-                                    onChange={e => { this.setState({ campRegistration: {...this.state.campRegistration, accommodation: e.target.checked} }) }}
-                                />
-                            </Form.Group>
                         </Container>
                         <Container>
                             <Form.Group as={Row}>
