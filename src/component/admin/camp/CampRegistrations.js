@@ -29,7 +29,7 @@ class CampRegistrations extends Component
             addModalShow: false,            
             selectedRowsIds: [],            
             sayonaraMeeting: false,
-            accommodation: false
+            accommodation: false            
         };
                
         this.handleRowClick = this.handleRowClick.bind(this);
@@ -120,6 +120,7 @@ class CampRegistrations extends Component
         columns[ColumnNames.FULL_NAME] = {...columns[ColumnNames.FULL_NAME], text: t("full_name"), filter: textFilter({ placeholder: t("enter_full_name")})};
         columns[ColumnNames.EMAIL] = {...columns[ColumnNames.EMAIL], text: t("email"), filter: textFilter({ placeholder: t("enter_email")})};
         columns[ColumnNames.CLUB] = {...columns[ColumnNames.CLUB], text: t("club"), filter: textFilter({ placeholder: t("enter_club")})};
+        columns[ColumnNames.ADVANCE_PAYMENT_RECEIVED] = {...columns[ColumnNames.ADVANCE_PAYMENT_RECEIVED], text: t("advance_payment_received")};
         columns[ColumnNames.FEE_RECEIVED] = {...columns[ColumnNames.FEE_RECEIVED], text: t("fee_received")};
         columns[ColumnNames.SAYONARA] = {...columns[ColumnNames.SAYONARA], text: t("sayonara")};
         columns[ColumnNames.CLOTHING_SIZE] = {...columns[ColumnNames.CLOTHING_SIZE], text: t("clothing_size"), filter: textFilter({ placeholder: t("enter_clothing_type")})};

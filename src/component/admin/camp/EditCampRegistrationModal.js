@@ -37,10 +37,11 @@ class EditCampRegistrationModal extends Component
                     club: null,
                     branchChief: null
                 },
+                advancePaymentReceived: false,
                 feeReceived: false,
-                sayonaraMeetingParticipation: false,
-                clothingSize: null,
-                accommodation: false
+                sayonaraMeetingParticipation: false,                
+                accommodation: false,
+                clothingSize: null
             },
             clothingSizes: []
         }
@@ -77,19 +78,30 @@ class EditCampRegistrationModal extends Component
         })
         .then(response => response.json())
         .then(data => {
-            let cs;
+            let clothingSize;
+
             if ( data.clothingSize == null )
-                cs = {
+                clothingSize = {
                     value: null,
                     label: "-"
                 }
             else 
-                cs = {
+                clothingSize = {
                     value: data.clothingSize.id,
                     label: data.clothingSize.clothingSizeName
-                }
-            this.setState({ itemToUpdate: {...data, clothingSize: cs} })
-        })
+                }       
+
+            this.setState({ 
+                itemToUpdate: {
+                    ...data,
+                    advancePaymentReceived: data.advancePaymentReceived ? true : false,
+                    feeReceived: data.feeReceived ? true : false,
+                    sayonaraMeetingParticipation: data.sayonaraMeetingParticipation ? true : false,
+                    accommodation: data.accommodation ? true : false,
+                    clothingSize: clothingSize
+                } 
+            });
+        });
     }
 
     handleUpdateRegistration(e)
@@ -153,6 +165,16 @@ class EditCampRegistrationModal extends Component
                     <Modal.Body>
                         <Container>
                             <Form.Group as={Row}>
+                                <Form.Label column sm="4">{t("advance_payment_received")}</Form.Label>
+                                <Form.Check column sm="4"
+                                    type="checkbox"
+                                    name="advancePaymentReceived" 
+                                    style={{display: "flex", alignItems: "center"}}
+                                    checked={this.state.itemToUpdate.advancePaymentReceived}
+                                    onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, advancePaymentReceived: e.target.checked} }) }}
+                                />                            
+                            </Form.Group>
+                            <Form.Group as={Row}>
                                 <Form.Label column sm="4">{t("fee_received")}</Form.Label>
                                 <Form.Check column sm="4"
                                     type="checkbox"
@@ -171,6 +193,16 @@ class EditCampRegistrationModal extends Component
                                     checked={this.state.itemToUpdate.sayonaraMeetingParticipation}
                                     onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, sayonaraMeetingParticipation: e.target.checked} }) }}
                                 />
+                            </Form.Group>                            
+                            <Form.Group as={Row}>
+                                <Form.Label column sm="4">{t("accommodation")}</Form.Label>
+                                <Form.Check column sm="4"
+                                    type="checkbox"
+                                    name="accommodation" 
+                                    style={{display: "flex", alignItems: "center"}}
+                                    checked={this.state.itemToUpdate.accommodation}
+                                    onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, accommodation: e.target.checked} }) }}
+                                />
                             </Form.Group>
                             <Form.Group as={Row}>
                                 <Form.Label column sm="4">{t("clothing_size")}</Form.Label>
@@ -183,16 +215,6 @@ class EditCampRegistrationModal extends Component
                                     }}
                                 />
                             </Form.Group>                        
-                            <Form.Group as={Row}>
-                                <Form.Label column sm="4">{t("accommodation")}</Form.Label>
-                                <Form.Check column sm="4"
-                                    type="checkbox"
-                                    name="accommodation" 
-                                    style={{display: "flex", alignItems: "center"}}
-                                    checked={this.state.itemToUpdate.accommodation}
-                                    onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, accommodation: e.target.checked} }) }}
-                                />
-                            </Form.Group>
                         </Container>                        
                     </Modal.Body>
                     <Modal.Footer>
