@@ -4,6 +4,7 @@ import {
     Form,
     Button,
     Row,
+    Card,
     Col,
     Container,
     Alert
@@ -153,6 +154,7 @@ class EditCampRegistrationModal extends Component
         };
 
         const t = this.props.t;
+        
         return (
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
             (
@@ -166,73 +168,100 @@ class EditCampRegistrationModal extends Component
             >
                 <Form onSubmit={this.handleUpdateRegistration}>
                     <Modal.Header>
-                        {this.state.itemToUpdate.user.fullName}
+                        {t("edit_registration")} - {this.state.itemToUpdate.user.fullName}
                     </Modal.Header>
                     <Modal.Body>
-                        <Container>
-                            <Form.Group as={Row} style={{alignItems: "center"}}>
-                                <Form.Label column sm="4">{t("advance_payment")}</Form.Label>
-                                <Col sm="7">
-                                    <Form.Control
-                                        type="text"
-                                        name="advancePayment"                                              
-                                        maxLength="255"                                   
-                                        value={this.state.itemToUpdate.advancePayment ? this.state.itemToUpdate.advancePayment : ""}
-                                        onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, advancePayment: e.target.value} }) }}                           
-                                    />                            
-                                </Col>
-                                <Col sm="1">[PLN]</Col>
-                            </Form.Group>
-                            <Form.Group as={Row}>
-                                <Form.Label column sm="4">{t("fee_received")}</Form.Label>
-                                <Col sm="8">
-                                    <Form.Check
-                                        type="checkbox"
-                                        name="feeReceived" 
-                                        style={{display: "flex", alignItems: "center"}}
-                                        checked={this.state.itemToUpdate.feeReceived}
-                                        onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, feeReceived: e.target.checked} }) }}
-                                    />
-                                </Col>                  
-                            </Form.Group>
-                            <Form.Group as={Row}>
-                                <Form.Label column sm="4">{t("sayonara")}</Form.Label>
-                                <Col sm="8">
-                                    <Form.Check
-                                        type="checkbox"
-                                        name="sayonaraMeetingParticipation" 
-                                        style={{display: "flex", alignItems: "center"}}
-                                        checked={this.state.itemToUpdate.sayonaraMeetingParticipation}
-                                        onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, sayonaraMeetingParticipation: e.target.checked} }) }}
-                                    />
-                                </Col>
-                            </Form.Group>                            
-                            <Form.Group as={Row}>
-                                <Form.Label column sm="4">{t("accommodation")}</Form.Label>
-                                <Col sm="8">
-                                    <Form.Check
-                                        type="checkbox"
-                                        name="accommodation" 
-                                        style={{display: "flex", alignItems: "center"}}
-                                        checked={this.state.itemToUpdate.accommodation}
-                                        onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, accommodation: e.target.checked} }) }}
-                                    />
-                                </Col>
-                            </Form.Group>
-                            <Form.Group as={Row} style={{alignItems: "center"}}>
-                                <Form.Label column sm="4">{t("clothing_size")}</Form.Label>
-                                <Col sm="8">
-                                    <Select
-                                        styles={clothingSizesSelectStyles}
-                                        options={this.state.clothingSizes}                                    
-                                        value={this.state.itemToUpdate.clothingSize}
-                                        onChange={clothingSize => {                                        
-                                            this.setState({ itemToUpdate: {...this.state.itemToUpdate, clothingSize: clothingSize} })                                        
-                                        }}
-                                    />
-                                </Col>
-                            </Form.Group>                        
-                        </Container>                        
+                        <Card>
+                            <Card.Header>{t("personal_details")}</Card.Header>
+                            <Card.Body>
+                                <Form.Group as={Row}>
+                                    <Form.Label column sm="4">{t("full_name")}</Form.Label>
+                                    <Form.Label column sm="8">{this.state.itemToUpdate.user.fullName}</Form.Label>
+                                </Form.Group>
+                                <Form.Group as={Row}>
+                                    <Form.Label column sm="4">{t("club")}</Form.Label>
+                                    <Form.Label column sm="8">{this.state.itemToUpdate.user.club?.clubName}</Form.Label>                                    
+                                </Form.Group>
+                            </Card.Body>
+                        </Card>
+                        <div style={{height: "16px"}}></div>
+                        <Card>
+                            <Card.Header>{t("administrative_tools")}</Card.Header>
+                            <Card.Body>
+                                <Form.Group as={Row} style={{alignItems: "center"}}>
+                                    <Form.Label column sm="4">{t("advance_payment")}</Form.Label>
+                                    <Col sm="8">
+                                        <Row style={{alignItems: "center"}}>
+                                            <Col sm="10">
+                                                <Form.Control
+                                                    type="text"
+                                                    name="advancePayment"                                              
+                                                    maxLength="255"                                   
+                                                    value={this.state.itemToUpdate.advancePayment ? this.state.itemToUpdate.advancePayment : ""}
+                                                    onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, advancePayment: e.target.value} }) }}                           
+                                                />
+                                            </Col>
+                                            <Col sm="2">[PLN]</Col>
+                                        </Row>                                                                    
+                                    </Col>                                    
+                                </Form.Group>
+                                <Form.Group as={Row}>
+                                    <Form.Label column sm="4">{t("fee_received")}</Form.Label>
+                                    <Col sm="8">
+                                        <Form.Check
+                                            type="checkbox"
+                                            name="feeReceived" 
+                                            style={{display: "flex", alignItems: "center"}}
+                                            checked={this.state.itemToUpdate.feeReceived}
+                                            onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, feeReceived: e.target.checked} }) }}
+                                        />
+                                    </Col>                  
+                                </Form.Group>                                
+                            </Card.Body>
+                        </Card>
+                        <div style={{height: "16px"}}></div>
+                        <Card>
+                            <Card.Header>{t("registration_options")}</Card.Header>
+                            <Card.Body>
+                                <Form.Group as={Row}>
+                                    <Form.Label column sm="4">{t("sayonara")}</Form.Label>
+                                    <Col sm="8">
+                                        <Form.Check
+                                            type="checkbox"
+                                            name="sayonaraMeetingParticipation" 
+                                            style={{display: "flex", alignItems: "center"}}
+                                            checked={this.state.itemToUpdate.sayonaraMeetingParticipation}
+                                            onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, sayonaraMeetingParticipation: e.target.checked} }) }}
+                                        />
+                                    </Col>
+                                </Form.Group>                            
+                                <Form.Group as={Row}>
+                                    <Form.Label column sm="4">{t("accommodation")}</Form.Label>
+                                    <Col sm="8">
+                                        <Form.Check
+                                            type="checkbox"
+                                            name="accommodation" 
+                                            style={{display: "flex", alignItems: "center"}}
+                                            checked={this.state.itemToUpdate.accommodation}
+                                            onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, accommodation: e.target.checked} }) }}
+                                        />
+                                    </Col>
+                                </Form.Group>
+                                <Form.Group as={Row} style={{alignItems: "center"}}>
+                                    <Form.Label column sm="4">{t("clothing_size")}</Form.Label>
+                                    <Col sm="8">
+                                        <Select
+                                            styles={clothingSizesSelectStyles}
+                                            options={this.state.clothingSizes}                                    
+                                            value={this.state.itemToUpdate.clothingSize}
+                                            onChange={clothingSize => {                                        
+                                                this.setState({ itemToUpdate: {...this.state.itemToUpdate, clothingSize: clothingSize} })                                        
+                                            }}
+                                        />
+                                    </Col>
+                                </Form.Group>
+                            </Card.Body>
+                        </Card>                       
                     </Modal.Body>
                     <Modal.Footer>
                         <div>
