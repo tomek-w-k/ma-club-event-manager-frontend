@@ -32,7 +32,7 @@ class AddParticipantToCampModal extends Component
             campRegistration: {
                 id: null,
                 user: null,
-                advancePaymentReceived: false,
+                advancePayment: null,
                 feeReceived: false,
                 sayonaraMeetingParticipation: false,
                 accommodation: false,
@@ -92,7 +92,7 @@ class AddParticipantToCampModal extends Component
             campRegistration: {
                 id: null,
                 user: null,
-                advancePaymentReceived: false,
+                advancePayment: null,
                 feeReceived: false,
                 sayonaraMeetingParticipation: false,
                 accommodation: false,

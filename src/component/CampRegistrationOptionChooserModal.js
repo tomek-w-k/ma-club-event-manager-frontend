@@ -26,6 +26,7 @@ class CampRegistrationOptionChooserModal extends Component
             campRegistration: {
                 id: null,
                 user: null,
+                advancePayment: null,
                 feeReceived: false,
                 sayonaraMeetingParticipation: false,
                 clothingSize: {
@@ -69,6 +70,7 @@ class CampRegistrationOptionChooserModal extends Component
             campRegistration: {
                 id: null,
                 user: null,
+                advancePayment: null,
                 feeReceived: false,
                 sayonaraMeetingParticipation: false,
                 clothingSize: {

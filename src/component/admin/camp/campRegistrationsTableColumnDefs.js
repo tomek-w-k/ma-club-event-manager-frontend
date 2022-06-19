@@ -9,7 +9,7 @@ export const ColumnNames = Object.freeze ({
     FULL_NAME: 1,
     EMAIL: 2,    
     CLUB: 3,
-    ADVANCE_PAYMENT_RECEIVED: 4,
+    ADVANCE_PAYMENT: 4,
     FEE_RECEIVED: 5,
     SAYONARA: 6,
     CLOTHING_SIZE: 7,
@@ -43,20 +43,18 @@ export const campRegistrationsTableColumnDefs = [
         filter: textFilter(),
         headerFormatter: searchableHeaderFormatter           
     },
-    { 
-        dataField: "advancePaymentReceived", 
-        text: "Advance payment received",
-        sort: false,
-        type: "bool",
+    {        
+        dataField: "advancePayment",
+        text: "Advance payment",
+        sort: true, 
+        filter: textFilter(),
         style: booleanTableCellStyle,        
-        headerFormatter: booleanTableCellFormatter,
         headerStyle:  { "text-align": "center" },
-        formatter: booleanTableCellFormatter,        
-        filter: textFilter({            
-            disabled: "true",
-            placeholder: "-"
-        }),        
-        headerFormatter: searchableHeaderFormatter          
+        formatter: (cell, row) => {
+            if (cell == undefined || cell == null || cell.length === 0 || cell.replace(/\s/g,"") == "" )
+                return "-"
+            else return cell;
+        }
     },
     { 
         dataField: "feeReceived", 

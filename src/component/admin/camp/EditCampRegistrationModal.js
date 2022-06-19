@@ -4,6 +4,7 @@ import {
     Form,
     Button,
     Row,
+    Col,
     Container,
     Alert
     } from "react-bootstrap";
@@ -37,7 +38,7 @@ class EditCampRegistrationModal extends Component
                     club: null,
                     branchChief: null
                 },
-                advancePaymentReceived: false,
+                advancePayment: null,
                 feeReceived: false,
                 sayonaraMeetingParticipation: false,                
                 accommodation: false,
@@ -78,6 +79,12 @@ class EditCampRegistrationModal extends Component
         })
         .then(response => response.json())
         .then(data => {
+            let advancePayment;
+
+            if ( data.advancePayment == null )
+                advancePayment = null;
+            else advancePayment = data.advancePayment;
+            
             let clothingSize;
 
             if ( data.clothingSize == null )
@@ -94,7 +101,7 @@ class EditCampRegistrationModal extends Component
             this.setState({ 
                 itemToUpdate: {
                     ...data,
-                    advancePaymentReceived: data.advancePaymentReceived ? true : false,
+                    advancePayment: advancePayment,
                     feeReceived: data.feeReceived ? true : false,
                     sayonaraMeetingParticipation: data.sayonaraMeetingParticipation ? true : false,
                     accommodation: data.accommodation ? true : false,
@@ -146,7 +153,6 @@ class EditCampRegistrationModal extends Component
         };
 
         const t = this.props.t;
-
         return (
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
             (
@@ -164,56 +170,67 @@ class EditCampRegistrationModal extends Component
                     </Modal.Header>
                     <Modal.Body>
                         <Container>
-                            <Form.Group as={Row}>
-                                <Form.Label column sm="4">{t("advance_payment_received")}</Form.Label>
-                                <Form.Check column sm="4"
-                                    type="checkbox"
-                                    name="advancePaymentReceived" 
-                                    style={{display: "flex", alignItems: "center"}}
-                                    checked={this.state.itemToUpdate.advancePaymentReceived}
-                                    onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, advancePaymentReceived: e.target.checked} }) }}
-                                />                            
+                            <Form.Group as={Row} style={{alignItems: "center"}}>
+                                <Form.Label column sm="4">{t("advance_payment")}</Form.Label>
+                                <Col sm="7">
+                                    <Form.Control
+                                        type="text"
+                                        name="advancePayment"                                              
+                                        maxLength="255"                                   
+                                        value={this.state.itemToUpdate.advancePayment ? this.state.itemToUpdate.advancePayment : ""}
+                                        onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, advancePayment: e.target.value} }) }}                           
+                                    />                            
+                                </Col>
+                                <Col sm="1">[PLN]</Col>
                             </Form.Group>
                             <Form.Group as={Row}>
                                 <Form.Label column sm="4">{t("fee_received")}</Form.Label>
-                                <Form.Check column sm="4"
-                                    type="checkbox"
-                                    name="feeReceived" 
-                                    style={{display: "flex", alignItems: "center"}}
-                                    checked={this.state.itemToUpdate.feeReceived}
-                                    onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, feeReceived: e.target.checked} }) }}
-                                />                            
+                                <Col sm="8">
+                                    <Form.Check
+                                        type="checkbox"
+                                        name="feeReceived" 
+                                        style={{display: "flex", alignItems: "center"}}
+                                        checked={this.state.itemToUpdate.feeReceived}
+                                        onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, feeReceived: e.target.checked} }) }}
+                                    />
+                                </Col>                  
                             </Form.Group>
                             <Form.Group as={Row}>
                                 <Form.Label column sm="4">{t("sayonara")}</Form.Label>
-                                <Form.Check column sm="4"
-                                    type="checkbox"
-                                    name="sayonaraMeetingParticipation" 
-                                    style={{display: "flex", alignItems: "center"}}
-                                    checked={this.state.itemToUpdate.sayonaraMeetingParticipation}
-                                    onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, sayonaraMeetingParticipation: e.target.checked} }) }}
-                                />
+                                <Col sm="8">
+                                    <Form.Check
+                                        type="checkbox"
+                                        name="sayonaraMeetingParticipation" 
+                                        style={{display: "flex", alignItems: "center"}}
+                                        checked={this.state.itemToUpdate.sayonaraMeetingParticipation}
+                                        onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, sayonaraMeetingParticipation: e.target.checked} }) }}
+                                    />
+                                </Col>
                             </Form.Group>                            
                             <Form.Group as={Row}>
                                 <Form.Label column sm="4">{t("accommodation")}</Form.Label>
-                                <Form.Check column sm="4"
-                                    type="checkbox"
-                                    name="accommodation" 
-                                    style={{display: "flex", alignItems: "center"}}
-                                    checked={this.state.itemToUpdate.accommodation}
-                                    onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, accommodation: e.target.checked} }) }}
-                                />
+                                <Col sm="8">
+                                    <Form.Check
+                                        type="checkbox"
+                                        name="accommodation" 
+                                        style={{display: "flex", alignItems: "center"}}
+                                        checked={this.state.itemToUpdate.accommodation}
+                                        onChange={e => { this.setState({ itemToUpdate: {...this.state.itemToUpdate, accommodation: e.target.checked} }) }}
+                                    />
+                                </Col>
                             </Form.Group>
-                            <Form.Group as={Row}>
+                            <Form.Group as={Row} style={{alignItems: "center"}}>
                                 <Form.Label column sm="4">{t("clothing_size")}</Form.Label>
-                                <Select
-                                    styles={clothingSizesSelectStyles}
-                                    options={this.state.clothingSizes}                                    
-                                    value={this.state.itemToUpdate.clothingSize}
-                                    onChange={clothingSize => {                                        
-                                        this.setState({ itemToUpdate: {...this.state.itemToUpdate, clothingSize: clothingSize} })                                        
-                                    }}
-                                />
+                                <Col sm="8">
+                                    <Select
+                                        styles={clothingSizesSelectStyles}
+                                        options={this.state.clothingSizes}                                    
+                                        value={this.state.itemToUpdate.clothingSize}
+                                        onChange={clothingSize => {                                        
+                                            this.setState({ itemToUpdate: {...this.state.itemToUpdate, clothingSize: clothingSize} })                                        
+                                        }}
+                                    />
+                                </Col>
                             </Form.Group>                        
                         </Container>                        
                     </Modal.Body>
