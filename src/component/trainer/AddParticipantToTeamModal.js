@@ -330,7 +330,8 @@ class AddParticipantToTeamModal extends Component
                                         <Col sm="8" style={{display: "flex", alignItems: "center"}}>
                                             <Form.Check 
                                                 type="checkbox"
-                                                name="asJudgeParticipation"                                    
+                                                name="asJudgeParticipation"
+                                                style={{display: "flex", alignItems: "center"}}
                                                 checked={this.state.tournamentRegistration.asJudgeParticipation}
                                                 onChange={e => { 
                                                     this.setState({ 
