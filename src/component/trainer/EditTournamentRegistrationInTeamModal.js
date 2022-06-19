@@ -309,7 +309,8 @@ class EditTournamentRegistrationInTeamModal extends Component
                                         <Form.Check
                                             disabled={!currentUser.roles.includes("ROLE_ADMIN") ? this.state.itemToUpdate.feeReceived : false}  
                                             type="checkbox"
-                                            name="asJudgeParticipation"                                    
+                                            name="asJudgeParticipation"
+                                            style={{display: "flex", alignItems: "center"}}
                                             checked={this.state.itemToUpdate.asJudgeParticipation}
                                             onChange={e => { 
                                                 this.setState({ 
