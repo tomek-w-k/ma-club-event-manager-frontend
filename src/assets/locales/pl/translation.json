@@ -246,9 +246,8 @@
     "im_over_13": "Oświadczam że mam ukończone 13 lat",
     "you_have_to_be_over_13": "Aby założyć konto trzeba mieć ukończone 13 lat.",    
     "in_case_of_under_13": "W przyadku osób poniżej 13 roku życia konto może być prowadzone jedynie przez rodzica lub prawnego opiekuna.",
-    "show_accommodation_on_registration_form": "Pokaż opcję zakwaterowania na formularzu rejestracji"
-
-
-
+    "show_accommodation_on_registration_form": "Pokaż opcję zakwaterowania na formularzu rejestracji",
+    "suspend_registration": "Wstrzymaj rejestrację",
+    "registration_suspended": "Rejestracja wstrzymana"
 
 }

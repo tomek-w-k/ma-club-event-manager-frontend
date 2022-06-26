@@ -35,6 +35,7 @@ class CampDetailsComponent extends Component
                 sayonaraMeeting: false,
                 accommodation: false,
                 showAccommodationOnRegistrationForm: false,
+                suspendRegistration: false,
                 clothingType: "",
                 clothingSizes: [],
                 fees: [],
@@ -70,7 +71,14 @@ class CampDetailsComponent extends Component
             }
         })
         .then(response => response.json())
-        .then(data => {
+        .then(data => { 
+            data = {...data,
+                accommodation: data.accommodation ? true : false,
+                sayonaraMeeting: data.sayonaraMeeting ? true : false,
+                showAccommodationOnRegistrationForm: data.showAccommodationOnRegistrationForm ? true : false,
+                suspendRegistration: data.suspendRegistration ? true : false
+            }
+            
             let clothingSizeUrls = data.clothingSizes.map(clothingSize => CLOTHING_SIZES_API_URL + "/" + clothingSize.id + "/camp_registrations");
             let clothingSizeRequests = clothingSizeUrls.map(url => fetch(url, {
                 method: "GET",
@@ -360,6 +368,13 @@ class CampDetailsComponent extends Component
                                             checked={this.state.event.showAccommodationOnRegistrationForm}
                                             disabled={!this.state.event.accommodation}
                                             onChange={(e) => { this.setState({ event: {...this.state.event, showAccommodationOnRegistrationForm: e.target.checked} }) }}
+                                        />
+                                        <Form.Check 
+                                            type="checkbox"
+                                            name="suspendRegistration"
+                                            label={t("suspend_registration")}                                                
+                                            checked={this.state.event.suspendRegistration}
+                                            onChange={(e) => { this.setState({ event: {...this.state.event, suspendRegistration: e.target.checked} }) }}
                                         />
                                     </Form.Group>
                                     <Form.Group>
