@@ -35,7 +35,9 @@ class CampDetailsComponent extends Component
                 sayonaraMeeting: false,
                 accommodation: false,
                 showAccommodationOnRegistrationForm: false,
+                suspendRegistration: false,
                 clothingType: "",
+                numberOfPlaces: undefined,
                 clothingSizes: [],
                 fees: [],
                 campRegistrations: []
@@ -70,7 +72,14 @@ class CampDetailsComponent extends Component
             }
         })
         .then(response => response.json())
-        .then(data => {
+        .then(data => { 
+            data = {...data,
+                accommodation: data.accommodation ? true : false,
+                sayonaraMeeting: data.sayonaraMeeting ? true : false,
+                showAccommodationOnRegistrationForm: data.showAccommodationOnRegistrationForm ? true : false,
+                suspendRegistration: data.suspendRegistration ? true : false
+            }
+
             let clothingSizeUrls = data.clothingSizes.map(clothingSize => CLOTHING_SIZES_API_URL + "/" + clothingSize.id + "/camp_registrations");
             let clothingSizeRequests = clothingSizeUrls.map(url => fetch(url, {
                 method: "GET",
@@ -118,6 +127,8 @@ class CampDetailsComponent extends Component
     */    
     handleEditEvent(e)
     {
+        const t = this.props.t;
+
         e.preventDefault(); 
         if ( e.currentTarget.checkValidity() )
         {
@@ -131,6 +142,9 @@ class CampDetailsComponent extends Component
             })
             .then(response => response.json())
             .then(data => {            
+                if ( data.length > this.state.event.numberOfPlaces ) 
+                    throw new Error(data.length);
+               
                 this.setState(state => (
                     { event: {...state.event, campRegistrations: data} }
                 ),
@@ -174,7 +188,8 @@ class CampDetailsComponent extends Component
                         error => error.json().then(text => this.setState({ errorMessage: text.message }) ) );
                     });
                 });
-            });
+            })
+            .catch(error => alert(t("persons_registered") + ": " + error.message + "\n" + t("number_of_places_cannot_be_less_than_person_registered")));
         }
         else this.setState({ 
             formValidated: true,
@@ -261,11 +276,11 @@ class CampDetailsComponent extends Component
         return( 
             currentUser != null && currentUser.roles.includes("ROLE_ADMIN") ?
             ( 
-                <div>
-                    {this.state.errorMessage && (<Alert variant="danger">{this.state.errorMessage}</Alert>)}                    
+                <div>                                        
                     <Card >                       
                         <Card.Body>
                             <Card.Text>
+                            {this.state.errorMessage && (<Alert variant="danger">{this.state.errorMessage}</Alert>)}
                             <Form noValidate validated={this.state.formValidated} onSubmit={this.handleEditEvent}>   
                                     <Form.Group>
                                         <Form.Label>{t("name")}</Form.Label>
@@ -361,7 +376,29 @@ class CampDetailsComponent extends Component
                                             disabled={!this.state.event.accommodation}
                                             onChange={(e) => { this.setState({ event: {...this.state.event, showAccommodationOnRegistrationForm: e.target.checked} }) }}
                                         />
+                                        <Form.Check 
+                                            type="checkbox"
+                                            name="suspendRegistration"
+                                            label={t("suspend_registration")}                                                
+                                            checked={this.state.event.suspendRegistration}
+                                            onChange={(e) => { this.setState({ event: {...this.state.event, suspendRegistration: e.target.checked} }) }}
+                                        />
                                     </Form.Group>
+                                    <Form.Group>
+                                        <Form.Label>{t("number_of_places")}</Form.Label>
+                                        <Form.Control required
+                                            type="number"
+                                            name="numberOfPlaces"
+                                            min={this.state.event.campRegistrations.length}
+                                            max="2147483647"
+                                            value={this.state.event.numberOfPlaces}
+                                            onChange={(e) => { this.setState({ event: {...this.state.event, numberOfPlaces: e.target.value} }) }}                            
+                                        />
+                                        {/* <Form.Control.Feedback type="invalid">                                            
+                                            {t("persons_registered")}: {this.state.event.campRegistrations.length} <br />
+                                            {t("number_of_places_cannot_be_less_than_person_registered")}                                         
+                                        </Form.Control.Feedback> */}
+                                    </Form.Group> 
                                     <Form.Group>
                                         <Form.Label>{t("clothing_type")}</Form.Label>
                                         <Form.Control required

@@ -6,10 +6,12 @@ import {
 } from "react-bootstrap";
 import CampRegistrationOptionChooserModal from "./CampRegistrationOptionChooserModal";
 import { withTranslation } from "react-i18next";
-import { Check } from "react-bootstrap-icons";
+import { Check, Triangle } from "react-bootstrap-icons";
+import { ExclamationTriangle } from "react-bootstrap-icons";
 import AuthService from "../service/auth-service";
 import * as Urls from "../servers-urls";
 import moment from "moment";
+import { fetchMetadataForDelete } from "../utils/fetchMetadata";
 
 
 const currentUser = AuthService.getCurrentUser();
@@ -24,8 +26,9 @@ class CampEventTile extends Component
     {
         super(props);
         this.state = {            
-            eventContainsCurrentUser: false,
+            containsCurrentUser: false,
             isUpcoming: false,
+            isSuspended: false,
             campRegistrationId: undefined,
             showChooserModal: false,
         }
@@ -40,20 +43,24 @@ class CampEventTile extends Component
             if ( campRegistration.user.id == currentUser.id ) 
             {                                    
                 this.setState({ 
-                    eventContainsCurrentUser: true,
+                    containsCurrentUser: true,
                     campRegistrationId: campRegistration.id
                 });
                 return true;
             } 
             else this.setState({ 
-                eventContainsCurrentUser: false,
+                containsCurrentUser: false,
                 campRegistrationId: undefined
             });
         });
 
         // - - - Check if the event is not expired - - -                
         let eventStartDate = moment(this.props.event.startDate, EVENT_DATE_FORMAT).toDate();
-        this.setState({ isUpcoming: eventStartDate > Date.now() }); 
+        
+        this.setState({ 
+            isUpcoming: eventStartDate > Date.now(),
+            isSuspended: this.props.event.suspendRegistration
+        }); 
     }
 
     handleSignUp(e)
@@ -67,20 +74,16 @@ class CampEventTile extends Component
     handleSignOut(e)
     {
         e.preventDefault();
-        fetch(CAMP_REGISTRATION_API_URL + "/" + this.state.campRegistrationId, {
-            method: "DELETE",
-            headers: {
-                "Authorization": "Bearer " + currentUser.accessToken
-            }
-        })
+        fetch(CAMP_REGISTRATION_API_URL + "/" + this.state.campRegistrationId, fetchMetadataForDelete(currentUser))
         .then(response => {
             if ( response.ok )
             {                
                 this.setState({
-                    eventContainsCurrentUser: false,
+                    containsCurrentUser: false,
                     campRegistrationId: undefined
                 });
-                this.forceUpdate();                    
+                this.forceUpdate();
+                window.location.reload();                    
                 return response;
             }
             throw new Error(response.message);
@@ -91,7 +94,9 @@ class CampEventTile extends Component
     render()
     {   
         const event = this.props.event;
-        const { eventContainsCurrentUser } = this.state;
+        const { containsCurrentUser } = this.state;
+        const { isUpcoming } = this.state;
+        const { isSuspended } = this.state;
         const t = this.props.t;
 
         const imageContainerStyle = {
@@ -111,9 +116,7 @@ class CampEventTile extends Component
                 <div>
                     <CampRegistrationOptionChooserModal     show={this.state.showChooserModal}
                                                             onHide={() => {
-                                                                this.setState({ 
-                                                                    showChooserModal: false,
-                                                                 });                                                                
+                                                                this.setState({ showChooserModal: false });                                                                
                                                                 window.location.reload();                                                                 
                                                             }}                                                            
                                                             eventId={event.id}
@@ -136,25 +139,28 @@ class CampEventTile extends Component
                             </div>
                             <br />                                              
                             <div className="d-flex flex-row-reverse">                                                        
-                                {!eventContainsCurrentUser && this.state.isUpcoming && (
+                                {!containsCurrentUser && !isSuspended && isUpcoming && (event.campRegistrations.length < event.numberOfPlaces) && (
                                     <Button variant="info" onClick={this.handleSignUp} >{t("sign_up_event")}</Button>
+                                )}                                
+                                {containsCurrentUser && (                                    
+                                    <div>
+                                        <Button variant="outline-success" disabled><Check color="#13A84D" size={22}/>{t("signed_up_event")}</Button>{' '}                                        
+                                        {this.state.isUpcoming && (
+                                            <Button variant="danger" onClick={this.handleSignOut}>{t("sign_out_event")}</Button> 
+                                        )}
+                                    </div>                                    
                                 )}
-                                {eventContainsCurrentUser && (
-                                    <div className="d-flex flex-row-reverse">
-                                        <div>
-                                            <Button variant="outline-success" disabled><Check color="#13A84D" size={22}/>{t("signed_up_event")}</Button>{' '}                                        
-                                            {this.state.isUpcoming && (
-                                                <Button variant="danger" onClick={this.handleSignOut}>{t("sign_out_event")}</Button> 
-                                            )}
-                                        </div>                                            
-                                    </div>                                        
+                                {isSuspended && isUpcoming && (
+                                    <div style={{paddingRight: "5px"}}>
+                                        <Button variant="warning" disabled><ExclamationTriangle size={17}/>{' '}{t("registration_suspended")}</Button>
+                                    </div> 
                                 )}
                             </div>
                         </Card.Body>
                     <Card.Footer>
                         {t("added")} {event.dateCreated}
                         <div style={{float: "right"}}>
-                            {event.campRegistrations.length} persons registered
+                           {t("persons_registered")}: {event.campRegistrations.length} / {event.numberOfPlaces}
                         </div>                    
                     </Card.Footer>
                     </Card>
