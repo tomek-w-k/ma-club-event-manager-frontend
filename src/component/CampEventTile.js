@@ -11,6 +11,7 @@ import { ExclamationTriangle } from "react-bootstrap-icons";
 import AuthService from "../service/auth-service";
 import * as Urls from "../servers-urls";
 import moment from "moment";
+import { fetchMetadataForDelete } from "../utils/fetchMetadata";
 
 
 const currentUser = AuthService.getCurrentUser();
@@ -73,12 +74,7 @@ class CampEventTile extends Component
     handleSignOut(e)
     {
         e.preventDefault();
-        fetch(CAMP_REGISTRATION_API_URL + "/" + this.state.campRegistrationId, {
-            method: "DELETE",
-            headers: {
-                "Authorization": "Bearer " + currentUser.accessToken
-            }
-        })
+        fetch(CAMP_REGISTRATION_API_URL + "/" + this.state.campRegistrationId, fetchMetadataForDelete(currentUser))
         .then(response => {
             if ( response.ok )
             {                
@@ -86,7 +82,8 @@ class CampEventTile extends Component
                     containsCurrentUser: false,
                     campRegistrationId: undefined
                 });
-                this.forceUpdate();                    
+                this.forceUpdate();
+                window.location.reload();                    
                 return response;
             }
             throw new Error(response.message);
@@ -119,9 +116,7 @@ class CampEventTile extends Component
                 <div>
                     <CampRegistrationOptionChooserModal     show={this.state.showChooserModal}
                                                             onHide={() => {
-                                                                this.setState({ 
-                                                                    showChooserModal: false,
-                                                                 });                                                                
+                                                                this.setState({ showChooserModal: false });                                                                
                                                                 window.location.reload();                                                                 
                                                             }}                                                            
                                                             eventId={event.id}
@@ -144,7 +139,7 @@ class CampEventTile extends Component
                             </div>
                             <br />                                              
                             <div className="d-flex flex-row-reverse">                                                        
-                                {!containsCurrentUser && !isSuspended && isUpcoming && (
+                                {!containsCurrentUser && !isSuspended && isUpcoming && (event.campRegistrations.length < event.numberOfPlaces) && (
                                     <Button variant="info" onClick={this.handleSignUp} >{t("sign_up_event")}</Button>
                                 )}                                
                                 {containsCurrentUser && (                                    
@@ -165,7 +160,7 @@ class CampEventTile extends Component
                     <Card.Footer>
                         {t("added")} {event.dateCreated}
                         <div style={{float: "right"}}>
-                            {event.campRegistrations.length} persons registered
+                           {t("persons_registered")}: {event.campRegistrations.length} / {event.numberOfPlaces}
                         </div>                    
                     </Card.Footer>
                     </Card>

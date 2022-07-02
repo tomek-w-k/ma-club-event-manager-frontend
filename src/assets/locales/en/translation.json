@@ -248,6 +248,10 @@
     "in_case_of_under_13": "In the case of persons under the age of 13, the account may only be maintained by a parent or legal guardian.",
     "show_accommodation_on_registration_form": "Show accommodation option on registration form",
     "suspend_registration": "Suspend registration",
-    "registration_suspended": "Registration suspended"
+    "registration_suspended": "Registration suspended",
+    "number_of_places": "Number of places",
+    "number_of_places_cannot_be_less_than_person_registered": "Number of places cannot be less than a number of already registered participants.",
+    "no_places": "No places available.",
+    "someone_took_last_place_before_you": "Someone else took the last place just before you."
 
 }

@@ -248,6 +248,10 @@
     "in_case_of_under_13": "W przyadku osób poniżej 13 roku życia konto może być prowadzone jedynie przez rodzica lub prawnego opiekuna.",
     "show_accommodation_on_registration_form": "Pokaż opcję zakwaterowania na formularzu rejestracji",
     "suspend_registration": "Wstrzymaj rejestrację",
-    "registration_suspended": "Rejestracja wstrzymana"
+    "registration_suspended": "Rejestracja wstrzymana",
+    "number_of_places": "Liczba miejsc",
+    "number_of_places_cannot_be_less_than_person_registered": "Liczba miejsc nie może być mniejsza od liczby już zarejestrowanych uczestników.",
+    "no_places": "Brak miejsc.",
+    "someone_took_last_place_before_you": "Ktoś inny zajął ostatnie wolne miejsce na chwilę przed tobą."
 
 }

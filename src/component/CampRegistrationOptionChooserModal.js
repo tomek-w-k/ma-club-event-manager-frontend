@@ -10,11 +10,15 @@ import Select from "react-select";
 import { withTranslation } from "react-i18next";
 import AuthService from "../service/auth-service";
 import * as Urls from "../servers-urls";
+import { format } from "../utils/stringUtils";
+import { fetchMetadataForGet, fetchMetadataForPost } from "../utils/fetchMetadata";
 
+String.prototype.format = format;
 
 const currentUser = AuthService.getCurrentUser();
 const CAMP_EVENTS = Urls.WEBSERVICE_URL + "/camp_events"; 
-const CAMP_REGISTRATIONS = Urls.WEBSERVICE_URL + "/camp_registrations"; 
+const CAMP_REGISTRATIONS = Urls.WEBSERVICE_URL + "/camp_registrations";
+const CAMP_EVENT_DETAILS_URL = Urls.WEBSERVICE_URL + "/camp_events/{0}/details";
 
 
 class CampRegistrationOptionChooserModal extends Component
@@ -47,21 +51,13 @@ class CampRegistrationOptionChooserModal extends Component
 
     componentDidMount()
     {        
-        fetch(CAMP_EVENTS + "/" + this.props.eventId + "/clothing_sizes",{
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer " + currentUser.accessToken
-            }
-        })
+        fetch(CAMP_EVENTS + "/" + this.props.eventId + "/clothing_sizes", fetchMetadataForGet(currentUser))
         .then(response => response.json())
-        .then((data) => {                
-            let cs = [];
-            cs.push( { value: null, label: "-" } );
-            data.map((clothingSize) => {
-                cs.push( { value: clothingSize.id, label: clothingSize.clothingSizeName } )
-            })                
+        .then(data => {                
+            let cs = [{ value: null, label: "-" }];
+            data.map(clothingSize => cs.push( { value: clothingSize.id, label: clothingSize.clothingSizeName } ));
             this.setState({ clothingSizes: cs });
-        })        
+        });  
     }
 
     handleClearForm()
@@ -89,44 +85,41 @@ class CampRegistrationOptionChooserModal extends Component
     handleSignUp(e)
     {
         e.preventDefault();
-                   
-        let cs;
-        if ( this.state.campRegistration.clothingSize.value == null && 
-                (this.state.campRegistration.clothingSize.label == "-" || this.state.campRegistration.clothingSize.label == "") )
-            cs = null;
-        else
-            cs = {
-                id: this.state.campRegistration.clothingSize.value,
-                clothingSizeName: this.state.campRegistration.clothingSize.label
-            };
-        let campRegistration = {...this.state.campRegistration, clothingSize: cs, user: {id: currentUser.id}};            
-           console.log(campRegistration)         ;
-        fetch(CAMP_REGISTRATIONS, {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + currentUser.accessToken
+
+        const t = this.props.t;
+        
+        fetch(CAMP_EVENT_DETAILS_URL.format(this.props.eventId), fetchMetadataForGet(currentUser))
+        .then(response => response.json())
+        .then(campEventDetails => {
+            if (campEventDetails.numberOfCampRegistrations >= campEventDetails.numberOfPlaces )
+                throw new Error();
+
+            let cs;
+            if ( this.state.campRegistration.clothingSize.value == null && 
+                    (this.state.campRegistration.clothingSize.label == "-" || this.state.campRegistration.clothingSize.label == "") )
+                cs = null;
+            else
+                cs = {
+                    id: this.state.campRegistration.clothingSize.value,
+                    clothingSizeName: this.state.campRegistration.clothingSize.label
+                };
+            let campRegistration = {...this.state.campRegistration, clothingSize: cs, user: {id: currentUser.id}};            
+                
+            fetch(CAMP_REGISTRATIONS, fetchMetadataForPost(currentUser, campRegistration))            
+            .then(result => {            
+                return new Promise((resolve, reject) => {
+                    if(result.ok)
+                        resolve("Participant added")
+                    else reject(result);                    
+                })    
             },
-            body: JSON.stringify(campRegistration)           
-        })            
-        .then(result => {            
-            return new Promise((resolve, reject) => {
-                if(result.ok)
-                    resolve("Participant added")
-                else reject(result);                    
-            })    
-        },
-        error => { console.log("not updated") })    
-        .then( msg => {                
-            this.props.onHide();
-        },
-        error => {
-            error.json()
-            .then((text) => {                    
-                alert(text.message);
-            })                
-        })        
+            error => console.log("not updated"))    
+            .then(
+                msg => this.props.onHide(),
+                error => error.json().then(text => alert(text.message))                
+            ); 
+        })
+        .catch(error => alert(t("no_places") + "\n" + t("someone_took_last_place_before_you")));  
     }
 
     render()
