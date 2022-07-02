@@ -15,12 +15,16 @@ import AuthService from "../../../service/auth-service";
 import * as Urls from "../../../servers-urls";
 import { ColumnNames } from "./addParticipantToCampTableColumnDefs";
 import { addParticipantToCampTableColumnDefs as columns } from "./addParticipantToCampTableColumnDefs";
+import { format } from "../../../utils/stringUtils";
+import { fetchMetadataForGet, fetchMetadataForPost } from "../../../utils/fetchMetadata";
 
+String.prototype.format = format;
 
 const currentUser = AuthService.getCurrentUser();
 const USERS_API_URL = Urls.WEBSERVICE_URL + "/users";
-const CAMP_EVENTS = Urls.WEBSERVICE_URL + "/camp_events"; 
 const CAMP_REGISTRATIONS = Urls.WEBSERVICE_URL + "/camp_registrations"; 
+const CLOTHING_SIZES_URL = Urls.WEBSERVICE_URL + "/camp_events/{0}/clothing_sizes";
+const CAMP_EVENT_DETAILS_URL = Urls.WEBSERVICE_URL + "/camp_events/{0}/details";
 
 
 class AddParticipantToCampModal extends Component
@@ -45,7 +49,9 @@ class AddParticipantToCampModal extends Component
                 }
             },
             clothingSizes: [],
-            selectedRowsIds: []
+            selectedRowsIds: [],
+            numberOfPlaces: undefined,
+            personsRegistered: undefined
         }        
         this.handleSignUp = this.handleSignUp.bind(this);
         this.handleRowClick = this.handleRowClick.bind(this);
@@ -55,35 +61,26 @@ class AddParticipantToCampModal extends Component
 
     componentDidMount()
     {        
-        fetch(CAMP_EVENTS + "/" + this.props.eventId + "/clothing_sizes", {
-            method: "GET",
-            headers: {
-                "Authorization": "Bearer " + currentUser.accessToken
-            }
-        })
+        const t = this.props.t;
+       
+        fetch(CLOTHING_SIZES_URL.format(this.props.eventId), fetchMetadataForGet(currentUser))
         .then(response => response.json())
-        .then((data) => {                
-            let cs = [];
-            cs.push( { value: null, label: "-" } );
-            data.map((clothingSize) => {
-                cs.push( { value: clothingSize.id, label: clothingSize.clothingSizeName } )
-            })                
+        .then(data => {
+            let cs = [{ value: null, label: "-" }];                
+            data.map(clothingSize =>  cs.push( { value: clothingSize.id, label: clothingSize.clothingSizeName } ) );
             this.setState({ clothingSizes: cs });
-        })        
+        })
+        .catch(error => this.setState({ errorMessage: t("failed_to_fetch") }));                           
     }
 
     handleRowClick(selectedRowsIds)
     {
-        this.setState({             
-            selectedRowsIds: selectedRowsIds            
-        });
+        this.setState({ selectedRowsIds: selectedRowsIds });
     }
 
     handleRowSelection(selectedRowsIds)
     {
-        this.setState({
-            selectedRowsIds: selectedRowsIds
-        });
+        this.setState({ selectedRowsIds: selectedRowsIds });
     }
 
     handleClearForm()
@@ -114,47 +111,42 @@ class AddParticipantToCampModal extends Component
         
         const t = this.props.t;
 
-        if ( this.state.selectedRowsIds.length == 1 )
-        {   
-            let cs;
-            if ( this.state.campRegistration.clothingSize.value == null && 
-                    (this.state.campRegistration.clothingSize.label == "-" || this.state.campRegistration.clothingSize.label == "") )
-                cs = null;
-            else
-                cs = {
-                    id: this.state.campRegistration.clothingSize.value,
-                    clothingSizeName: this.state.campRegistration.clothingSize.label
-                };
-            let campRegistration = {...this.state.campRegistration, clothingSize: cs, user: {id: this.state.selectedRowsIds[0]}};            
-                        
-            fetch(CAMP_REGISTRATIONS, {
-                method: "POST",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + currentUser.accessToken
+        fetch(CAMP_EVENT_DETAILS_URL.format(this.props.eventId), fetchMetadataForGet(currentUser))
+        .then(response => response.json())
+        .then(campEventDetails => {
+            if (campEventDetails.numberOfCampRegistrations >= campEventDetails.numberOfPlaces )
+                throw new Error(campEventDetails.numberOfCampRegistrations);
+            
+            if ( this.state.selectedRowsIds.length == 1 )
+            {   
+                let cs;
+                if ( this.state.campRegistration.clothingSize.value == null && 
+                        (this.state.campRegistration.clothingSize.label == "-" || this.state.campRegistration.clothingSize.label == "") )
+                    cs = null;
+                else
+                    cs = {
+                        id: this.state.campRegistration.clothingSize.value,
+                        clothingSizeName: this.state.campRegistration.clothingSize.label
+                    };
+                let campRegistration = {...this.state.campRegistration, clothingSize: cs, user: {id: this.state.selectedRowsIds[0]}};            
+                            
+                fetch(CAMP_REGISTRATIONS, fetchMetadataForPost(currentUser, campRegistration))
+                .then(result => {            
+                    return new Promise((resolve, reject) => {
+                        if(result.ok)
+                            resolve("Participant added")
+                        else reject(result);                    
+                    })    
                 },
-                body: JSON.stringify(campRegistration)           
-            })            
-            .then(result => {            
-                return new Promise((resolve, reject) => {
-                    if(result.ok)
-                        resolve("Participant added")
-                    else reject(result);                    
-                })    
-            },
-            error => { console.log("not updated") })    
-            .then( msg => {                
-                this.props.onHide();
-            },
-            error => {
-                error.json()
-                .then((text) => {                    
-                    alert(text.message);
-                })                
-            })
-        }
-        else alert(t("choose_one_person"));
+                error => console.log("not updated"))    
+                .then( 
+                    msg => this.props.onHide(),
+                    error => error.json().then(text => alert(text.message))
+                );
+            }
+            else alert(t("choose_one_person"));            
+        })
+        .catch(error => alert(t("persons_registered") + ": " + error.message + "\n" + t("number_of_places_cannot_be_less_than_person_registered")));
     }
 
     render()
