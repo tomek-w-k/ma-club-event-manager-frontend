@@ -84,9 +84,6 @@ class AddTournament extends Component
             if ( !this.state.event.accommodation )
                 tournamentToSave = {...tournamentToSave, roomTypes: [], stayPeriods: [] };
 
-            console.log("roomtypename :: ", tournamentToSave.roomTypes);
-            console.log("stayperiodname :: ", tournamentToSave.stayPeriods);
-
             fetch(TOURNAMENT_EVENTS_API_URL,{
                 method: "POST",
                 headers: {

@@ -75,15 +75,13 @@ class ClubDocuments extends Component
                     },
                     body: formData
                 })
-                .then(() => { console.log("Club document directory removed.") });
+                .then(() => console.log("Club document directory removed."));
                 
                 this.setState({ selectedRowsIds: [] });
                 this.crudTableRef.current.unselectAllRows();
                 this.crudTableRef.current.fillTable();
             },
-            error => {
-                console.log("Item not deleted");
-            })
+            error => console.log("Item not deleted"))
         }            
         else alert(t("select_one_document_to_remove"));
     }

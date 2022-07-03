@@ -67,12 +67,10 @@ class EditExamRegistrationModal extends Component
             body: JSON.stringify(this.state.itemToUpdate)           
         })
         .then(response => response.json())
-        .then(result => {            
-            this.props.onHide();
-        },
-        error => {
-            console.log("not updated");
-        });
+        .then(
+            result => this.props.onHide(),
+            error => console.log("not updated")
+        );
     }
 
     render()

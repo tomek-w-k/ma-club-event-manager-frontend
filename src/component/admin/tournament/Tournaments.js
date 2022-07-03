@@ -74,15 +74,14 @@ class Tournaments extends Component
                     },
                     body: formData
                 })
-                .then(() => { console.log("Image directory removed.") });
+                .then(() => console.log("Image directory removed."));
 
                 this.setState({ selectedRowsIds: [] });
                 this.crudTableRef.current.unselectAllRows();
                 this.crudTableRef.current.fillTable();
             },
-            error => {
-                console.log("Item not deleted");
-            })
+                error => console.log("Item not deleted")
+            )
         }            
         else alert("Please select one tournament to remove");
     }

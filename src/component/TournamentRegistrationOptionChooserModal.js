@@ -172,7 +172,7 @@ class TournamentRegistrationOptionChooserModal extends Component
             };
         
         let tournamentRegistration = {...this.state.tournamentRegistration, roomType: rt, stayPeriod: sp, weightAgeCategory: wac, user: {id: currentUser.id}};            
-           console.log(tournamentRegistration);
+        
         fetch(TOURNAMENT_REGISTRATIONS, {
             method: "POST",
             headers: {

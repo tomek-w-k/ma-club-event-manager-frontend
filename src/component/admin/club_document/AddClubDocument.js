@@ -103,7 +103,7 @@ class AddClubDocument extends Component
             name: acceptedFiles[0].name
         };
         
-        this.setState({ clubDocumentTemp: clubDocument }, () => console.log(this.state.clubDocumentTemp));
+        this.setState({ clubDocumentTemp: clubDocument });
     }
 
     render()

@@ -68,7 +68,7 @@ class TournamentTeams extends Component
 
     handleShowAddTeamModal()
     {
-        console.log("handle add team modal")
+        
     }
 
     render()

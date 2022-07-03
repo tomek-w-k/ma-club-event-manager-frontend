@@ -63,8 +63,6 @@ class Tournament extends Component
         
         if ( this.state.selectedRowsIds != null && this.state.selectedRowsIds.length == 1 )
         {
-            console.log("selectedrowsids z handleDeleteTeam :: ", this.state.selectedRowsIds[0])
-
             if ( !window.confirm("Are you sure?") )
                 return;
 
@@ -82,9 +80,8 @@ class Tournament extends Component
                 this.state.crudTableRef.current.fillTable();
                 this.tournamentRegistrationsRef.current.fillTable();
             },
-            error => {
-                alert("Item not deleted.")
-            });
+                error => alert("Item not deleted.")
+            );
         }            
         else alert(t("select_one_team_to_remove"));
     }

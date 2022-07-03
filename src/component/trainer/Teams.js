@@ -33,18 +33,13 @@ class Teams extends Component
 
     handleRowClick(selectedRowId)
     {
-        this.setState({
-            selectedRowsIds: selectedRowId
-        });
-
+        this.setState({ selectedRowsIds: selectedRowId });
         this.props.history.push("/user/" + this.props.match.params.userId + "/team_component/" + selectedRowId[0]);
     }
 
     handleRowSelection(selectedRows)
     {
-        this.setState({
-            selectedRowsIds: selectedRows
-        });
+        this.setState({ selectedRowsIds: selectedRows });
     }
 
     handleDeleteTeam()
@@ -69,9 +64,8 @@ class Teams extends Component
                 this.crudTableRef.current.unselectAllRows();
                 this.crudTableRef.current.fillTable();
             },
-            error => {
-                console.log("Item not deleted");
-            })
+                error => console.log("Item not deleted")
+            )
         }            
         else alert(t("select_one_team_to_remove"));
     }

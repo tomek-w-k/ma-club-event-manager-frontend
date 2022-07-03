@@ -238,9 +238,11 @@ class AddParticipantToTeamModal extends Component
                     else reject(result);                    
                 })    
             },
-            error => { console.log("Error - Participant not added.") })    
-            .then( () => this.props.onHide(),
-            error => error.json().then(text => this.setState({ errorMessage: text.message }) ) );
+            error => console.log("Error - Participant not added."))    
+            .then(
+                () => this.props.onHide(),
+                error => error.json().then(text => this.setState({ errorMessage: text.message })) 
+            );
         }        
         else this.setState({ formValidated: true });       
     }
