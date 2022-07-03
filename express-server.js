@@ -4,19 +4,6 @@ const cors = require("cors");
 const morgan = require("morgan");
 const fs = require("fs");
 const path = require("path");
-const https = require("https");
-const { DOMAIN_NAME } = require("./domain-name");
-
-
-const privateKey =  fs.readFileSync('/etc/letsencrypt/live/' + DOMAIN_NAME + '/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/etc/letsencrypt/live/' + DOMAIN_NAME + '/cert.pem', 'utf8');
-const ca = fs.readFileSync('/etc/letsencrypt/live/' + DOMAIN_NAME + '/chain.pem', 'utf8');
-
-const credentials = {
-    key: privateKey,
-    cert: certificate,
-    ca: ca
-};
 
 const app = express();
 
@@ -230,7 +217,5 @@ app.post("/save_club_logo", (req, res) => {
     catch(e) { res.status(500).send(e) }
 });
 
-const httpsServer = https.createServer(credentials, app);
-
 const port = 4000;
-httpsServer.listen(port, () => console.log(`Server is running on port ${port}`));
+app.listen(port, () => console.log(`Server is running on port ${port}`));
