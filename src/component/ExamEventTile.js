@@ -76,23 +76,16 @@ class ExamEventTile extends Component
                 }
             })
         })
-        // .then(response => response.json())
         .then(response => {                        
             if (response.ok)
-            {
-                console.log("rejestracja zakończona pomyślnie");                
-                this.setState({ 
-                    eventContainsCurrentUser: true                    
-                })
+            {                
+                this.setState({ eventContainsCurrentUser: true })
                 window.location.reload();
                 return response
             }
-            console.log("Będzie wyrzucony: ", response.message);
             throw new Error(response.message);            
         })
-        .catch(error => {
-            console.log("Przechwycony: ", error);
-        })
+        .catch(error => console.log(error))
     }
 
     handleSignOut(e)

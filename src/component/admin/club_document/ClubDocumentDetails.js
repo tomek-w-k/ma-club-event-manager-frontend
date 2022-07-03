@@ -101,8 +101,6 @@ class ClubDocumentDetails extends Component
             })
             .then(response => response.json())
             .then(response => {
-                //if ( response.ok )
-               // {
                     let clubDocumentUrl = Urls.EXPRESS_JS_URL + "/get_club_document/" + clubDocument.id + "/" + response.clubDocumentName;
                     clubDocument = {...clubDocument, clubDocumentPath: clubDocumentUrl};
 
@@ -125,8 +123,6 @@ class ClubDocumentDetails extends Component
                         if ( result )
                             this.setState({ errorMessage: result.message }) ;
                     });
-               // }
-                //else this.setState({ errorMessage: "Error - document not saved" }) ;
             });
         }
         else this.setState({ 
@@ -142,7 +138,7 @@ class ClubDocumentDetails extends Component
             name: acceptedFiles[0].name
         };
         
-        this.setState({ clubDocumentTemp: clubDocument }, () => console.log(this.state.clubDocumentTemp));
+        this.setState({ clubDocumentTemp: clubDocument });
     }
     
     render()

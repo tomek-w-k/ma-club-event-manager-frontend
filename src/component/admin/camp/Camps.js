@@ -79,9 +79,7 @@ class CampsComponent extends Component
                     this.crudTableRef.current.fillTable();    
                 });
             },
-            error => {
-                console.log("Item not deleted");
-            })
+            error => console.log("Item not deleted"))
         }            
         else alert(t("select_one_camp_to_remove"));
     }

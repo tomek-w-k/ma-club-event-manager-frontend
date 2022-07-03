@@ -27,7 +27,6 @@ const LanguageSelect = () => {
                         onChange={(e) => {
                             setRadioValue(e.currentTarget.value);
                             i18next.changeLanguage(e.currentTarget.value);
-                            console.log(e.currentTarget.value);
                         }}
                     >
                         {radio.name}

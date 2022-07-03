@@ -99,16 +99,11 @@ class AddParticipantToExamModal extends Component
                     else reject(result);                    
                 })    
             },
-            error => { console.log("not updated") })    
-            .then( msg => {                
-                this.props.onHide();
-            },
-            error => {
-                error.json()
-                .then((text) => {                    
-                    alert(text.message);
-                })                
-            })
+            error => console.log("not updated"))    
+            .then(
+                msg => this.props.onHide(),
+                error => error.json().then(text => alert(text.message))                
+            )
         }
         else alert(t("choose_one_person"));
     }

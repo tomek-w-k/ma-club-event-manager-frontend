@@ -101,15 +101,13 @@ class AddTeamModal extends Component
                     else reject(result);                    
                 })    
             },
-            error => { console.log("Error - Participant not added.") })    
+            error => console.log("Error - Participant not added."))    
             .then( result => {
                 result.json()
                 .then(savedTeam => this.props.history.push("/user/" + this.state.selectedRowsIds[0] + "/team_component/" + savedTeam.id)) 
             },
-            error => {
-                error.json()
-                .then(text => this.setState({ errorMessage: text.message }) );                
-            }); 
+                error => error.json().then(text => this.setState({ errorMessage: text.message }) )
+            ); 
         }
         else this.setState({ errorMessage: t("choose_one_person") });        
     }
